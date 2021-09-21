@@ -40,13 +40,11 @@ public class ClassController {
 		}
 		catch(ServiceException e)
 		{
-			 String name = e.getClass().getName();
-			  if(name.equals("com.questionaire.exception.ServiceException"))
-			  {
+			
 			     response.setStatusCode(500);
 			     response.setStatusText("Internal Server Error");
 			     responseEntity = new ResponseEntity<Response>(response,new HttpHeaders(),HttpStatus.INTERNAL_SERVER_ERROR);
-			  } 
+			 
 		}
 		return responseEntity;
 	}

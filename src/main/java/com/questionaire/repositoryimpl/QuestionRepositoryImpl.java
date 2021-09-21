@@ -31,6 +31,9 @@ public class QuestionRepositoryImpl implements QuestionRepository {
 
 	@Autowired
 	private SessionFactory sessionFactory;
+	
+	@Autowired
+	private QuizRepositoryImpl quiz;
 	public boolean checkQuiz(Long id,Integer quesNo) throws QuizIdNotFoundException
 	{
 		Session session=null;
@@ -45,7 +48,7 @@ public class QuestionRepositoryImpl implements QuestionRepository {
 	        }
 	        catch(NoResultException e)
 	        {
-	           
+	           return false;
 	        }
 		if(quiz==null)
 			throw new QuizIdNotFoundException("Quiz Id or Question not found!");
@@ -105,8 +108,8 @@ public class QuestionRepositoryImpl implements QuestionRepository {
 		List<Question> question=new ArrayList<Question>();
 		try {
 			session=sessionFactory.getCurrentSession();
-			QuizRepositoryImpl q=new QuizRepositoryImpl();
-			boolean status=q.checkQuiz(id);
+			
+			boolean status=quiz.checkQuiz(id);
 			Query query=session.createQuery("from Question where quiz.id=:id");
 			query.setParameter("id", id);
 			question=query.getResultList();

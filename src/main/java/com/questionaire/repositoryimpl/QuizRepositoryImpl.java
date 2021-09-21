@@ -38,33 +38,31 @@ public class QuizRepositoryImpl implements QuizRepository {
 	public boolean checkQuiz(Long id) throws QuizIdNotFoundException {
 		Session session = null;
 		session = sessionFactory.getCurrentSession();
-		Query query = session.createQuery("from Question where quiz.id=:id");
+		Query query = session.createQuery("from Quiz where autoId=:id");
 		query.setParameter("id", id);
 		Object question = null;
 		try {
 			question = query.getSingleResult();
 		} catch (NoResultException e) {
-
+			return false;
 		}
 		if (question == null)
 			throw new QuizIdNotFoundException("Quiz Id not found!");
 		return true;
 	}
 
-	public boolean checkQuizBySubCode(Long id, String subCode) throws QuizIdNotFoundException {
+	public boolean checkQuizBySubCode(String subCode) throws QuizIdNotFoundException {
 		Session session = null;
 		session = sessionFactory.getCurrentSession();
-		Query query = session.createQuery("from Quiz where autoId=:id and subject.subCode=:subCode ");
-		query.setParameter("id", id);
+		Query query = session.createQuery("from Quiz where subject.subCode=:subCode ");
+		
 		query.setParameter("subCode", subCode);
-		Object quiz = null;
-		try {
-			quiz = query.getSingleResult();
-		} catch (NoResultException e) {
-
-		}
-		if (quiz == null)
-			throw new QuizIdNotFoundException("No quiz created for subject " + subCode + " and quizId " + id + "!");
+		List<Quiz>quiz; 
+	
+			quiz = query.getResultList();
+		
+		if (quiz.isEmpty())
+			throw new QuizIdNotFoundException("No quiz created for subject " + subCode+ "!");
 		return true;
 	}
 
@@ -101,8 +99,8 @@ public class QuizRepositoryImpl implements QuizRepository {
 		List<Quiz> quiz;
 		try {
 			session = sessionFactory.getCurrentSession();
-			boolean status = checkQuizBySubCode(id, subCode);
-			Query query = session.createQuery("from Quiz  where teacher.id=:id and subject.subCode=:subCode  ");
+			boolean status = checkQuizBySubCode(subCode);
+			Query query = session.createQuery("from Quiz  where teacher.id=:id and subject.subCode=:subCode");
 			query.setParameter("subCode", subCode);
 			query.setParameter("id", id);
 			quiz = query.getResultList();

@@ -11,11 +11,14 @@ import com.questionaire.exception.DatabaseException;
 
 public interface StudentRepository {
 
-	ResponseEntity<String> addStudent(Long roomNo,Student student);
+	Student addStudent(Long roomNo, Student student) throws DatabaseException;
+
 	List<Student> getStudent(Long roomNo) throws DatabaseException;
-	List<Student> getStudentById(Long rollNo);
-	ResponseEntity<String> updateStudent(Long roomNo,Long rollNo,Student student);
-	ResponseEntity<String> deleteStudent(Long rollNo);
-	
-	
+
+	Student getStudentById(Long rollNo) throws DatabaseException;
+
+	Student updateStudent(Long roomNo, Long rollNo, Student student) throws DatabaseException;
+
+	String deleteStudent(Long rollNo) throws DatabaseException;
+
 }

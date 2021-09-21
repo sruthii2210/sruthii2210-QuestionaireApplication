@@ -7,14 +7,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.questionaire.entity.Subject;
+import com.questionaire.exception.ServiceException;
 
 
 public interface SubjectService {
 
-	 ResponseEntity<String> addSubject(Long roomNo,Subject subject);
-	 List<Subject> getSubject(Long roomNo);
-	 ResponseEntity<String>updateSubject(Long roomNo,String subCode,Subject subject);
-	 ResponseEntity<String>deleteSubject(String subCode);
+	 Subject addSubject(Long roomNo,Subject subject) throws ServiceException;
+	 List<Subject> getSubject(Long roomNo) throws ServiceException;
+	 Subject updateSubject(Long roomNo,String subCode,Subject subject) throws ServiceException;
+	 String deleteSubject(String subCode) throws ServiceException;
 	
 	
 }

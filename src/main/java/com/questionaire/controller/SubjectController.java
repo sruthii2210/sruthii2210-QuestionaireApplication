@@ -3,6 +3,8 @@ package com.questionaire.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,40 +17,97 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.questionaire.entity.Subject;
+import com.questionaire.exception.ServiceException;
 import com.questionaire.service.SubjectService;
 
 
 
 @RestController
-@RequestMapping("/subject")
+@RequestMapping("/api/subject")
 @CrossOrigin("http://localhost:4200")
 public class SubjectController {
 
 	@Autowired
 	private SubjectService subjectService;
 	
-	@PostMapping("/{roomNo}/addSubject")
-	public ResponseEntity<String> addSubject(@PathVariable("roomNo") Long roomNo,@RequestBody Subject subject)
+	@PostMapping("/{roomNo}")
+	public ResponseEntity<Response> addSubject(@PathVariable("roomNo") Long roomNo,@RequestBody Subject subject)
 	{
-		return subjectService.addSubject(roomNo,subject);
+		ResponseEntity<Response> responseBody = null;
+		Response response = new Response();
+		try {
+			Subject sub=subjectService.addSubject(roomNo,subject);
+			response.setData(sub);
+			response.setStatusText("Subject added");
+			response.setStatusCode(200);
+			responseBody = new ResponseEntity<Response>(response, new HttpHeaders(), HttpStatus.OK);
+		} catch (ServiceException e) {
+			response.setStatusCode(500);
+			response.setStatusText("Internal Server Error");
+			responseBody = new ResponseEntity<Response>(response, new HttpHeaders(),
+					HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return responseBody;
 	}
 	
-	@GetMapping("/{roomNo}/getSubject")
-	public List<Subject> getSubject(@PathVariable("roomNo") Long roomNo)
+	@GetMapping("/{roomNo}")
+	public ResponseEntity<Response> getSubject(@PathVariable("roomNo") Long roomNo)
 	{
-		List<Subject>subject=subjectService.getSubject(roomNo);
-		return subject;
+		ResponseEntity<Response> responseEntity = null;
+		Response response = new Response();
+		try {
+			List<Subject>subject=subjectService.getSubject(roomNo);
+			response.setData(subject);
+			response.setStatusText("Subject Details Fetched");
+			response.setStatusCode(200);
+			responseEntity = new ResponseEntity<Response>(response, new HttpHeaders(), HttpStatus.OK);
+		} catch (ServiceException e) {
+			response.setStatusCode(404);
+			response.setStatusText(e.getMessage());
+			responseEntity = new ResponseEntity<Response>(response, new HttpHeaders(),
+					HttpStatus.NOT_FOUND);
+		}
+		return responseEntity;
+		
 	}
 	
-	@PutMapping("{roomNo}/{subCode}/updateSubject")
-	public ResponseEntity<String>updateSubject(@PathVariable("roomNo") Long roomNo,@PathVariable("subCode") String subCode,@RequestBody Subject subject)
+	@PutMapping("{roomNo}/{subCode}")
+	public ResponseEntity<Response>updateSubject(@PathVariable("roomNo") Long roomNo,@PathVariable("subCode") String subCode,@RequestBody Subject subject)
 	{
-		return subjectService.updateSubject(roomNo,subCode,subject);
+		ResponseEntity<Response>responseEntity=null;
+		Response response=new Response();
+		try {
+			Subject sub=subjectService.updateSubject(roomNo,subCode,subject);
+			response.setData(sub);
+			response.setStatusText("Subject Details updated!");
+			response.setStatusCode(200);
+			responseEntity = new ResponseEntity<Response>(response, new HttpHeaders(), HttpStatus.OK);
+		} catch (ServiceException e) {
+			response.setStatusCode(404);
+			response.setStatusText(e.getMessage());
+			responseEntity = new ResponseEntity<Response>(response, new HttpHeaders(),
+					HttpStatus.NOT_FOUND);
+		}
+		return responseEntity;
 	}
 	
-	@DeleteMapping("/{subCode}/deleteSubject")
-	public ResponseEntity<String>deleteSubject(@PathVariable("subCode") String subCode)
+	@DeleteMapping("/{subCode}")
+	public ResponseEntity<Response>deleteSubject(@PathVariable("subCode") String subCode)
 	{
-		return subjectService.deleteSubject(subCode);
+		ResponseEntity<Response>responseEntity=null;
+		Response response=new Response();
+		try {
+			String string=subjectService.deleteSubject(subCode);
+			//response.setData(string);
+			response.setStatusText(string);
+			response.setStatusCode(200);
+			responseEntity = new ResponseEntity<Response>(response, new HttpHeaders(), HttpStatus.OK);
+		} catch (ServiceException e) {
+			response.setStatusCode(404);
+			response.setStatusText(e.getMessage());
+			responseEntity = new ResponseEntity<Response>(response, new HttpHeaders(),
+					HttpStatus.NOT_FOUND);
+		}
+		return responseEntity;
 	}
 }

@@ -3,6 +3,8 @@ package com.questionaire.repositoryimpl;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.NoResultException;
+
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -19,6 +21,8 @@ import com.questionaire.entity.Student;
 import com.questionaire.entity.Subject;
 import com.questionaire.exception.DatabaseException;
 import com.questionaire.exception.RoomNoNotFoundException;
+import com.questionaire.exception.StudentIdNotFoundException;
+import com.questionaire.exception.SubjectNotFoundException;
 import com.questionaire.repository.StudentRepository;
 
 @Repository
@@ -27,34 +31,56 @@ public class StudentRepositoryImpl implements StudentRepository {
 
 	@Autowired
 	private SessionFactory sessionFactory;
+	@Autowired
+	ClassRepositoryImpl classRepo;
 	
-	public boolean checkSubject(String code) {
-		Session session = sessionFactory.getCurrentSession();
-		Query query = session.createQuery("FROM Subject WHERE code=:subjectCode");
-		query.setParameter("subjectCode", code);
-		List<Subject> subjectList = query.list();
-		if (subjectList.isEmpty()) {
-			return false;
-		}
-		return true;
-	}
-		public boolean checkRoom(Long roomNo) {
+		public boolean checkStudent(Long rollNo) throws StudentIdNotFoundException {
+			
 			Session session = sessionFactory.getCurrentSession();
-			Query query = session.createQuery("FROM ClassRoom WHERE roomNo=:roomNo");
+			Query query = session.createQuery("FROM Student WHERE rollNo=:rollNo");
+			query.setParameter("rollNo", rollNo);
+			Student stud = null;
+			try {
+		        stud =(Student) query.getSingleResult();
+		        }
+		        catch(NoResultException e)
+		        {
+		           
+		        }
+		   
+		      if(stud==null)
+		      {
+		    	  throw new StudentIdNotFoundException("Student not Found,Enter the Valid Id!");
+		      }
+		      return true;
+	}
+		
+		public boolean checkClassStud(Long roomNo,Long rollNo) throws StudentIdNotFoundException {
+			
+			Session session = sessionFactory.getCurrentSession();
+			Query query = session.createQuery("FROM Student WHERE rollNo=:rollNo and roomNo=:roomNo");
+			query.setParameter("rollNo", rollNo);
 			query.setParameter("roomNo", roomNo);
-			List<Class> cls = query.list();
-			if (cls.isEmpty()) {
-				return false;
-			}
-			return true;
+			Student stud=null;
+			try {
+		        stud =(Student) query.getSingleResult();
+		        }
+		        catch(NoResultException e)
+		        {
+		           
+		        }
+		      if(stud==null)
+		      {
+		    	  throw new StudentIdNotFoundException("StudentId or RoomNo is Invalid..Enter valid one");
+		      }
+		      return true;
 	}
 	@Override
-	public ResponseEntity<String> addStudent(Long roomNo,Student student) {
+	public Student addStudent(Long roomNo,Student student) throws DatabaseException {
 		Session session=null;
-		ResponseEntity<String> response=null;
+		Student response=null;
 		try {
 			session=sessionFactory.getCurrentSession();
-			//session.beginTransaction();
 			Student stud=new Student();
 			ClassRoom classDetails=new ClassRoom();
 			classDetails.setRoomNo(roomNo);
@@ -64,16 +90,17 @@ public class StudentRepositoryImpl implements StudentRepository {
 			stud.setDateOfBirth(student.getDateOfBirth());
 			stud.setGender(student.getGender());
 			stud.setAddress(student.getAddress());
-			
 			session.save(stud);
-			//session.getTransaction().commit();
-			response=new ResponseEntity<String>("Student Details Added Successfully!",new HttpHeaders(),HttpStatus.OK);
-		}
+			Long count = (Long) session.save(stud);
+			if(count>0)
+			{
+				response = stud;
+			}
+			}
 		catch(HibernateException e)
 		{
-			return new ResponseEntity<String>(e.getMessage(),new HttpHeaders(),HttpStatus.OK);
+			throw new DatabaseException(e.getMessage());
 		}
-		
 		return response;
 	}
 	@Override
@@ -81,20 +108,18 @@ public class StudentRepositoryImpl implements StudentRepository {
 		
 		List<Student> student=new ArrayList<Student>();
 		Session session=null;
-			
 		try {
-			
 			session=sessionFactory.getCurrentSession();
-			if(!checkRoom(roomNo))
-				throw new RoomNoNotFoundException("RoomNo not found");
-			else {
+			
+			boolean status=classRepo.checkClassRoomNo(roomNo);
+			
 			Query query=session.createQuery("from Student s where roomNo=:room");
 			query.setParameter("room", roomNo);
 			student=query.getResultList();
-			}
+			
 		}
 		
-		catch(HibernateException| RoomNoNotFoundException e)
+		catch(HibernateException |  RoomNoNotFoundException  e)
 		{
 			throw new DatabaseException(e.getMessage());
 		}
@@ -103,30 +128,33 @@ public class StudentRepositoryImpl implements StudentRepository {
 
 	}
 	@Override
-	public List<Student> getStudentById(Long rollNo) {
-		List<Student> student=new ArrayList<Student>();
+	public Student getStudentById(Long rollNo) throws DatabaseException {
+		Student student;
 		Session session=null;
 		try {
 			session=sessionFactory.getCurrentSession();
+			boolean status=checkStudent(rollNo);
 			Query query=session.createQuery("from Student s where s.rollNo=:rollNo");
 			query.setParameter("rollNo", rollNo);
-			student=query.getResultList();
+			student=(Student) query.getSingleResult();
 			
 		}
-		finally
+		catch(HibernateException | StudentIdNotFoundException  e)
 		{
-			
+			throw new DatabaseException(e.getMessage());
 		}
 		return student;
 	}
 	@Override
-	public ResponseEntity<String> updateStudent(Long roomNo,Long rollNo, Student student) {
+	public Student updateStudent(Long roomNo,Long rollNo, Student student) throws DatabaseException {
 		
 		Session session=null;
-		ResponseEntity<String> response=null;
+		Student response=null;
 		try {
 			session=sessionFactory.getCurrentSession();
-			//session.beginTransaction();
+		
+			boolean status=checkClassStud(roomNo,rollNo);
+
 			session.find(Student.class, rollNo);
 			Student stud=session.load(Student.class, rollNo);
 			
@@ -138,35 +166,31 @@ public class StudentRepositoryImpl implements StudentRepository {
 			classDetails.setRoomNo(roomNo);
 			stud.setClassRoom(classDetails);
 			
-			//session.merge(stud);
-			//session.flush();
-			//session.getTransaction().commit();
-			response=new ResponseEntity<String>("student Details updated Successfully!",new HttpHeaders(),HttpStatus.OK);
+			response=stud;
 			}
-		catch(HibernateException e)
+		catch(HibernateException | StudentIdNotFoundException e)
 		{
-			return new ResponseEntity<String>(e.getMessage(),new HttpHeaders(),HttpStatus.OK);
+			throw new DatabaseException(e.getMessage());
 		}
 		
 		return response;
 	}
 	@Override
-	public ResponseEntity<String> deleteStudent(Long rollNo) {
+	public String deleteStudent(Long rollNo) throws DatabaseException {
 		Session session=null;
-		ResponseEntity<String> response=null;
+		String response;
 		try {
 			session=sessionFactory.getCurrentSession();
-			//session.beginTransaction();
+			boolean status=checkStudent(rollNo);
 			session.find(Student.class, rollNo);
 			Student studentEntity = session.load(Student.class, rollNo);
 			session.delete(studentEntity);
-			//session.flush();
-			//session.getTransaction().commit();
-			response=new ResponseEntity<String>("Student Details deleted Successfully!",new HttpHeaders(),HttpStatus.OK);
+		
+			response="Student Details deleted Successfully!";
 		}
-		catch(HibernateException e)
+		catch(HibernateException | StudentIdNotFoundException e)
 		{
-			return new ResponseEntity<String>(e.getMessage(),new HttpHeaders(),HttpStatus.OK);
+			throw new DatabaseException(e.getMessage());
 		}
 		
 		return response;

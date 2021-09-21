@@ -7,12 +7,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.questionaire.entity.TeacherLogin;
+import com.questionaire.exception.DatabaseException;
 
 public interface TeacherLoginRepository {
 
-	 ResponseEntity<String> createLogin(Long id,TeacherLogin login);
-	 List<TeacherLogin> getDetails(Long id);
-	 ResponseEntity<String> updateLogin(Long id,TeacherLogin login);
-		
+	TeacherLogin createLogin(Long id, TeacherLogin login) throws DatabaseException;
+
+	List<TeacherLogin> getDetails(Long id) throws DatabaseException;
+
+	TeacherLogin updateLogin(Long id, TeacherLogin login) throws DatabaseException;
 
 }

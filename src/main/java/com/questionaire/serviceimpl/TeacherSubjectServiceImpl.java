@@ -8,36 +8,57 @@ import org.springframework.stereotype.Service;
 
 import com.questionaire.entity.TeacherSubject;
 import com.questionaire.entity.TeacherSubjectModel;
+import com.questionaire.exception.DatabaseException;
+import com.questionaire.exception.ServiceException;
 import com.questionaire.exception.SubjectNotFoundException;
 import com.questionaire.exception.TeacherNotFoundException;
 import com.questionaire.repository.TeacherSubjectRepository;
 import com.questionaire.service.TeacherSubjectService;
 
 @Service
-public class TeacherSubjectServiceImpl implements TeacherSubjectService{
+public class TeacherSubjectServiceImpl implements TeacherSubjectService {
 	@Autowired
 	private TeacherSubjectRepository teacherSubjectRepositoryImpl;
+
 	@Override
-	public ResponseEntity<String> assignTeacherSubject(Long teacherId, String subjectCode,
-			TeacherSubject teacherSubjectDetails) throws TeacherNotFoundException, SubjectNotFoundException {
-		// TODO Auto-generated method stub
-		return teacherSubjectRepositoryImpl.assignTeacherSubject(teacherId,subjectCode,teacherSubjectDetails);
+	public TeacherSubject assignTeacherSubject(Long teacherId, String subjectCode, TeacherSubject teacherSubjectDetails)
+			throws ServiceException {
+		try {
+			return teacherSubjectRepositoryImpl.assignTeacherSubject(teacherId, subjectCode, teacherSubjectDetails);
+		} catch (DatabaseException e) {
+			throw new ServiceException(e.getMessage());
+		}
 	}
+
 	@Override
-	public ResponseEntity<String> updateTeacherSubjectAssign(Long teacherId, String subjectCode,
-			TeacherSubject teacherSubjectDetails) throws TeacherNotFoundException, SubjectNotFoundException {
-		// TODO Auto-generated method stub
-		return teacherSubjectRepositoryImpl.updateTeacherSubjectAssign(teacherId,subjectCode,teacherSubjectDetails);
+	public TeacherSubject updateTeacherSubjectAssign(Long teacherId, String subjectCode,
+			TeacherSubject teacherSubjectDetails) throws ServiceException {
+		try {
+			return teacherSubjectRepositoryImpl.updateTeacherSubjectAssign(teacherId, subjectCode,
+					teacherSubjectDetails);
+		} catch (DatabaseException e) {
+			throw new ServiceException(e.getMessage());
+		}
 	}
+
 	@Override
-	public ResponseEntity<String> deleteTeacherSubjectAssign(Long teacherId, String subjectCode) throws TeacherNotFoundException, SubjectNotFoundException {
-		// TODO Auto-generated method stub
-		return teacherSubjectRepositoryImpl.deleteTeacherSubjectAssign(teacherId,subjectCode);
+	public String deleteTeacherSubjectAssign(Long teacherId, String subjectCode) throws ServiceException {
+
+		try {
+			return teacherSubjectRepositoryImpl.deleteTeacherSubjectAssign(teacherId, subjectCode);
+		} catch (DatabaseException e) {
+			throw new ServiceException(e.getMessage());
+		}
 	}
+
 	@Override
-	public List<TeacherSubjectModel> getSubject(Long id) throws TeacherNotFoundException {
-		// TODO Auto-generated method stub
-		return teacherSubjectRepositoryImpl.getSubject(id);
+	public List<TeacherSubjectModel> getSubject(Long id) throws ServiceException {
+
+		try {
+			return teacherSubjectRepositoryImpl.getSubject(id);
+		} catch (DatabaseException e) {
+			throw new ServiceException(e.getMessage());
+		}
 	}
 
 }

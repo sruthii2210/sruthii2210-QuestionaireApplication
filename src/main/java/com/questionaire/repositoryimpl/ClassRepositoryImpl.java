@@ -26,15 +26,15 @@ public class ClassRepositoryImpl implements ClassRepository{
 
 	@Autowired
 	private SessionFactory sessionFactory;
-	public boolean checkClassRoomNo(Long rno) throws ClassNotFoundException, RoomNoNotFoundException {
+	public boolean checkClassRoomNo(Long roomNo) throws RoomNoNotFoundException {
 		  ClassRoom classDetail=new ClassRoom();
 	      boolean status = false;
 	      Session session =sessionFactory.getCurrentSession();
-	      Query query=session.createQuery("from Class where roomNo=:rNo");
-	      query.setParameter("rNo",rno);
+	      Query query=session.createQuery("from ClassRoom where roomNo=:roomNo");
+	      query.setParameter("roomNo",roomNo);
 	      classDetail=(ClassRoom) query.getSingleResult();
-	      status=(classDetail!=null);
-	      if(!status)
+	      
+	      if(classDetail==null)
 	      {
 	    	  throw new RoomNoNotFoundException("Class not Found,Enter the Valid Room No!");
 	      }
@@ -49,6 +49,7 @@ public class ClassRepositoryImpl implements ClassRepository{
 			session=sessionFactory.getCurrentSession();
 			session.save(classDetails);
 			Long count = (Long) session.save(classDetails);
+			
 			if(count>0)
 			{
 				response = classDetails;

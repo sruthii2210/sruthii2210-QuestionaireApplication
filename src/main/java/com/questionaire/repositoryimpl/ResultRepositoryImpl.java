@@ -19,6 +19,7 @@ import com.questionaire.entity.Quiz;
 import com.questionaire.entity.Result;
 import com.questionaire.entity.Student;
 import com.questionaire.entity.Subject;
+import com.questionaire.exception.DatabaseException;
 import com.questionaire.repository.ResultRepository;
 
 @Repository
@@ -28,12 +29,11 @@ public class ResultRepositoryImpl implements ResultRepository{
 	@Autowired
 	private SessionFactory sessionFactory;
 	@Override
-	public ResponseEntity<String> addResult(Long rollNo, String subCode, Long id, Integer score,Result result) {
+	public Result addResult(Long rollNo, String subCode, Long id, Integer score,Result result) throws DatabaseException {
 		Session session=null;
-		ResponseEntity<String> response=null;
+		Result response=null;
 		try {
 			session=sessionFactory.getCurrentSession();
-			//session.beginTransaction();
 			Student stud=new Student();
 			Subject sub=new Subject();
 			Quiz quiz=new Quiz();
@@ -47,18 +47,21 @@ public class ResultRepositoryImpl implements ResultRepository{
 			result.setSub(sub);
 			result.setScore(score);
 			session.save(result);
-			//session.getTransaction().commit();
-			response=new ResponseEntity<String>("Result added Successfully!",new HttpHeaders(),HttpStatus.OK);
+		Long count=(Long) session.save(result);
+			if(count>0)
+			{
+				response = result;
+			}
+			
 		}
 		catch(HibernateException e)
 		{
-			return new ResponseEntity<String>(e.getMessage(),new HttpHeaders(),HttpStatus.OK);
+			throw new DatabaseException(e.getMessage());
 		}
-		
 		return response;
 	}
 	@Override
-	public List<Result> getResult(Long id) {
+	public List<Result> getResult(Long id) throws DatabaseException {
 		List<Result> result=new ArrayList<Result>();
 		Session session=null;
 		try {
@@ -68,9 +71,9 @@ public class ResultRepositoryImpl implements ResultRepository{
 			result=query.getResultList();
 			
 		}
-		finally
+		catch(HibernateException e)
 		{
-			
+			throw new DatabaseException(e.getMessage());
 		}
 		return result;
 	}

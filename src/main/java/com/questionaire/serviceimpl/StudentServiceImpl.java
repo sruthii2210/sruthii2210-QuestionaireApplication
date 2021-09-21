@@ -19,8 +19,12 @@ public class StudentServiceImpl implements StudentService{
 	@Autowired
 	private StudentRepository studentRepository;
 	@Override
-	public ResponseEntity<String> addStudent(Long roomNo,Student student) {
-		return studentRepository.addStudent(roomNo,student);
+	public Student addStudent(Long roomNo,Student student) throws ServiceException {
+		try {
+			return studentRepository.addStudent(roomNo,student);
+		} catch (DatabaseException e) {
+			throw new ServiceException(e.getMessage());
+		}
 	}
 	@Override
 	public List<Student> getStudent(Long roomNo) throws ServiceException {
@@ -28,23 +32,34 @@ public class StudentServiceImpl implements StudentService{
 		try {
 			student = studentRepository.getStudent(roomNo);
 		} catch (DatabaseException e) {
-			// TODO Auto-generated catch block
 			throw new ServiceException(e.getMessage());
 		}
 		return student;
 	}
 	@Override
-	public List<Student> getStudentById(Long rollNo) {
-		List<Student> student=studentRepository.getStudentById(rollNo);
-		return student;
+	public Student getStudentById(Long rollNo) throws ServiceException {
+		
+		try {
+			return studentRepository.getStudentById(rollNo);
+		} catch (DatabaseException e) {
+			throw new ServiceException(e.getMessage());
+		}
 	}
 	@Override
-	public ResponseEntity<String> updateStudent(Long roomNo,Long rollNo, Student student) {
-		return studentRepository.updateStudent(roomNo,rollNo,student);
+	public Student updateStudent(Long roomNo,Long rollNo, Student student) throws ServiceException {
+		try {
+			return studentRepository.updateStudent(roomNo,rollNo,student);
+		} catch (DatabaseException e) {
+			throw new ServiceException(e.getMessage());
+		}
 	}
 	@Override
-	public ResponseEntity<String> deleteStudent(Long rollNo) {
-		return studentRepository.deleteStudent(rollNo);
+	public String deleteStudent(Long rollNo) throws ServiceException {
+		try {
+			return studentRepository.deleteStudent(rollNo);
+		} catch (DatabaseException e) {
+			throw new ServiceException(e.getMessage());
+		}
 	}
 
 }

@@ -39,15 +39,12 @@ public class QuizController {
 			responseBody = new ResponseEntity<Response>(response, new HttpHeaders(), HttpStatus.OK);
 		} catch (ServiceException e) {
 
-			String name = e.getClass().getName();
-			System.out.println(name);
-
-			if (name.equals("com.school.exception.ServiceException")) {
+			
 				response.setStatusCode(500);
 				response.setStatusText("Internal Server Error");
 				responseBody = new ResponseEntity<Response>(response, new HttpHeaders(),
 						HttpStatus.INTERNAL_SERVER_ERROR);
-			}
+			
 		}
 		return responseBody;
 

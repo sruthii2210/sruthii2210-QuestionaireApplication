@@ -11,12 +11,14 @@ import com.questionaire.exception.ServiceException;
 
 public interface StudentService {
 
-	 ResponseEntity<String> addStudent(Long roomNo,Student student);
-	 List<Student> getStudent(Long roomNo) throws ServiceException;
-	 List<Student> getStudentById(Long rollNo);
-	 ResponseEntity<String> updateStudent(Long roomNo,Long rollNo,Student student);
-	 ResponseEntity<String> deleteStudent(Long rollNo);
-	
-	
-	
+	Student addStudent(Long roomNo, Student student) throws ServiceException;
+
+	List<Student> getStudent(Long roomNo) throws ServiceException;
+
+	Student getStudentById(Long rollNo) throws ServiceException;
+
+	Student updateStudent(Long roomNo, Long rollNo, Student student) throws ServiceException;
+
+	String deleteStudent(Long rollNo) throws ServiceException;
+
 }

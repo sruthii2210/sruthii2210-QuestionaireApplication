@@ -31,6 +31,7 @@ public class Teacher {
 	private Long id;
 	
 	@OneToMany(mappedBy="teacher",fetch=FetchType.LAZY)
+	@JsonIgnore
 	private Set<TeacherSubject> teacherSub;
 
 	@OneToOne(mappedBy="userid")

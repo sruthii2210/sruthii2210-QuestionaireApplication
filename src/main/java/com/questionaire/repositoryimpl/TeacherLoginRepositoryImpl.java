@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import com.questionaire.entity.Student;
 import com.questionaire.entity.Teacher;
 import com.questionaire.entity.TeacherLogin;
+import com.questionaire.exception.DatabaseException;
+import com.questionaire.exception.TeacherNotFoundException;
 import com.questionaire.repository.TeacherLoginRepository;
 
 @Repository
@@ -26,13 +28,15 @@ public class TeacherLoginRepositoryImpl implements TeacherLoginRepository{
 
 	@Autowired
 	private SessionFactory sessionFactory;
+	
+	@Autowired
+	private TeacherRepositoryImpl teacherRepo;
 	@Override
-	public ResponseEntity<String> createLogin(Long id,TeacherLogin login) {
+	public TeacherLogin createLogin(Long id,TeacherLogin login) throws DatabaseException {
 		Session session=null;
-		ResponseEntity<String> response=null;
+		TeacherLogin response=null;
 		try {
 			session=sessionFactory.getCurrentSession();
-			//session.beginTransaction();
 			Teacher teacher=new Teacher();
 			TeacherLogin teachLogin=new TeacherLogin();
 			
@@ -40,58 +44,57 @@ public class TeacherLoginRepositoryImpl implements TeacherLoginRepository{
 			teachLogin.setUserid(teacher);
 			teachLogin.setPassword(login.getPassword());
 			
-			session.save(teachLogin);
-			//session.getTransaction().commit();
-			response=new ResponseEntity<String>("Login Details created Successfully!",new HttpHeaders(),HttpStatus.OK);
+			Long count=(Long) session.save(teachLogin);
+			
+			if(count>0)
+			response=teachLogin;
 		}
 		catch(HibernateException e)
 		{
-			return new ResponseEntity<String>(e.getMessage(),new HttpHeaders(),HttpStatus.OK);
+			throw new DatabaseException(e.getMessage());
 		}
 		
 		return response;
 
 	}
 	@Override
-	public List<TeacherLogin> getDetails(Long id) {
+	public List<TeacherLogin> getDetails(Long id) throws DatabaseException {
 		List<TeacherLogin> teacher=new ArrayList<TeacherLogin>();
 		Session session=null;
 		try {
 			session=sessionFactory.getCurrentSession();
+			boolean status=teacherRepo.checkTeacher(id);
 			Query query=session.createSQLQuery("select * from login where id=:staffId");
 			query.setParameter("staffId", id);
-			teacher=query.getResultList();
-			
+			teacher=query.getResultList();	
 		}
-		finally
+		catch(HibernateException | TeacherNotFoundException e)
 		{
-			
+			throw new DatabaseException(e.getMessage());
 		}
 		return teacher;
 	}
 	@Override
-	public ResponseEntity<String> updateLogin(Long id, TeacherLogin login) {
+	public TeacherLogin updateLogin(Long id, TeacherLogin login) throws DatabaseException {
 		Session session=null;
-		ResponseEntity<String> response=null;
+		TeacherLogin response=null;
 		try {
 			session=sessionFactory.getCurrentSession();
-			//session.beginTransaction();
+			//boolean status=teacherRepo.checkTeacher(id);
+			//System.out.println(status);
 			session.find(TeacherLogin.class, id);
 			TeacherLogin teachLogin=session.load(TeacherLogin.class, id);
 			
-			Teacher teacher=new Teacher();
-			teacher.setId(id);
-			teachLogin.setUserid(teacher);
 			teachLogin.setPassword(login.getPassword());
 			
 			session.merge(teachLogin);
-			//session.flush();
-			//session.getTransaction().commit();
-			response=new ResponseEntity<String>("Login Details updated Successfully!",new HttpHeaders(),HttpStatus.OK);
+		
+			response=teachLogin;
+			
 		}
 		catch(HibernateException e)
 		{
-			return new ResponseEntity<String>(e.getMessage(),new HttpHeaders(),HttpStatus.OK);
+			throw new DatabaseException(e.getMessage());
 		}
 		
 		return response;
@@ -101,3 +104,4 @@ public class TeacherLoginRepositoryImpl implements TeacherLoginRepository{
 
 	
 }
+;

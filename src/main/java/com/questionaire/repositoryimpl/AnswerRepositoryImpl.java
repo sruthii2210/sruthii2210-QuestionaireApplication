@@ -22,17 +22,19 @@ import com.questionaire.exception.DatabaseException;
 import com.questionaire.exception.QuestionNotFoundException;
 import com.questionaire.exception.RoomNoNotFoundException;
 import com.questionaire.repository.AnswerRepository;
+import com.sun.istack.logging.Logger;
 
 @Repository
 @Transactional
 public class AnswerRepositoryImpl implements AnswerRepository {
 
+	
 	@Autowired
 	private SessionFactory sessionFactory;
 	
 	@Autowired
 	private QuestionRepositoryImpl questionRepo;
-	
+
 	@Override
 	public Answer addAnswer(Integer quesNo, Answer answer) throws DatabaseException {
 		Session session=null;
@@ -42,7 +44,6 @@ public class AnswerRepositoryImpl implements AnswerRepository {
 			Question q=new Question();
 			q.setQuesNo(quesNo);
 			answer.setQues(q);
-			
 			 session.save(answer);
 			
 			Long count = (Long) session.save(answer);
@@ -89,11 +90,11 @@ public class AnswerRepositoryImpl implements AnswerRepository {
 	public Answer updateAnswer(Long autoId,Integer quesNo, Answer answer) throws DatabaseException {
 		Session session=null;
 		Answer response=null;
-		QuestionRepositoryImpl ques=new QuestionRepositoryImpl();
+		
 		try {
 			
 			session=sessionFactory.getCurrentSession();
-			ques.checkQuestion(quesNo);
+			questionRepo.checkQuestion(quesNo);
 			session.find(Answer.class, autoId);
 			Answer ans=session.load(Answer.class, autoId);
 			Question q=new Question();

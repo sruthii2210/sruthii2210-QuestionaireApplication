@@ -21,43 +21,113 @@ import com.questionaire.exception.ServiceException;
 import com.questionaire.service.StudentService;
 
 @RestController
-@RequestMapping("/student")
+@RequestMapping("/api/student")
 @CrossOrigin("http://localhost:4200")
 public class StudentController {
 
 	@Autowired
 	private StudentService studentService;
-	
-	@PostMapping("/{roomNo}/addStudent")
-	public ResponseEntity<String> addStudent(@PathVariable("roomNo") Long roomNo,@RequestBody Student student)
-	{
-		return studentService.addStudent(roomNo,student);
+
+	@PostMapping("/{roomNo}")
+	public ResponseEntity<Response> addStudent(@PathVariable("roomNo") Long roomNo, @RequestBody Student student) {
+		ResponseEntity<Response> responseEntity = null;
+		Response response = new Response();
+		try {
+			Student stud = studentService.addStudent(roomNo, student);
+			response.setStatusText("StudentDetails added");
+			response.setStatusCode(200);
+			response.setData(stud);
+			responseEntity = new ResponseEntity<Response>(response, new HttpHeaders(), HttpStatus.OK);
+
+		} catch (ServiceException e) {
+			String name = e.getClass().getName();
+			response.setStatusCode(500);
+			response.setStatusText("Internal Server Error");
+			responseEntity = new ResponseEntity<Response>(response, new HttpHeaders(),
+					HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return responseEntity;
 	}
-	@GetMapping("{roomNo}/getStudent")
-	public List<Student> getStudent(@PathVariable("roomNo") Long roomNo)
-	{
+
+	@GetMapping("/room/{roomNo}")
+	public ResponseEntity<Response> getStudent(@PathVariable("roomNo") Long roomNo) {
 		List<Student> student;
+		ResponseEntity<Response> responseEntity = null;
+		Response response = new Response();
 		try {
 			student = studentService.getStudent(roomNo);
+			response.setStatusText("StudentDetails fetched!");
+			response.setStatusCode(200);
+			response.setData(student);
+			responseEntity = new ResponseEntity<Response>(response, new HttpHeaders(), HttpStatus.OK);
+
 		} catch (ServiceException e) {
-			return (List<Student>) new ResponseEntity<String>(e.getMessage(),new HttpHeaders(),HttpStatus.BAD_REQUEST);
+			response.setStatusCode(404);
+			response.setStatusText(e.getMessage());
+			responseEntity = new ResponseEntity<Response>(response, new HttpHeaders(),
+					HttpStatus.NOT_FOUND);
 		}
-		return student;
+		return responseEntity;
 	}
-	@GetMapping("/getStudent/{rollNo}")
-	public List<Student> getStudentById(@PathVariable("rollNo") Long rollNo)
-	{
-		List<Student> student=studentService.getStudentById(rollNo);
-		return student;
+
+	@GetMapping("/{rollNo}")
+	public ResponseEntity<Response> getStudentById(@PathVariable("rollNo") Long rollNo) {
+		ResponseEntity<Response> responseEntity = null;
+		Response response = new Response();
+		try {
+			Student student = studentService.getStudentById(rollNo);
+			response.setStatusText("StudentDetails fetched!");
+			response.setStatusCode(200);
+			response.setData(student);
+			responseEntity = new ResponseEntity<Response>(response, new HttpHeaders(), HttpStatus.OK);
+
+		} catch (ServiceException e) {
+			response.setStatusCode(404);
+			response.setStatusText(e.getMessage());
+			responseEntity = new ResponseEntity<Response>(response, new HttpHeaders(),
+					HttpStatus.NOT_FOUND);
+		}
+		return responseEntity;
+		
 	}
-	@PutMapping("/{roomNo}/{rollNo}/updateStudent")
-	public ResponseEntity<String> updateStudent(@PathVariable("roomNo") Long roomNo,@PathVariable("rollNo") Long rollNo,@RequestBody Student student)
-	{
-		return studentService.updateStudent(roomNo,rollNo,student);
-	} 
-	@DeleteMapping("/{rollNo}/deleteStudent")
-	public ResponseEntity<String> deleteStudent(@PathVariable("rollNo") Long rollNo)
-	{
-		return studentService.deleteStudent(rollNo);
-	} 
+
+	@PutMapping("/{roomNo}/{rollNo}")
+	public ResponseEntity<Response> updateStudent(@PathVariable("roomNo") Long roomNo,
+			@PathVariable("rollNo") Long rollNo, @RequestBody Student student) {
+		ResponseEntity<Response> responseEntity = null;
+		Response response = new Response();
+		try {
+			Student stud =studentService.updateStudent(roomNo, rollNo, student);
+			response.setStatusText("StudentDetails Updated!");
+			response.setStatusCode(200);
+			response.setData(stud);
+			responseEntity = new ResponseEntity<Response>(response, new HttpHeaders(), HttpStatus.OK);
+		} catch (ServiceException e) {
+			response.setStatusCode(404);
+			response.setStatusText(e.getMessage());
+			responseEntity = new ResponseEntity<Response>(response, new HttpHeaders(),
+					HttpStatus.NOT_FOUND);
+		}
+		return responseEntity;
+	}
+
+	@DeleteMapping("/{rollNo}")
+	public ResponseEntity<Response> deleteStudent(@PathVariable("rollNo") Long rollNo) {
+		ResponseEntity<Response> responseEntity = null;
+		Response response = new Response();
+		try {
+			String string=studentService.deleteStudent(rollNo);
+			response.setStatusText(string);
+			response.setStatusCode(200);
+			
+			responseEntity = new ResponseEntity<Response>(response, new HttpHeaders(), HttpStatus.OK);
+
+		} catch (ServiceException e) {
+			response.setStatusCode(404);
+			response.setStatusText(e.getMessage());
+			responseEntity = new ResponseEntity<Response>(response, new HttpHeaders(),
+					HttpStatus.NOT_FOUND);
+		}
+		return responseEntity;
+	}
 }

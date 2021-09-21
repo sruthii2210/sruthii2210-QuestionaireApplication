@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.questionaire.entity.Teacher;
+import com.questionaire.exception.DatabaseException;
+import com.questionaire.exception.ServiceException;
 import com.questionaire.exception.TeacherNotFoundException;
 import com.questionaire.repository.TeacherRepository;
 import com.questionaire.service.TeacherService;
@@ -18,29 +20,43 @@ public class TeacherServiceImpl implements TeacherService{
 	@Autowired
 	private TeacherRepository teacherRepositoryImpl;
 	@Override
-	public ResponseEntity<String> addTeacherDetails(Teacher teacherDetails) {
-		// TODO Auto-generated method stub
-		return teacherRepositoryImpl.addTeacherDetails(teacherDetails);
+	public Teacher addTeacherDetails(Teacher teacherDetails) throws ServiceException {
+		
+		try {
+			return teacherRepositoryImpl.addTeacherDetails(teacherDetails);
+		} catch (DatabaseException e) {
+			throw new ServiceException(e.getMessage());
+		}
 	}
 	@Override
-	public ResponseEntity<List<Teacher>> getAllTeacherDetails() {
-		// TODO Auto-generated method stub
-		return teacherRepositoryImpl.getAllTeacherDetails();
+	public List<Teacher> getAllTeacherDetails() throws ServiceException {
+		try {
+			return teacherRepositoryImpl.getAllTeacherDetails();
+		} catch (DatabaseException e) {
+		throw new ServiceException(e.getMessage());
+		}
 	}
 	@Override
-	public ResponseEntity<String> updateTeacherDetails(Long id, Teacher teacherDetails) throws TeacherNotFoundException {
-		// TODO Auto-generated method stub
-		return teacherRepositoryImpl.updateTeacherDetails(id,teacherDetails);
+	public Teacher updateTeacherDetails(Long id, Teacher teacherDetails) throws ServiceException {
+		try {
+			return teacherRepositoryImpl.updateTeacherDetails(id,teacherDetails);
+		} catch (DatabaseException e) {
+			throw new ServiceException(e.getMessage());
+		}
 	}
 	@Override
 	public ResponseEntity<String> deleteTeacherDetails(Long id) {
-		// TODO Auto-generated method stub
+		
 		return teacherRepositoryImpl.deleteTeacherDetails(id);
 	}
 	@Override
-	public ResponseEntity<Teacher> getParticularTeacherDetails(Long id) {
-		// TODO Auto-generated method stub
-		return teacherRepositoryImpl.getParticularTeacherDetails(id);
+	public Teacher getParticularTeacherDetails(Long id) throws ServiceException {
+		
+		try {
+			return teacherRepositoryImpl.getParticularTeacherDetails(id);
+		} catch (DatabaseException e) {
+		throw new ServiceException(e.getMessage());
+		}
 	}
 	
 }
