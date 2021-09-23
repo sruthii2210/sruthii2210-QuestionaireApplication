@@ -32,14 +32,11 @@ public class ClassRepositoryImpl implements ClassRepository{
 		ClassRoom classDetail= new ClassRoom();
 	 
 	      Session session =sessionFactory.getCurrentSession();
-	      Query query=session.createQuery("from ClassRoom where roomNo=:roomNo");
+	      Query<ClassRoom> query=session.createQuery("from ClassRoom where roomNo=:roomNo");
 	      query.setParameter("roomNo",roomNo);
-	     // classDetail=(ClassRoom) query.getSingleResult();
-	      try {
-	    	  classDetail = (ClassRoom) query.getSingleResult();
-			} catch (NoResultException e) {
-
-			}
+	
+	      classDetail =  query.uniqueResultOptional().orElse(null);
+	      
 	      if(classDetail==null)
 	      {
 	    	  throw new RoomNoNotFoundException("Class not Found,Enter the Valid Room No!");

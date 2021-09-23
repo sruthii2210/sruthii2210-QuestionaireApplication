@@ -7,8 +7,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Subject {
 
-	
 	private String subCode;
 	private String subName;
-	private Long classRoom;
+	private ClassDetails classDetails;
 }

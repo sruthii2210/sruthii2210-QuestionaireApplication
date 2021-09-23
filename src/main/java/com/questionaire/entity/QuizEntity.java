@@ -47,8 +47,8 @@ public class QuizEntity implements Serializable{
 	@JsonIgnore
 	private SubjectEntity subject;
 	
-	@ManyToOne(targetEntity=Teacher.class,fetch=FetchType.LAZY)
+	@ManyToOne(targetEntity=TeacherEntity.class,fetch=FetchType.LAZY)
 	@JoinColumn(name="id",nullable=false)
 	@JsonIgnore
-	private Teacher teacher;
+	private TeacherEntity teacher;
 }

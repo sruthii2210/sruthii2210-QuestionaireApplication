@@ -29,10 +29,10 @@ public class TeacherLogin implements Serializable{
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long autoId;
 	
-	@OneToOne(targetEntity=Teacher.class)
+	@OneToOne(targetEntity=TeacherEntity.class)
 	@JoinColumn(name="id",nullable=false,unique=true)
 	@JsonIgnore
-	private Teacher userid;
+	private TeacherEntity userid;
 	
 	@Column(nullable=false)
 	private String password;

@@ -14,10 +14,15 @@ import com.questionaire.exception.SubjectNotFoundException;
 public interface SubjectRepository {
 
 	void checkSubject(String code) throws SubjectNotFoundException;
-	String addSubject(Long roomNo,Subject subject) throws DatabaseException;
+
+	void checkSubjectRoom(Long roomNo, String code) throws SubjectNotFoundException;
+	
+	String addSubject(Long roomNo, Subject subject) throws DatabaseException;
+
 	List<SubjectEntity> getSubject(Long roomNo) throws DatabaseException;
-	SubjectEntity updateSubject(Long roomNo,String subCode,Subject subject) throws DatabaseException;
+
+	SubjectEntity updateSubject(Long roomNo, String subCode, Subject subject) throws DatabaseException;
+
 	String deleteSubject(String subCode) throws DatabaseException;
-	
-	
+
 }

@@ -26,7 +26,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name="Teacher")
-public class Teacher {
+public class TeacherEntity {
 	@Id
 	private Long id;
 	
@@ -64,7 +64,7 @@ public class Teacher {
 	@NotNull
 	private String address;
 	
-	public Teacher(Long id, @NotNull @Size(max = 20) String firstName, @NotNull @Size(max = 20) String lastName,
+	public TeacherEntity(Long id, @NotNull @Size(max = 20) String firstName, @NotNull @Size(max = 20) String lastName,
 			@NotNull Date dateOfBirth, @NotNull @Size(max = 7) String gender,
 			@NotNull @Size(max = 10) String qualification, @Email @NotNull String email, @NotNull Long contactNo,
 			@NotNull String address) {

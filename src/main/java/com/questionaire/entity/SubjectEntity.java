@@ -30,6 +30,11 @@ public class SubjectEntity implements Serializable {
 	private String subCode;
 	private String subName;
 	
+	@ManyToOne(targetEntity=ClassRoom.class,fetch=FetchType.LAZY)
+	@JoinColumn(name="roomNo",nullable=false)
+	@JsonIgnore
+	private ClassRoom classRoom;
+	
 	@OneToMany(mappedBy="subject",fetch=FetchType.LAZY)
 	@JsonIgnore
 	private Set<QuizEntity> quiz;
@@ -44,10 +49,7 @@ public class SubjectEntity implements Serializable {
 	
 	
 	
-	@ManyToOne(targetEntity=ClassRoom.class,fetch=FetchType.LAZY)
-	@JoinColumn(name="roomNo",nullable=false)
-	@JsonIgnore
-	private ClassRoom classRoom;
+	
 	
 	
 	

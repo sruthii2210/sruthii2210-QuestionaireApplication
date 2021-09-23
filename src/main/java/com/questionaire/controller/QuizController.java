@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.questionaire.dto.Quiz;
 import com.questionaire.entity.QuizEntity;
+import com.questionaire.exception.NotFoundException;
+import com.questionaire.exception.TeacherNotFoundException;
+import com.questionaire.exception.SubjectNotFoundException;
 import com.questionaire.exception.ServiceException;
 import com.questionaire.service.QuizService;
 
@@ -38,14 +41,15 @@ public class QuizController {
 			response.setStatusText("Quiz created Successfully!..");
 			response.setStatusCode(200);
 			responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
-		} catch (ServiceException e) {
+		} catch (ServiceException | NotFoundException e) {
 
-			
-				response.setStatusCode(500);
-				response.setStatusText("Internal Server Error");
+			if(e instanceof TeacherNotFoundException|e instanceof SubjectNotFoundException)
+			{
+				response.setStatusCode(404);
+				response.setStatusText(e.getMessage());
 				responseBody = new ResponseEntity<>(response, new HttpHeaders(),
-						HttpStatus.INTERNAL_SERVER_ERROR);
-			
+						HttpStatus.NOT_FOUND);
+			}
 		}
 		return responseBody;
 
@@ -63,9 +67,9 @@ public class QuizController {
 			response.setStatusCode(200);
 			responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
 
-		} catch (ServiceException e) {
-			String name = e.getClass().getName();
-			if (name.equals("com.school.exception.ServiceException")) {
+		} catch (ServiceException | NotFoundException e) {
+			
+			if (e instanceof TeacherNotFoundException|e instanceof SubjectNotFoundException ) {
 				response.setStatusCode(404);
 				response.setStatusText(e.getMessage());
 				responseBody = new ResponseEntity<>(response, new HttpHeaders(),
@@ -86,9 +90,9 @@ public class QuizController {
 			response.setStatusCode(200);
 			responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
 
-		} catch (ServiceException e) {
-			String name = e.getClass().getName();
-			if (name.equals("com.school.exception.ServiceException")) {
+		} catch (ServiceException | NotFoundException e) {
+			
+			if (e instanceof SubjectNotFoundException) {
 				response.setStatusCode(404);
 				response.setStatusText(e.getMessage());
 				responseBody = new ResponseEntity<>(response, new HttpHeaders(),

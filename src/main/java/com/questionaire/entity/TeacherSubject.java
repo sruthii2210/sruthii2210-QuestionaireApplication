@@ -27,10 +27,10 @@ public class TeacherSubject implements Serializable{
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long autoId;
 	
-	@ManyToOne(targetEntity=Teacher.class)
+	@ManyToOne(targetEntity=TeacherEntity.class)
 	@JoinColumn(name="id",nullable=false)
 	@JsonIgnore
-	private Teacher teacher;
+	private TeacherEntity teacher;
 	
 	@ManyToOne(targetEntity=SubjectEntity.class)
 	@JoinColumn(name="subCode",nullable=false,unique=true)

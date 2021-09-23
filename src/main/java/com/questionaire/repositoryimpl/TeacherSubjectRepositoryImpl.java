@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.questionaire.entity.Student;
 import com.questionaire.entity.SubjectEntity;
-import com.questionaire.entity.Teacher;
+import com.questionaire.entity.TeacherEntity;
 import com.questionaire.entity.TeacherSubject;
 import com.questionaire.entity.TeacherSubjectModel;
 import com.questionaire.exception.DatabaseException;
@@ -42,13 +42,13 @@ public class TeacherSubjectRepositoryImpl implements TeacherSubjectRepository {
 		TeacherSubject response = null;
 		Session session = null;
 		try {
-			boolean checkTeacher = teacherRepositoryImpl.checkTeacher(teacherId);
+			teacherRepositoryImpl.checkTeacher(teacherId);
 
-			boolean checkSubject = subjectRepositoryImpl.checkSubject(subjectCode);
+			subjectRepositoryImpl.checkSubject(subjectCode);
 
 			session = sessionFactory.getCurrentSession();
 
-			Teacher teacherDetails = new Teacher();
+			TeacherEntity teacherDetails = new TeacherEntity();
 			teacherDetails.setId(teacherId);
 			SubjectEntity subjectDetails = new SubjectEntity();
 			subjectDetails.setSubCode(subjectCode);
@@ -74,9 +74,9 @@ public class TeacherSubjectRepositoryImpl implements TeacherSubjectRepository {
 		TeacherSubject response = null;
 		Session session = null;
 		try {
-			boolean checkTeacher = teacherRepositoryImpl.checkTeacher(teacherId);
+			 teacherRepositoryImpl.checkTeacher(teacherId);
 
-			boolean checkSubject = subjectRepositoryImpl.checkSubject(subjectCode);
+			subjectRepositoryImpl.checkSubject(subjectCode);
 
 			session = sessionFactory.getCurrentSession();
 
@@ -100,9 +100,9 @@ public class TeacherSubjectRepositoryImpl implements TeacherSubjectRepository {
 		String response = null;
 		Session session = null;
 		try {
-			boolean checkTeacher = teacherRepositoryImpl.checkTeacher(teacherId);
+			 teacherRepositoryImpl.checkTeacher(teacherId);
 
-			boolean checkSubject = subjectRepositoryImpl.checkSubject(subjectCode);
+			 subjectRepositoryImpl.checkSubject(subjectCode);
 
 			session = sessionFactory.getCurrentSession();
 
@@ -128,7 +128,7 @@ public class TeacherSubjectRepositoryImpl implements TeacherSubjectRepository {
 		try {
 
 			session = sessionFactory.getCurrentSession();
-			boolean checkTeacher = teacherRepositoryImpl.checkTeacher(id);
+			teacherRepositoryImpl.checkTeacher(id);
 
 			Query query = session.createQuery("SELECT new com.questionaire.entity.TeacherSubjectModel"
 					+ "(t.teacher.id,t.subject.subCode) " + "FROM TeacherSubject t WHERE t.teacher.id=:id ");

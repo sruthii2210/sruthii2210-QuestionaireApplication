@@ -3,47 +3,62 @@ package com.questionaire.serviceimpl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.questionaire.dto.Quiz;
 import com.questionaire.entity.QuizEntity;
 import com.questionaire.exception.DatabaseException;
+import com.questionaire.exception.NotFoundException;
 import com.questionaire.exception.ServiceException;
+
 import com.questionaire.repository.QuizRepository;
+import com.questionaire.repository.SubjectRepository;
+import com.questionaire.repository.TeacherRepository;
 import com.questionaire.service.QuizService;
 
 @Service
-public class QuizServiceImpl implements QuizService{
+public class QuizServiceImpl implements QuizService {
 
 	@Autowired
 	private QuizRepository quizRepository;
-	
+
+	@Autowired
+	private TeacherRepository teacherRepository;
+
+	@Autowired
+	private SubjectRepository subjectRepository;
+
 	@Override
-	public Long addQuiz(Long id,String subCode, Quiz quiz) throws ServiceException {
+	public Long addQuiz(Long id, String subCode, Quiz quiz) throws ServiceException, NotFoundException {
 		try {
-			return quizRepository.addQuiz(id,subCode,quiz);
+			teacherRepository.checkTeacher(id);
+			subjectRepository.checkSubject(subCode);
+
+			return quizRepository.addQuiz(id, subCode, quiz);
 		} catch (DatabaseException e) {
 			throw new ServiceException(e.getMessage());
 		}
 	}
 
 	@Override
-	public List<QuizEntity> getQuiz(Long id,String subCode) throws ServiceException {
-		
+	public List<QuizEntity> getQuiz(Long id, String subCode) throws ServiceException, NotFoundException {
+
 		try {
-			List<QuizEntity> quiz = quizRepository.getQuiz(id,subCode);
+			teacherRepository.checkTeacher(id);
+			subjectRepository.checkSubject(subCode);
+			List<QuizEntity> quiz = quizRepository.getQuiz(id, subCode);
 			return quiz;
 		} catch (DatabaseException e) {
 			throw new ServiceException(e.getMessage());
 		}
-		
+
 	}
 
 	@Override
-	public List<QuizEntity> getQuizBySubCode(String subCode) throws ServiceException {
+	public List<QuizEntity> getQuizBySubCode(String subCode) throws ServiceException, NotFoundException {
 		List<QuizEntity> quiz;
 		try {
+			subjectRepository.checkSubject(subCode);
 			quiz = quizRepository.getQuizBySubCode(subCode);
 		} catch (DatabaseException e) {
 			throw new ServiceException(e.getMessage());

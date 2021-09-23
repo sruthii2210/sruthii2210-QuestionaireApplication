@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import com.questionaire.entity.Student;
-import com.questionaire.entity.Teacher;
+import com.questionaire.entity.TeacherEntity;
 import com.questionaire.entity.TeacherLogin;
 import com.questionaire.exception.DatabaseException;
 import com.questionaire.exception.TeacherNotFoundException;
@@ -37,7 +37,7 @@ public class TeacherLoginRepositoryImpl implements TeacherLoginRepository{
 		TeacherLogin response=null;
 		try {
 			session=sessionFactory.getCurrentSession();
-			Teacher teacher=new Teacher();
+			TeacherEntity teacher=new TeacherEntity();
 			TeacherLogin teachLogin=new TeacherLogin();
 			
 			teacher.setId(id);
