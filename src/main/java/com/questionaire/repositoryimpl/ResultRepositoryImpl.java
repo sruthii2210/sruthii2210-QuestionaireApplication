@@ -15,10 +15,10 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.questionaire.entity.ClassRoom;
-import com.questionaire.entity.Quiz;
+import com.questionaire.entity.QuizEntity;
 import com.questionaire.entity.Result;
 import com.questionaire.entity.Student;
-import com.questionaire.entity.Subject;
+import com.questionaire.entity.SubjectEntity;
 import com.questionaire.exception.DatabaseException;
 import com.questionaire.repository.ResultRepository;
 
@@ -35,8 +35,8 @@ public class ResultRepositoryImpl implements ResultRepository{
 		try {
 			session=sessionFactory.getCurrentSession();
 			Student stud=new Student();
-			Subject sub=new Subject();
-			Quiz quiz=new Quiz();
+			SubjectEntity sub=new SubjectEntity();
+			QuizEntity quiz=new QuizEntity();
 			
 			stud.setRollNo(rollNo);
 			sub.setSubCode(subCode);

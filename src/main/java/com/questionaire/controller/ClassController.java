@@ -15,9 +15,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.questionaire.dto.ClassDetails;
 import com.questionaire.entity.ClassRoom;
+import com.questionaire.exception.NotFoundException;
+import com.questionaire.exception.RoomNoNotFoundException;
 import com.questionaire.exception.ServiceException;
 import com.questionaire.service.ClassService;
+
 
 @RestController
 @RequestMapping("/api/class")
@@ -28,23 +32,21 @@ public class ClassController {
 	private ClassService classServiceImp;
 
 	@PostMapping
-	public ResponseEntity<Response> addClass(@RequestBody ClassRoom classDetails) {
+	public ResponseEntity<Response> addClass(@RequestBody ClassDetails classDetails) {
 		ResponseEntity<Response> responseEntity = null;
 		Response response = new Response();
 		try {
-		ClassRoom classRoom=classServiceImp.addClass(classDetails);
-		 response.setStatusText("OK");
+		Long roomNo=classServiceImp.addClass(classDetails);
+		 response.setStatusText("ClassDetails added..!");
 		 response.setStatusCode(200);
-		 response.setData(classRoom);
-		 responseEntity=new ResponseEntity<Response>(response,new HttpHeaders(),HttpStatus.OK);
+		 response.setData(roomNo);
+		 responseEntity=new ResponseEntity<>(response,new HttpHeaders(),HttpStatus.OK);
 		}
 		catch(ServiceException e)
 		{
-			
-			     response.setStatusCode(500);
-			     response.setStatusText("Internal Server Error");
-			     responseEntity = new ResponseEntity<Response>(response,new HttpHeaders(),HttpStatus.INTERNAL_SERVER_ERROR);
-			 
+			response.setStatusCode(500);
+			response.setStatusText(e.getMessage());
+			responseEntity = new ResponseEntity<>(response,new HttpHeaders(),HttpStatus.INTERNAL_SERVER_ERROR); 
 		}
 		return responseEntity;
 	}
@@ -57,10 +59,10 @@ public class ClassController {
 		List<ClassRoom> classDetails;
 		try {
 			classDetails = classServiceImp.getClassDetails();
-			response.setStatusText("OK");
+			response.setStatusText("Fetched classDetails..");
 			 response.setStatusCode(200);
 			 response.setData(classDetails);
-			 responseEntity=new ResponseEntity<Response>(response,new HttpHeaders(),HttpStatus.OK);
+			 responseEntity=new ResponseEntity<>(response,new HttpHeaders(),HttpStatus.OK);
 			
 		} catch(ServiceException e)
 		{
@@ -69,35 +71,36 @@ public class ClassController {
 			  {
 			     response.setStatusCode(500);
 			     response.setStatusText("Internal Server Error");
-			     responseEntity = new ResponseEntity<Response>(response,new HttpHeaders(),HttpStatus.INTERNAL_SERVER_ERROR);
+			     responseEntity = new ResponseEntity<>(response,new HttpHeaders(),HttpStatus.INTERNAL_SERVER_ERROR);
 			  } 
 		}
 		return responseEntity;
 	}
 	
 	@PutMapping("/{roomNo}")
-	public ResponseEntity<Response> updateClass(@PathVariable("roomNo")Long roomNo,@RequestBody ClassRoom classDetails)
+	public ResponseEntity<Response> updateClass(@PathVariable("roomNo")Long roomNo,@RequestBody ClassDetails classDetails)
 	{
 		ResponseEntity<Response> responseEntity = null;
 		Response response = new Response();
-		ClassRoom updatedClass;
-		try {
-			updatedClass= classServiceImp.updateClass(roomNo,classDetails);
-			response.setStatusText("OK");
+		
+		try {	
+			 ClassRoom updatedClass= classServiceImp.updateClass(roomNo,classDetails);
+			response.setStatusText("ClassDetails updated for roomNo "+roomNo+" !");
 			 response.setStatusCode(200);
-			 response.setData(classDetails);
-			 responseEntity=new ResponseEntity<Response>(response,new HttpHeaders(),HttpStatus.OK);
+			 response.setData(updatedClass);
+			 responseEntity=new ResponseEntity<>(response,new HttpHeaders(),HttpStatus.OK);
 			
-		} catch (ServiceException e) {
-			 String name = e.getClass().getName();
-			  if(name.equals("com.questionaire.exception.ServiceException"))
+		} catch (ServiceException | NotFoundException e) {
+			  
+			  if(e instanceof RoomNoNotFoundException)
 			  {
-			     response.setStatusCode(500);
-			     response.setStatusText("Internal Server Error");
-			     responseEntity = new ResponseEntity<Response>(response,new HttpHeaders(),HttpStatus.INTERNAL_SERVER_ERROR);
+			     response.setStatusCode(404);
+			     response.setStatusText(e.getMessage());
+			     responseEntity = new ResponseEntity<>(response,new HttpHeaders(),HttpStatus.INTERNAL_SERVER_ERROR);
 			  } 
 		
-		}
+		} 
+		
 		return responseEntity;
 	}
 	
@@ -109,17 +112,17 @@ public class ClassController {
 		ClassRoom cls;
 		try {
 			cls = classServiceImp.getClass(standard,section);
-			response.setStatusText("OK");
+			response.setStatusText("Fetched classDetails...!");
 			 response.setStatusCode(200);
 			 response.setData(cls);
-			 responseEntity=new ResponseEntity<Response>(response,new HttpHeaders(),HttpStatus.OK);
+			 responseEntity=new ResponseEntity<>(response,new HttpHeaders(),HttpStatus.OK);
 		} catch (ServiceException e) {
 			String name = e.getClass().getName();
 			  if(name.equals("com.questionaire.exception.ServiceException"))
 			  {
 			     response.setStatusCode(500);
 			     response.setStatusText("Internal Server Error");
-			     responseEntity = new ResponseEntity<Response>(response,new HttpHeaders(),HttpStatus.INTERNAL_SERVER_ERROR);
+			     responseEntity = new ResponseEntity<>(response,new HttpHeaders(),HttpStatus.INTERNAL_SERVER_ERROR);
 			  } 
 		
 		}

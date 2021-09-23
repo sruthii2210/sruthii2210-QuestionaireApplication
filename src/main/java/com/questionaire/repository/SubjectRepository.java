@@ -6,14 +6,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import com.questionaire.entity.Subject;
+import com.questionaire.dto.Subject;
+import com.questionaire.entity.SubjectEntity;
 import com.questionaire.exception.DatabaseException;
+import com.questionaire.exception.SubjectNotFoundException;
 
 public interface SubjectRepository {
 
-	Subject addSubject(Long roomNo,Subject subject) throws DatabaseException;
-	List<Subject> getSubject(Long roomNo) throws DatabaseException;
-	Subject updateSubject(Long roomNo,String subCode,Subject subject) throws DatabaseException;
+	void checkSubject(String code) throws SubjectNotFoundException;
+	String addSubject(Long roomNo,Subject subject) throws DatabaseException;
+	List<SubjectEntity> getSubject(Long roomNo) throws DatabaseException;
+	SubjectEntity updateSubject(Long roomNo,String subCode,Subject subject) throws DatabaseException;
 	String deleteSubject(String subCode) throws DatabaseException;
 	
 	

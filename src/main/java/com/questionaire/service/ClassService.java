@@ -2,17 +2,17 @@ package com.questionaire.service;
 
 import java.util.List;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 
+import com.questionaire.dto.ClassDetails;
 import com.questionaire.entity.ClassRoom;
+import com.questionaire.exception.NotFoundException;
 import com.questionaire.exception.ServiceException;
 
 public interface ClassService {
 	
-	ClassRoom addClass(ClassRoom classDetails) throws ServiceException;
+	Long addClass(ClassDetails classDetails) throws ServiceException;
 	List<ClassRoom> getClassDetails() throws ServiceException;
-	ClassRoom updateClass(Long roomNo,ClassRoom classDetails) throws ServiceException;
+	ClassRoom updateClass(Long roomNo,ClassDetails classDetails) throws ServiceException, NotFoundException;
 	ClassRoom getClass(String standard,String section) throws ServiceException;
 	
 	

@@ -25,7 +25,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name="quiz")
-public class Quiz implements Serializable{
+public class QuizEntity implements Serializable{
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -42,10 +42,10 @@ public class Quiz implements Serializable{
 	private Set<Result> results;
 
 	
-	@ManyToOne(targetEntity=Subject.class,fetch=FetchType.LAZY)
+	@ManyToOne(targetEntity=SubjectEntity.class,fetch=FetchType.LAZY)
 	@JoinColumn(name="subCode",nullable=false)
 	@JsonIgnore
-	private Subject subject;
+	private SubjectEntity subject;
 	
 	@ManyToOne(targetEntity=Teacher.class,fetch=FetchType.LAZY)
 	@JoinColumn(name="id",nullable=false)

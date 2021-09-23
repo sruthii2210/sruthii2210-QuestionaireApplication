@@ -3,12 +3,13 @@ package com.questionaire.serviceimpl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.questionaire.dto.ClassDetails;
 import com.questionaire.entity.ClassRoom;
 import com.questionaire.exception.DatabaseException;
+import com.questionaire.exception.NotFoundException;
+
 import com.questionaire.exception.ServiceException;
 import com.questionaire.repository.ClassRepository;
 import com.questionaire.service.ClassService;
@@ -19,9 +20,7 @@ public class ClassServiceImpl implements ClassService {
 	@Autowired
 	private ClassRepository classRepositoryImp;
 	
-	
-
-	public ClassRoom addClass(ClassRoom classDetails) throws ServiceException
+	public Long addClass(ClassDetails classDetails) throws ServiceException
 	{
 		try {
 		return classRepositoryImp.addClass(classDetails);
@@ -34,7 +33,6 @@ public class ClassServiceImpl implements ClassService {
 	
 	public List<ClassRoom> getClassDetails() throws ServiceException
 	{
-		List<ClassRoom> classDetails;
 		try {
 		return classRepositoryImp.getClassDetails();
 		}
@@ -46,10 +44,10 @@ public class ClassServiceImpl implements ClassService {
 	}
 
 	@Override
-	public ClassRoom updateClass(Long roomNo,ClassRoom classDetails) throws ServiceException {
-		ClassRoom classroom;
+	public ClassRoom updateClass(Long roomNo,ClassDetails classDetails) throws ServiceException, NotFoundException{
 		try
 		{
+		classRepositoryImp.checkClassRoomNo(roomNo);
 		return classRepositoryImp.updateClass(roomNo,classDetails);
 		}
 		catch(DatabaseException e)

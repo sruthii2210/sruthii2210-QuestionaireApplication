@@ -6,7 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.questionaire.entity.Answer;
+import com.questionaire.dto.Answer;
+import com.questionaire.entity.AnswerEntity;
 import com.questionaire.exception.DatabaseException;
 import com.questionaire.exception.QuestionNotFoundException;
 import com.questionaire.exception.ServiceException;
@@ -19,7 +20,7 @@ public class AnswerServiceImpl implements AnswerService{
 	@Autowired
 	private AnswerRepository answerRepository;
 	@Override
-	public Answer addAnswer(Integer quesNo, Answer answer) throws ServiceException {
+	public Long addAnswer(Integer quesNo, Answer answer) throws ServiceException {
 		try {
 		return answerRepository.addAnswer(quesNo,answer);
 		}
@@ -28,7 +29,7 @@ public class AnswerServiceImpl implements AnswerService{
 	}
 	}
 	@Override
-	public Answer getAnswer(Integer quesNo) throws ServiceException, QuestionNotFoundException {
+	public AnswerEntity getAnswer(Integer quesNo) throws ServiceException, QuestionNotFoundException {
 		try {
 		return answerRepository.getAnswer(quesNo);
 		}

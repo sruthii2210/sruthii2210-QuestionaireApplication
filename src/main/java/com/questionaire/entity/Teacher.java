@@ -39,7 +39,7 @@ public class Teacher {
 	
 	@OneToMany(mappedBy="teacher",fetch=FetchType.LAZY)
 	@JsonIgnore
-	private Set<Quiz> quiz;
+	private Set<QuizEntity> quiz;
 	
 	@NotNull
 	@Size(max=20)

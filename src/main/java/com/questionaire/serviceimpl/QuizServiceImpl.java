@@ -6,7 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.questionaire.entity.Quiz;
+import com.questionaire.dto.Quiz;
+import com.questionaire.entity.QuizEntity;
 import com.questionaire.exception.DatabaseException;
 import com.questionaire.exception.ServiceException;
 import com.questionaire.repository.QuizRepository;
@@ -19,7 +20,7 @@ public class QuizServiceImpl implements QuizService{
 	private QuizRepository quizRepository;
 	
 	@Override
-	public Quiz addQuiz(Long id,String subCode, Quiz quiz) throws ServiceException {
+	public Long addQuiz(Long id,String subCode, Quiz quiz) throws ServiceException {
 		try {
 			return quizRepository.addQuiz(id,subCode,quiz);
 		} catch (DatabaseException e) {
@@ -28,10 +29,10 @@ public class QuizServiceImpl implements QuizService{
 	}
 
 	@Override
-	public List<Quiz> getQuiz(Long id,String subCode) throws ServiceException {
+	public List<QuizEntity> getQuiz(Long id,String subCode) throws ServiceException {
 		
 		try {
-			List<Quiz> quiz = quizRepository.getQuiz(id,subCode);
+			List<QuizEntity> quiz = quizRepository.getQuiz(id,subCode);
 			return quiz;
 		} catch (DatabaseException e) {
 			throw new ServiceException(e.getMessage());
@@ -40,8 +41,8 @@ public class QuizServiceImpl implements QuizService{
 	}
 
 	@Override
-	public List<Quiz> getQuizBySubCode(String subCode) throws ServiceException {
-		List<Quiz> quiz;
+	public List<QuizEntity> getQuizBySubCode(String subCode) throws ServiceException {
+		List<QuizEntity> quiz;
 		try {
 			quiz = quizRepository.getQuizBySubCode(subCode);
 		} catch (DatabaseException e) {

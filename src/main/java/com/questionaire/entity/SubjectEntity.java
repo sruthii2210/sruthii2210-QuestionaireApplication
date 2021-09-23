@@ -24,7 +24,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Entity
 @Table(name="subject")
-public class Subject implements Serializable {
+public class SubjectEntity implements Serializable {
 
 	@Id
 	private String subCode;
@@ -32,7 +32,7 @@ public class Subject implements Serializable {
 	
 	@OneToMany(mappedBy="subject",fetch=FetchType.LAZY)
 	@JsonIgnore
-	private Set<Quiz> quiz;
+	private Set<QuizEntity> quiz;
 	
 	@OneToMany(mappedBy="sub",fetch=FetchType.LAZY)
 	@JsonIgnore

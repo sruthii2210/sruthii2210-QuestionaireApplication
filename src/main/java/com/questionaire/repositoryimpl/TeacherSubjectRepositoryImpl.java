@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.questionaire.entity.Student;
-import com.questionaire.entity.Subject;
+import com.questionaire.entity.SubjectEntity;
 import com.questionaire.entity.Teacher;
 import com.questionaire.entity.TeacherSubject;
 import com.questionaire.entity.TeacherSubjectModel;
@@ -50,7 +50,7 @@ public class TeacherSubjectRepositoryImpl implements TeacherSubjectRepository {
 
 			Teacher teacherDetails = new Teacher();
 			teacherDetails.setId(teacherId);
-			Subject subjectDetails = new Subject();
+			SubjectEntity subjectDetails = new SubjectEntity();
 			subjectDetails.setSubCode(subjectCode);
 			TeacherSubject teacherSubjectAssignDetails = new TeacherSubject();
 			teacherSubjectAssignDetails.setTeacher(teacherDetails);

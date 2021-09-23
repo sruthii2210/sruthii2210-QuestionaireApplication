@@ -1,6 +1,5 @@
 package com.questionaire.controller;
 
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -15,7 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.questionaire.entity.Answer;
+import com.questionaire.dto.Answer;
+import com.questionaire.entity.AnswerEntity;
 import com.questionaire.exception.QuestionNotFoundException;
 import com.questionaire.exception.ServiceException;
 import com.questionaire.service.AnswerService;
@@ -33,17 +33,17 @@ public class AnswerController {
 		ResponseEntity<Response> responseBody = null;
 		Response response = new Response();
 		try {
-			Answer ans = answerService.addAnswer(quesNo, answer);
-			response.setData(ans);
-			response.setStatusText("OK");
+			Long autoId = answerService.addAnswer(quesNo, answer);
+			response.setData(autoId);
+			response.setStatusText("Answer is added successfully!..");
 			response.setStatusCode(200);
-			responseBody = new ResponseEntity<Response>(response, new HttpHeaders(), HttpStatus.OK);
+			responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
 
 		} catch (ServiceException e) {
 		
 				response.setStatusCode(500);
-				response.setStatusText("Internal Server Error");
-				responseBody = new ResponseEntity<Response>(response, new HttpHeaders(),
+				response.setStatusText(e.getMessage());
+				responseBody = new ResponseEntity<>(response, new HttpHeaders(),
 						HttpStatus.INTERNAL_SERVER_ERROR);
 			
 		}
@@ -55,18 +55,18 @@ public class AnswerController {
 		ResponseEntity<Response> responseBody = null;
 		Response response = new Response();
 		try {
-			Answer answer = answerService.getAnswer(quesNo);
+			AnswerEntity answer = answerService.getAnswer(quesNo);
 			response.setData(answer);
 			response.setStatusText("OK");
 			response.setStatusCode(200);
-			responseBody = new ResponseEntity<Response>(response, new HttpHeaders(), HttpStatus.OK);
+			responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
 		} catch (ServiceException e) {
 			String name = e.getClass().getName();
 			System.out.println(name);
 			if (name.equals("com.school.exception.ServiceException")) {
 				response.setStatusCode(500);
 				response.setStatusText("Internal Server Error");
-				responseBody = new ResponseEntity<Response>(response, new HttpHeaders(),
+				responseBody = new ResponseEntity<>(response, new HttpHeaders(),
 						HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 		}
@@ -74,7 +74,7 @@ public class AnswerController {
 				
 					response.setStatusCode(404);
 					response.setStatusText(e.getMessage());
-					responseBody = new ResponseEntity<Response>(response, new HttpHeaders(),HttpStatus.NOT_FOUND);
+					responseBody = new ResponseEntity<>(response, new HttpHeaders(),HttpStatus.NOT_FOUND);
 		
 		}
 		return responseBody;
@@ -90,16 +90,14 @@ public class AnswerController {
 			response.setData(updatedAnswer);
 			response.setStatusText("OK");
 			response.setStatusCode(200);
-			responseBody = new ResponseEntity<Response>(response, new HttpHeaders(), HttpStatus.OK);
+			responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
 		} catch (ServiceException e) {
-			String name = e.getClass().getName();
-			System.out.println(name);
-			if (name.equals("com.school.exception.ServiceException")) {
+		
 				response.setStatusCode(500);
 				response.setStatusText("Internal Server Error");
-				responseBody = new ResponseEntity<Response>(response, new HttpHeaders(),
+				responseBody = new ResponseEntity<>(response, new HttpHeaders(),
 						HttpStatus.INTERNAL_SERVER_ERROR);
-			}
+			
 		}
 		return responseBody;
 	}

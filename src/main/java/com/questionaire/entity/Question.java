@@ -31,11 +31,11 @@ public class Question implements Serializable{
 	private String question;
 	
 	@OneToOne(mappedBy="ques")
-	private Answer ans;
+	private AnswerEntity ans;
 	
-	@ManyToOne(targetEntity=Quiz.class,fetch=FetchType.LAZY)
+	@ManyToOne(targetEntity=QuizEntity.class,fetch=FetchType.LAZY)
 	@JoinColumn(name="id",nullable=false)
 	@JsonIgnore
-	private Quiz quiz;
+	private QuizEntity quiz;
 	
 }

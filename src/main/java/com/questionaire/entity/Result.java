@@ -32,15 +32,15 @@ public class Result implements Serializable{
 	@JsonIgnore
 	private Student stud;
 	
-	@ManyToOne(targetEntity=Subject.class,fetch=FetchType.LAZY)
+	@ManyToOne(targetEntity=SubjectEntity.class,fetch=FetchType.LAZY)
 	@JoinColumn(name="subCode",nullable=false)
 	@JsonIgnore
-	private Subject sub;
+	private SubjectEntity sub;
 	
-	@ManyToOne(targetEntity=Quiz.class,fetch=FetchType.LAZY)
+	@ManyToOne(targetEntity=QuizEntity.class,fetch=FetchType.LAZY)
 	@JoinColumn(name="id",nullable=false)
 	@JsonIgnore
-	private Quiz quiz;
+	private QuizEntity quiz;
 	
 	private Integer score;
 	

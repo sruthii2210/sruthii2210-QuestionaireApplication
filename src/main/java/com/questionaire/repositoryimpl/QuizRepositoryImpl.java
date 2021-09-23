@@ -15,10 +15,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.questionaire.dto.Quiz;
 import com.questionaire.entity.ClassRoom;
-import com.questionaire.entity.Quiz;
+import com.questionaire.entity.QuizEntity;
 import com.questionaire.entity.Student;
-import com.questionaire.entity.Subject;
+import com.questionaire.entity.SubjectEntity;
 import com.questionaire.entity.Teacher;
 import com.questionaire.exception.DatabaseException;
 import com.questionaire.exception.QuizIdNotFoundException;
@@ -35,7 +36,7 @@ public class QuizRepositoryImpl implements QuizRepository {
 	@Autowired
 	private SubjectRepositoryImpl sub;
 	
-	public boolean checkQuiz(Long id) throws QuizIdNotFoundException {
+	public void checkQuiz(Long id) throws QuizIdNotFoundException {
 		Session session = null;
 		session = sessionFactory.getCurrentSession();
 		Query query = session.createQuery("from Quiz where autoId=:id");
@@ -44,46 +45,46 @@ public class QuizRepositoryImpl implements QuizRepository {
 		try {
 			question = query.getSingleResult();
 		} catch (NoResultException e) {
-			return false;
+			
 		}
 		if (question == null)
 			throw new QuizIdNotFoundException("Quiz Id not found!");
-		return true;
+		
 	}
 
-	public boolean checkQuizBySubCode(String subCode) throws QuizIdNotFoundException {
+	public void checkQuizBySubCode(String subCode) throws QuizIdNotFoundException {
 		Session session = null;
 		session = sessionFactory.getCurrentSession();
 		Query query = session.createQuery("from Quiz where subject.subCode=:subCode ");
 		
 		query.setParameter("subCode", subCode);
-		List<Quiz>quiz; 
+		List<QuizEntity>quiz; 
 	
 			quiz = query.getResultList();
 		
 		if (quiz.isEmpty())
 			throw new QuizIdNotFoundException("No quiz created for subject " + subCode+ "!");
-		return true;
+	
 	}
 
 	@Override
-	public Quiz addQuiz(Long id, String subCode, Quiz quiz) throws DatabaseException {
+	public Long addQuiz(Long id, String subCode,Quiz quiz) throws DatabaseException {
 		Session session = null;
-		Quiz response = null;
+		Long response = 0l;
 		try {
 			session = sessionFactory.getCurrentSession();
-			Subject sub = new Subject();
+			SubjectEntity sub = new SubjectEntity();
 			sub.setSubCode(subCode);
 			Teacher t = new Teacher();
 			t.setId(id);
-			Quiz q = new Quiz();
+			QuizEntity q = new QuizEntity();
 			q.setName(quiz.getName());
 			q.setTeacher(t);
 			q.setSubject(sub);
-			session.save(q);
-			Long count = (Long) session.save(q);
-			if (count > 0) {
-				response = q;
+			
+			Long quizId = (Long) session.save(q);
+			if (quizId > 0) {
+				response = quizId;
 			}
 		} catch (HibernateException e) {
 			throw new DatabaseException(e.getMessage());
@@ -93,10 +94,10 @@ public class QuizRepositoryImpl implements QuizRepository {
 	}
 
 	@Override
-	public List<Quiz> getQuiz(Long id, String subCode) throws DatabaseException {
+	public List<QuizEntity> getQuiz(Long id, String subCode) throws DatabaseException {
 		Session session = null;
 		// sub = new SubjectRepositoryImpl();
-		List<Quiz> quiz;
+		List<QuizEntity> quiz;
 		try {
 			session = sessionFactory.getCurrentSession();
 			boolean status = checkQuizBySubCode(subCode);
@@ -112,9 +113,9 @@ public class QuizRepositoryImpl implements QuizRepository {
 	}
 
 	@Override
-	public List<Quiz> getQuizBySubCode(String subCode) throws DatabaseException {
+	public List<QuizEntity> getQuizBySubCode(String subCode) throws DatabaseException {
 		Session session = null;
-		List<Quiz> quiz;
+		List<QuizEntity> quiz;
 		try {
 			session = sessionFactory.getCurrentSession();
 			boolean status = sub.checkSubject(subCode);

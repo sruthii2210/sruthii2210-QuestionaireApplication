@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.questionaire.entity.ClassRoom;
 import com.questionaire.entity.Question;
-import com.questionaire.entity.Quiz;
+import com.questionaire.entity.QuizEntity;
 import com.questionaire.entity.Student;
 import com.questionaire.exception.DatabaseException;
 import com.questionaire.exception.QuestionNotFoundException;
@@ -81,7 +81,7 @@ public class QuestionRepositoryImpl implements QuestionRepository {
 		Question response=null;
 		try {
 			session=sessionFactory.getCurrentSession();
-			Quiz q=new Quiz();
+			QuizEntity q=new QuizEntity();
 			q.setAutoId(id);
 			question.setQuiz(q);
 			question.setQuestion(question.getQuestion());
@@ -109,7 +109,7 @@ public class QuestionRepositoryImpl implements QuestionRepository {
 		try {
 			session=sessionFactory.getCurrentSession();
 			
-			boolean status=quiz.checkQuiz(id);
+			quiz.checkQuiz(id);
 			Query query=session.createQuery("from Question where quiz.id=:id");
 			query.setParameter("id", id);
 			question=query.getResultList();

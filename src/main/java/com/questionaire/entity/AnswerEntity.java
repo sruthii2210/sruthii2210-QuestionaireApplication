@@ -21,7 +21,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name="answer")
-public class Answer implements Serializable{
+public class AnswerEntity implements Serializable{
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long autoId;

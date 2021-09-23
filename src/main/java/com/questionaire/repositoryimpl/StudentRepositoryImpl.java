@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.questionaire.entity.ClassRoom;
 import com.questionaire.entity.Student;
-import com.questionaire.entity.Subject;
+import com.questionaire.entity.SubjectEntity;
 import com.questionaire.exception.DatabaseException;
 import com.questionaire.exception.RoomNoNotFoundException;
 import com.questionaire.exception.StudentIdNotFoundException;
@@ -111,7 +111,7 @@ public class StudentRepositoryImpl implements StudentRepository {
 		try {
 			session=sessionFactory.getCurrentSession();
 			
-			boolean status=classRepo.checkClassRoomNo(roomNo);
+			classRepo.checkClassRoomNo(roomNo);
 			
 			Query query=session.createQuery("from Student s where roomNo=:room");
 			query.setParameter("room", roomNo);

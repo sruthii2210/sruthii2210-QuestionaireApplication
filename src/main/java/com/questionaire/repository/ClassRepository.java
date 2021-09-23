@@ -2,17 +2,17 @@ package com.questionaire.repository;
 
 import java.util.List;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-
+import com.questionaire.dto.ClassDetails;
 import com.questionaire.entity.ClassRoom;
 import com.questionaire.exception.DatabaseException;
+import com.questionaire.exception.RoomNoNotFoundException;
 
 public interface ClassRepository {
 
-	ClassRoom addClass(ClassRoom classDetails) throws DatabaseException;
+	void checkClassRoomNo(Long roomNo) throws RoomNoNotFoundException;
+	Long addClass(ClassDetails classDetails) throws DatabaseException;
 	List<ClassRoom> getClassDetails() throws DatabaseException;
-	ClassRoom updateClass(Long roomNo,ClassRoom classDetails) throws DatabaseException;
+	ClassRoom updateClass(Long roomNo,ClassDetails classDetails) throws DatabaseException;
 	ClassRoom getClass(String standard,String section) throws DatabaseException;
 	
 	

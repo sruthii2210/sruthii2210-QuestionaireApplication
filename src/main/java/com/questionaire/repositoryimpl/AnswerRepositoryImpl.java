@@ -14,7 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.questionaire.entity.Answer;
+import com.questionaire.dto.Answer;
+import com.questionaire.entity.AnswerEntity;
 import com.questionaire.entity.ClassRoom;
 import com.questionaire.entity.Question;
 import com.questionaire.entity.Student;
@@ -36,9 +37,9 @@ public class AnswerRepositoryImpl implements AnswerRepository {
 	private QuestionRepositoryImpl questionRepo;
 
 	@Override
-	public Answer addAnswer(Integer quesNo, Answer answer) throws DatabaseException {
+	public Long addAnswer(Integer quesNo, Answer answer) throws DatabaseException {
 		Session session=null;
-		Answer response=null;
+		AnswerEntity response=null;
 		try {
 			session=sessionFactory.getCurrentSession();
 			Question q=new Question();
@@ -61,9 +62,9 @@ public class AnswerRepositoryImpl implements AnswerRepository {
 	}
 
 	@Override
-	public Answer getAnswer(Integer quesNo) throws DatabaseException, QuestionNotFoundException {
+	public AnswerEntity getAnswer(Integer quesNo) throws DatabaseException, QuestionNotFoundException {
 		Session session=null;
-		Answer answer;
+		AnswerEntity answer;
 		
 		
 		try {
@@ -72,7 +73,7 @@ public class AnswerRepositoryImpl implements AnswerRepository {
 			session=sessionFactory.getCurrentSession();
 			Query query=session.createQuery("from Answer where ques.quesNo=:quesNo");
 			query.setParameter("quesNo", quesNo);
-			answer=(Answer) query.getSingleResult();
+			answer=(AnswerEntity) query.getSingleResult();
 			}
 			else
 			{
@@ -87,16 +88,16 @@ public class AnswerRepositoryImpl implements AnswerRepository {
 	}
 
 	@Override
-	public Answer updateAnswer(Long autoId,Integer quesNo, Answer answer) throws DatabaseException {
+	public AnswerEntity updateAnswer(Long autoId,Integer quesNo, AnswerEntity answer) throws DatabaseException {
 		Session session=null;
-		Answer response=null;
+		AnswerEntity response=null;
 		
 		try {
 			
 			session=sessionFactory.getCurrentSession();
 			questionRepo.checkQuestion(quesNo);
-			session.find(Answer.class, autoId);
-			Answer ans=session.load(Answer.class, autoId);
+			session.find(AnswerEntity.class, autoId);
+			AnswerEntity ans=session.load(AnswerEntity.class, autoId);
 			Question q=new Question();
 			
 			ans.setOption1(answer.getOption1());
@@ -106,7 +107,7 @@ public class AnswerRepositoryImpl implements AnswerRepository {
 			ans.setCrctAns(answer.getCrctAns());
 			
 			
-			response=(Answer) session.merge(ans);
+			response=(AnswerEntity) session.merge(ans);
 			}
 		catch(HibernateException | QuestionNotFoundException e)
 		{

@@ -32,8 +32,8 @@ public class TeacherSubject implements Serializable{
 	@JsonIgnore
 	private Teacher teacher;
 	
-	@ManyToOne(targetEntity=Subject.class)
+	@ManyToOne(targetEntity=SubjectEntity.class)
 	@JoinColumn(name="subCode",nullable=false,unique=true)
 	@JsonIgnore
-	private Subject subject;
+	private SubjectEntity subject;
 }

@@ -1,19 +1,14 @@
 package com.questionaire.service;
 
-import java.util.List;
-
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-
-import com.questionaire.entity.Answer;
+import com.questionaire.dto.Answer;
+import com.questionaire.entity.AnswerEntity;
 import com.questionaire.exception.QuestionNotFoundException;
 import com.questionaire.exception.ServiceException;
 
 public interface AnswerService {
 
-	Answer addAnswer(Integer quesNo,Answer answer) throws ServiceException;
-	Answer getAnswer(Integer quesNo) throws ServiceException, QuestionNotFoundException;
+	Long addAnswer(Integer quesNo,Answer answer) throws ServiceException;
+	AnswerEntity getAnswer(Integer quesNo) throws ServiceException, QuestionNotFoundException;
 	Answer updateAnswer( Long autoId,Integer quesNo,Answer answer) throws ServiceException;
 	
 	
