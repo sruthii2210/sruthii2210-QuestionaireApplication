@@ -2,6 +2,7 @@ package com.questionaire.entity;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -20,23 +21,26 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name="answer")
-public class AnswerEntity implements Serializable{
+@Table(name = "answer")
+public class AnswerEntity implements Serializable {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long autoId;
-	
-	@OneToOne(targetEntity=Question.class)
-	@JoinColumn(name="quesNo")
+
+	@OneToOne(targetEntity = QuestionEntity.class)
+	@JoinColumn(name = "quesNo")
 	@JsonIgnore
-	private Question ques;
-	
+	private QuestionEntity question;
+	@Column(nullable = false)
 	private String option1;
+	@Column(nullable = false)
 	private String option2;
+	@Column(nullable = false)
 	private String option3;
+	@Column(nullable = false)
 	private String option4;
+	@Column(nullable = false)
 	private Integer crctAns;
-	
-	
+
 }

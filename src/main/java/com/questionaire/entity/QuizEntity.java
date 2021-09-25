@@ -19,9 +19,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 @Entity
 @Table(name="quiz")
@@ -35,15 +37,15 @@ public class QuizEntity implements Serializable{
 	
 	@OneToMany(mappedBy="quiz",fetch=FetchType.LAZY)
 	@JsonIgnore
-	private Set<Question> question;
+	private Set<QuestionEntity> question;
 
 	@OneToMany(mappedBy="quiz",fetch=FetchType.LAZY)
 	@JsonIgnore
-	private Set<Result> results;
+	private Set<ResultEntity> results;
 
 	
 	@ManyToOne(targetEntity=SubjectEntity.class,fetch=FetchType.LAZY)
-	@JoinColumn(name="subCode",nullable=false)
+	@JoinColumn(name="code",nullable=false)
 	@JsonIgnore
 	private SubjectEntity subject;
 	

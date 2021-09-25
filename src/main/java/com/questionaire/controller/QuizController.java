@@ -41,15 +41,22 @@ public class QuizController {
 			response.setStatusText("Quiz created Successfully!..");
 			response.setStatusCode(200);
 			responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
-		} catch (ServiceException | NotFoundException e) {
+		} catch (NotFoundException e) {
 
-			if(e instanceof TeacherNotFoundException|e instanceof SubjectNotFoundException)
+			if(e instanceof TeacherNotFoundException||e instanceof SubjectNotFoundException)
 			{
 				response.setStatusCode(404);
 				response.setStatusText(e.getMessage());
 				responseBody = new ResponseEntity<>(response, new HttpHeaders(),
 						HttpStatus.NOT_FOUND);
 			}
+		}
+		catch(ServiceException e)
+		{
+			response.setStatusCode(500);
+			response.setStatusText(e.getMessage());
+			responseBody = new ResponseEntity<>(response, new HttpHeaders(),
+					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return responseBody;
 
@@ -67,14 +74,21 @@ public class QuizController {
 			response.setStatusCode(200);
 			responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
 
-		} catch (ServiceException | NotFoundException e) {
+		} catch (NotFoundException e) {
 			
-			if (e instanceof TeacherNotFoundException|e instanceof SubjectNotFoundException ) {
+			if (e instanceof TeacherNotFoundException||e instanceof SubjectNotFoundException ) {
 				response.setStatusCode(404);
 				response.setStatusText(e.getMessage());
 				responseBody = new ResponseEntity<>(response, new HttpHeaders(),
 						HttpStatus.NOT_FOUND);
 			}
+		}
+		catch(ServiceException e)
+		{
+			response.setStatusCode(500);
+			response.setStatusText(e.getMessage());
+			responseBody = new ResponseEntity<>(response, new HttpHeaders(),
+					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return responseBody;
 	}
@@ -90,7 +104,7 @@ public class QuizController {
 			response.setStatusCode(200);
 			responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
 
-		} catch (ServiceException | NotFoundException e) {
+		} catch (NotFoundException e) {
 			
 			if (e instanceof SubjectNotFoundException) {
 				response.setStatusCode(404);
@@ -98,6 +112,13 @@ public class QuizController {
 				responseBody = new ResponseEntity<>(response, new HttpHeaders(),
 						HttpStatus.NOT_FOUND);
 			}
+		}
+		catch(ServiceException e)
+		{
+			response.setStatusCode(500);
+			response.setStatusText(e.getMessage());
+			responseBody = new ResponseEntity<>(response, new HttpHeaders(),
+					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return responseBody;
 	}

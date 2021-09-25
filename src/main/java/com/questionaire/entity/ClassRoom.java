@@ -16,40 +16,36 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @ToString
 @Entity
-@Table(name="class")
-public class ClassRoom implements Serializable{
-	
-	
-	@OneToMany(mappedBy="classRoom",fetch=FetchType.LAZY)
+@Table(name = "class")
+public class ClassRoom implements Serializable {
+
+	@OneToMany(mappedBy = "classRoom", fetch = FetchType.LAZY)
 	@JsonIgnore
-	private Set<Student> students;
-	
-	@OneToMany(mappedBy="classRoom",fetch=FetchType.LAZY)
+	private Set<StudentEntity> students;
+
+	@OneToMany(mappedBy = "classRoom", fetch = FetchType.LAZY)
 	@JsonIgnore
 	private Set<SubjectEntity> subjects;
-	
+
 	@Id
-	@Column(nullable=false)
+	@Column(nullable = false)
 	private Long roomNo;
-	@Column(nullable=false)
+	@Column(nullable = false)
 	private String standard;
-	@Column(nullable=false)
+	@Column(nullable = false)
 	private String section;
-	public ClassRoom( Long roomNo, String standard, String section) {
+
+	public ClassRoom(Long roomNo, String standard, String section) {
 		super();
 		this.roomNo = roomNo;
 		this.standard = standard;
 		this.section = section;
 	}
-	
-	
-	
-	
-	
 
 }

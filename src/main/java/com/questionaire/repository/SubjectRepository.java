@@ -2,10 +2,6 @@ package com.questionaire.repository;
 
 import java.util.List;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-
 import com.questionaire.dto.Subject;
 import com.questionaire.entity.SubjectEntity;
 import com.questionaire.exception.DatabaseException;

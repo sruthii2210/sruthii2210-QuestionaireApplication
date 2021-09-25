@@ -45,7 +45,7 @@ public class SubjectController {
 			response.setStatusText("Subject added");
 			response.setStatusCode(200);
 			responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
-		} catch (ServiceException | NotFoundException e) {
+		} catch ( NotFoundException e) {
 			if(e instanceof RoomNoNotFoundException )
 			{
 			response.setStatusCode(404);
@@ -53,6 +53,13 @@ public class SubjectController {
 			responseBody = new ResponseEntity<>(response, new HttpHeaders(),
 					HttpStatus.NOT_FOUND);
 			}
+		}
+		catch(ServiceException e)
+		{
+			response.setStatusCode(500);
+			response.setStatusText(e.getMessage());
+			responseBody = new ResponseEntity<>(response, new HttpHeaders(),
+					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return responseBody;
 	}
@@ -68,7 +75,7 @@ public class SubjectController {
 			response.setStatusText("Subject Details Fetched");
 			response.setStatusCode(200);
 			responseEntity = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
-		} catch (ServiceException | NotFoundException e) {
+		} catch (NotFoundException e) {
 			if(e instanceof RoomNoNotFoundException)
 			{
 			response.setStatusCode(404);
@@ -76,6 +83,13 @@ public class SubjectController {
 			responseEntity = new ResponseEntity<>(response, new HttpHeaders(),
 					HttpStatus.NOT_FOUND);
 			}
+		}
+		catch(ServiceException e)
+		{
+			response.setStatusCode(500);
+			response.setStatusText(e.getMessage());
+			responseEntity = new ResponseEntity<>(response, new HttpHeaders(),
+					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return responseEntity;
 		
@@ -92,21 +106,21 @@ public class SubjectController {
 			response.setStatusText("Subject Details updated!");
 			response.setStatusCode(200);
 			responseEntity = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
-		} catch (ServiceException | NotFoundException e) {
-			if(e instanceof RoomNoNotFoundException)
+		} catch (NotFoundException e) {
+			if(e instanceof RoomNoNotFoundException||e instanceof SubjectNotFoundException)
 			{
 			response.setStatusCode(404);
 			response.setStatusText(e.getMessage());
 			responseEntity = new ResponseEntity<>(response, new HttpHeaders(),
 					HttpStatus.NOT_FOUND);
 			}
-			if(e instanceof SubjectNotFoundException)
-			{
-			response.setStatusCode(404);
+		}
+		catch(ServiceException e)
+		{
+			response.setStatusCode(500);
 			response.setStatusText(e.getMessage());
 			responseEntity = new ResponseEntity<>(response, new HttpHeaders(),
-					HttpStatus.NOT_FOUND);
-			}
+					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return responseEntity;
 	}
@@ -118,11 +132,10 @@ public class SubjectController {
 		Response response=new Response();
 		try {
 			String string=subjectService.deleteSubject(subCode);
-			//response.setData(string);
 			response.setStatusText(string);
 			response.setStatusCode(200);
 			responseEntity = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
-		} catch (ServiceException | NotFoundException e) {
+		} catch (NotFoundException e) {
 			if(e instanceof SubjectNotFoundException)
 			{
 			response.setStatusCode(404);
@@ -130,6 +143,13 @@ public class SubjectController {
 			responseEntity = new ResponseEntity<>(response, new HttpHeaders(),
 					HttpStatus.NOT_FOUND);
 			}
+		}
+		catch(ServiceException e)
+		{
+			response.setStatusCode(500);
+			response.setStatusText(e.getMessage());
+			responseEntity = new ResponseEntity<>(response, new HttpHeaders(),
+					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return responseEntity;
 	}

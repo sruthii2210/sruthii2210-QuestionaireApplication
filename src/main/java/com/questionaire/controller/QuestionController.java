@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.questionaire.entity.Question;
+import com.questionaire.dto.Question;
+import com.questionaire.entity.QuestionEntity;
+import com.questionaire.exception.NotFoundException;
 import com.questionaire.exception.QuestionNotFoundException;
 import com.questionaire.exception.QuizIdNotFoundException;
 import com.questionaire.exception.ServiceException;
@@ -35,18 +37,22 @@ public class QuestionController {
 		ResponseEntity<Response> responseBody = null;
 		Response response = new Response();
 		try {
-			Question ques = questionService.addQuestion(id, question);
+			Integer ques = questionService.addQuestion(id, question);
 			response.setData(ques);
-			response.setStatusText("OK");
+			response.setStatusText("Question is added...!");
 			response.setStatusCode(200);
-			responseBody = new ResponseEntity<Response>(response, new HttpHeaders(), HttpStatus.OK);
+			responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
 
+		} catch (NotFoundException e) {
+			if (e instanceof QuizIdNotFoundException) {
+				response.setStatusCode(404);
+				response.setStatusText(e.getMessage());
+				responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.NOT_FOUND);
+			}
 		} catch (ServiceException e) {
-				response.setStatusCode(500);
-				response.setStatusText("Internal Server Error");
-				responseBody = new ResponseEntity<Response>(response, new HttpHeaders(),
-						HttpStatus.INTERNAL_SERVER_ERROR);
-			
+			response.setStatusCode(500);
+			response.setStatusText(e.getMessage());
+			responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return responseBody;
 	}
@@ -55,19 +61,23 @@ public class QuestionController {
 	public ResponseEntity<Response> getQuestion(@PathVariable("id") Long id) {
 		ResponseEntity<Response> responseBody = null;
 		Response response = new Response();
-		List<Question>ques;
+		List<QuestionEntity> ques;
 		try {
-			 ques = questionService.getQuestion(id);
+			ques = questionService.getQuestion(id);
 			response.setData(ques);
 			response.setStatusText("Fetched Questions..");
 			response.setStatusCode(200);
-			responseBody = new ResponseEntity<Response>(response, new HttpHeaders(), HttpStatus.OK);
+			responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
+		} catch (NotFoundException e) {
+			if (e instanceof QuizIdNotFoundException) {
+				response.setStatusCode(404);
+				response.setStatusText(e.getMessage());
+				responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.NOT_FOUND);
+			}
 		} catch (ServiceException e) {
-
-			response.setStatusCode(404);
+			response.setStatusCode(500);
 			response.setStatusText(e.getMessage());
-			responseBody = new ResponseEntity<Response>(response, new HttpHeaders(), HttpStatus.NOT_FOUND);
-
+			responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return responseBody;
 	}
@@ -78,16 +88,22 @@ public class QuestionController {
 		ResponseEntity<Response> responseBody = null;
 		Response response = new Response();
 		try {
-			Question ques = questionService.updateQuestion(id, quesNo, question);
+			QuestionEntity ques = questionService.updateQuestion(id, quesNo, question);
 			response.setData(ques);
 			response.setStatusText("Question is updated");
 			response.setStatusCode(200);
-			responseBody = new ResponseEntity<Response>(response, new HttpHeaders(), HttpStatus.OK);
+			responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
+		} catch (NotFoundException e) {
+			if (e instanceof QuizIdNotFoundException || e instanceof QuestionNotFoundException) {
+				response.setStatusCode(404);
+				response.setStatusText(e.getMessage());
+				responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.NOT_FOUND);
+			}
+
 		} catch (ServiceException e) {
-			response.setData(e);
+			response.setStatusCode(500);
 			response.setStatusText(e.getMessage());
-			response.setStatusCode(404);
-			responseBody = new ResponseEntity<Response>(response, new HttpHeaders(), HttpStatus.NOT_FOUND);
+			responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return responseBody;
 	}
@@ -102,12 +118,21 @@ public class QuestionController {
 			response.setData(ques);
 			response.setStatusText("OK");
 			response.setStatusCode(200);
-			responseBody = new ResponseEntity<Response>(response, new HttpHeaders(), HttpStatus.OK);
-		} catch (ServiceException e) {
+			responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
+		} catch ( NotFoundException e) {
 
+			if (e instanceof QuestionNotFoundException) {
+				response.setStatusCode(404);
+				response.setStatusText(e.getMessage());
+				responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.NOT_FOUND);
+			}
+		}
+		catch(ServiceException e)
+		{
+			response.setStatusCode(500);
 			response.setStatusText(e.getMessage());
-			response.setStatusCode(404);
-			responseBody = new ResponseEntity<Response>(response, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+			responseBody = new ResponseEntity<>(response, new HttpHeaders(),
+					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return responseBody;
 	}

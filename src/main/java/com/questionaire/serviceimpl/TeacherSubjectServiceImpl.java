@@ -3,27 +3,35 @@ package com.questionaire.serviceimpl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.questionaire.entity.TeacherSubject;
+import com.questionaire.dto.TeacherSubject;
+import com.questionaire.entity.TeacherSubjectEntity;
 import com.questionaire.entity.TeacherSubjectModel;
 import com.questionaire.exception.DatabaseException;
+import com.questionaire.exception.NotFoundException;
 import com.questionaire.exception.ServiceException;
-import com.questionaire.exception.SubjectNotFoundException;
-import com.questionaire.exception.TeacherNotFoundException;
 import com.questionaire.repository.TeacherSubjectRepository;
+import com.questionaire.repositoryimpl.SubjectRepositoryImpl;
+import com.questionaire.repositoryimpl.TeacherRepositoryImpl;
 import com.questionaire.service.TeacherSubjectService;
 
 @Service
 public class TeacherSubjectServiceImpl implements TeacherSubjectService {
 	@Autowired
 	private TeacherSubjectRepository teacherSubjectRepositoryImpl;
+	
+	@Autowired
+	private TeacherRepositoryImpl teacherRepository;
+	@Autowired
+	private SubjectRepositoryImpl subjectRepository;
 
 	@Override
-	public TeacherSubject assignTeacherSubject(Long teacherId, String subjectCode, TeacherSubject teacherSubjectDetails)
-			throws ServiceException {
+	public Long assignTeacherSubject(Long teacherId, String subjectCode, TeacherSubject teacherSubjectDetails)
+			throws ServiceException, NotFoundException {
 		try {
+			teacherRepository.checkTeacher(teacherId);
+			subjectRepository.checkSubject(subjectCode);
 			return teacherSubjectRepositoryImpl.assignTeacherSubject(teacherId, subjectCode, teacherSubjectDetails);
 		} catch (DatabaseException e) {
 			throw new ServiceException(e.getMessage());
@@ -31,9 +39,11 @@ public class TeacherSubjectServiceImpl implements TeacherSubjectService {
 	}
 
 	@Override
-	public TeacherSubject updateTeacherSubjectAssign(Long teacherId, String subjectCode,
-			TeacherSubject teacherSubjectDetails) throws ServiceException {
+	public TeacherSubjectEntity updateTeacherSubjectAssign(Long teacherId, String subjectCode,
+			TeacherSubject teacherSubjectDetails) throws ServiceException, NotFoundException {
 		try {
+			teacherRepository.checkTeacher(teacherId);
+			subjectRepository.checkSubject(subjectCode);
 			return teacherSubjectRepositoryImpl.updateTeacherSubjectAssign(teacherId, subjectCode,
 					teacherSubjectDetails);
 		} catch (DatabaseException e) {
@@ -42,9 +52,11 @@ public class TeacherSubjectServiceImpl implements TeacherSubjectService {
 	}
 
 	@Override
-	public String deleteTeacherSubjectAssign(Long teacherId, String subjectCode) throws ServiceException {
+	public String deleteTeacherSubjectAssign(Long teacherId, String subjectCode) throws ServiceException, NotFoundException {
 
 		try {
+			teacherRepository.checkTeacher(teacherId);
+			subjectRepository.checkSubject(subjectCode);
 			return teacherSubjectRepositoryImpl.deleteTeacherSubjectAssign(teacherId, subjectCode);
 		} catch (DatabaseException e) {
 			throw new ServiceException(e.getMessage());
@@ -52,9 +64,10 @@ public class TeacherSubjectServiceImpl implements TeacherSubjectService {
 	}
 
 	@Override
-	public List<TeacherSubjectModel> getSubject(Long id) throws ServiceException {
+	public List<TeacherSubjectModel> getSubject(Long id) throws ServiceException, NotFoundException {
 
 		try {
+			teacherRepository.checkTeacher(id);
 			return teacherSubjectRepositoryImpl.getSubject(id);
 		} catch (DatabaseException e) {
 			throw new ServiceException(e.getMessage());

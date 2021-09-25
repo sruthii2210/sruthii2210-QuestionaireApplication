@@ -3,8 +3,6 @@ package com.questionaire.repositoryimpl;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.NoResultException;
-
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -20,7 +18,7 @@ import com.questionaire.exception.DatabaseException;
 import com.questionaire.exception.SubjectNotFoundException;
 import com.questionaire.mapper.SubjectMapper;
 import com.questionaire.repository.SubjectRepository;
-import com.sun.istack.logging.Logger;
+import org.apache.log4j.Logger;
 
 @Repository
 @Transactional
@@ -41,7 +39,7 @@ public class SubjectRepositoryImpl implements SubjectRepository {
 		subject=query.uniqueResultOptional().orElse(null);
 	
 		if (subject == null) {
-			logger.warning("In checkSubject method...");
+			logger.warn("In checkSubject method...");
 			throw new SubjectNotFoundException("SubjectCode is not found!");
 		}
 
@@ -56,7 +54,7 @@ public class SubjectRepositoryImpl implements SubjectRepository {
 		subject = query.uniqueResultOptional().orElse(null);
 		logger.info("In checkSubject Method...");
 		if (subject == null) {
-			logger.warning("In checkSubjectRoom method...");
+			logger.warn("In checkSubjectRoom method...");
 			throw new SubjectNotFoundException("SubjectCode or RoomNo is not Valid..Enter valid one!");
 		}
 
@@ -71,7 +69,7 @@ public class SubjectRepositoryImpl implements SubjectRepository {
 			logger.info("In addSubject Method...");
 
 		} catch (HibernateException e) {
-			logger.warning("In HibernateException(addSubject)...!");
+			logger.warn("In HibernateException(addSubject)...!");
 			throw new DatabaseException(e.getMessage());
 		}
 
@@ -90,7 +88,7 @@ public class SubjectRepositoryImpl implements SubjectRepository {
 			logger.info("In getSubject Method for particular class...");
 
 		} catch (HibernateException e) {
-			logger.warning("In HibernateException(getSubject)...!");
+			logger.warn("In HibernateException(getSubject)...!");
 			throw new DatabaseException(e.getMessage());
 		}
 		return subject;
@@ -116,7 +114,7 @@ public class SubjectRepositoryImpl implements SubjectRepository {
 			response = subjectEntity;
 
 		} catch (HibernateException e) {
-			logger.warning("In HibernateException(updateSubject)...!");
+			logger.warn("In HibernateException(updateSubject)...!");
 			throw new DatabaseException(e.getMessage());
 		}
 
@@ -137,7 +135,7 @@ public class SubjectRepositoryImpl implements SubjectRepository {
 			response = "Subject Details deleted Successfully!";
 
 		} catch (HibernateException e) {
-			logger.warning("In HibernateException(deleteSubject)...!");
+			logger.warn("In HibernateException(deleteSubject)...!");
 			throw new DatabaseException(e.getMessage());
 		}
 

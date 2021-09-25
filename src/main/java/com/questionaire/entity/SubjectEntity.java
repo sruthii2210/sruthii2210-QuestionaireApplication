@@ -27,8 +27,8 @@ import lombok.ToString;
 public class SubjectEntity implements Serializable {
 
 	@Id
-	private String subCode;
-	private String subName;
+	private String code;
+	private String name;
 	
 	@ManyToOne(targetEntity=ClassRoom.class,fetch=FetchType.LAZY)
 	@JoinColumn(name="roomNo",nullable=false)
@@ -39,13 +39,13 @@ public class SubjectEntity implements Serializable {
 	@JsonIgnore
 	private Set<QuizEntity> quiz;
 	
-	@OneToMany(mappedBy="sub",fetch=FetchType.LAZY)
+	@OneToMany(mappedBy="subject",fetch=FetchType.LAZY)
 	@JsonIgnore
-	private Set<Result> results;
+	private Set<ResultEntity> results;
 	
 	@OneToMany(mappedBy="subject",fetch=FetchType.LAZY)
 	@JsonIgnore
-	private Set<TeacherSubject> teacherSub;
+	private Set<TeacherSubjectEntity> teacherSubject;
 	
 	
 	

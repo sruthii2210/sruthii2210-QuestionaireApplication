@@ -2,19 +2,19 @@ package com.questionaire.repository;
 
 import java.util.List;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-
-import com.questionaire.entity.TeacherLogin;
+import com.questionaire.dto.TeacherLogin;
+import com.questionaire.entity.TeacherLoginEntity;
 import com.questionaire.exception.DatabaseException;
+import com.questionaire.exception.IdNotFoundException;
 
 public interface TeacherLoginRepository {
 
-	TeacherLogin createLogin(Long id, TeacherLogin login) throws DatabaseException;
+	void checkAutoId(Long id) throws IdNotFoundException;
 
-	List<TeacherLogin> getDetails(Long id) throws DatabaseException;
+	Long createLogin(Long id, TeacherLogin login) throws DatabaseException;
 
-	TeacherLogin updateLogin(Long id, TeacherLogin login) throws DatabaseException;
+	List<TeacherLoginEntity> getDetails(Long id) throws DatabaseException;
+
+	TeacherLoginEntity updateLogin(Long id, TeacherLogin login) throws DatabaseException;
 
 }

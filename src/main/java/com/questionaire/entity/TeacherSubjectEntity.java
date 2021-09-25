@@ -16,24 +16,25 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
 @Entity
-@Table(name="TeacherSubject")
-public class TeacherSubject implements Serializable{
+@Table(name = "TeacherSubject")
+public class TeacherSubjectEntity implements Serializable {
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long autoId;
-	
-	@ManyToOne(targetEntity=TeacherEntity.class)
-	@JoinColumn(name="id",nullable=false)
+
+	@ManyToOne(targetEntity = TeacherEntity.class)
+	@JoinColumn(name = "id", nullable = false)
 	@JsonIgnore
 	private TeacherEntity teacher;
-	
-	@ManyToOne(targetEntity=SubjectEntity.class)
-	@JoinColumn(name="subCode",nullable=false,unique=true)
+
+	@ManyToOne(targetEntity = SubjectEntity.class)
+	@JoinColumn(name = "code", nullable = false, unique = true)
 	@JsonIgnore
 	private SubjectEntity subject;
 }

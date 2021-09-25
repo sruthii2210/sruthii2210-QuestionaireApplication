@@ -34,16 +34,16 @@ public class TeacherController {
 		Response response = new Response();
 		ResponseEntity<Response> responseBody = null;
 		try {
-			Long id= teacherServiceImpl.addTeacherDetails(teacherDetails);
+			Long id = teacherServiceImpl.addTeacherDetails(teacherDetails);
 			response.setData(id);
 			response.setStatusCode(200);
 			response.setStatusText("Teacher Details added!");
-			responseBody = new ResponseEntity<Response>(response, new HttpHeaders(), HttpStatus.OK);
+			responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
 		} catch (ServiceException e) {
 
 			response.setStatusCode(500);
 			response.setStatusText(e.getMessage());
-			responseBody = new ResponseEntity<Response>(response, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+			responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return responseBody;
 	}
@@ -54,7 +54,7 @@ public class TeacherController {
 		ResponseEntity<Response> responseBody = null;
 		List<TeacherEntity> teacherList;
 		try {
-			 teacherList = teacherServiceImpl.getAllTeacherDetails();
+			teacherList = teacherServiceImpl.getAllTeacherDetails();
 			response.setData(teacherList);
 			response.setStatusCode(200);
 			response.setStatusText("Teacher Details fetchedd!");
@@ -78,14 +78,20 @@ public class TeacherController {
 			response.setStatusCode(200);
 			response.setStatusText("Teacher Details updated!");
 			responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
-		} catch (ServiceException | NotFoundException e) {
-			if(e instanceof TeacherNotFoundException )
-			{
-			response.setStatusCode(404);
+		} catch (NotFoundException e) {
+			if (e instanceof TeacherNotFoundException) {
+				response.setStatusCode(404);
+				response.setStatusText(e.getMessage());
+				responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.NOT_FOUND);
+			}
+		}
+		catch(ServiceException e)
+		{
+			response.setStatusCode(500);
 			response.setStatusText(e.getMessage());
-			responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.NOT_FOUND);
-			}
-			}
+			responseBody = new ResponseEntity<>(response, new HttpHeaders(),
+					HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 		return responseBody;
 	}
 
@@ -94,18 +100,24 @@ public class TeacherController {
 		Response response = new Response();
 		ResponseEntity<Response> responseBody = null;
 		try {
-			String string=teacherServiceImpl.deleteTeacherDetails(id);
+			String string = teacherServiceImpl.deleteTeacherDetails(id);
 			response.setData(string);
 			response.setStatusCode(200);
-			response.setStatusText("Teacher Details deleted for id "+id+" !");
+			response.setStatusText("Teacher Details deleted for id " + id + " !");
 			responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
-		}  catch (ServiceException | NotFoundException e) {
-			if(e instanceof TeacherNotFoundException )
-			{
+		} catch ( NotFoundException e) {
+			if (e instanceof TeacherNotFoundException) {
 				response.setStatusCode(404);
 				response.setStatusText(e.getMessage());
 				responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.NOT_FOUND);
 			}
+		}
+		catch(ServiceException e)
+		{
+			response.setStatusCode(500);
+			response.setStatusText(e.getMessage());
+			responseBody = new ResponseEntity<>(response, new HttpHeaders(),
+					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return responseBody;
 	}
@@ -120,14 +132,19 @@ public class TeacherController {
 			response.setStatusCode(200);
 			response.setStatusText("Teacher Detail fetched!");
 			responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
-		} catch (ServiceException | NotFoundException e)
-		{
-			if(e instanceof TeacherNotFoundException )
-		   {
-			response.setStatusCode(404);
-			response.setStatusText(e.getMessage());
-			responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.NOT_FOUND);
+		} catch ( NotFoundException e) {
+			if (e instanceof TeacherNotFoundException) {
+				response.setStatusCode(404);
+				response.setStatusText(e.getMessage());
+				responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.NOT_FOUND);
 			}
+		}
+		catch(ServiceException e)
+		{
+			response.setStatusCode(500);
+			response.setStatusText(e.getMessage());
+			responseBody = new ResponseEntity<>(response, new HttpHeaders(),
+					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return responseBody;
 	}

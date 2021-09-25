@@ -1,94 +1,73 @@
 package com.questionaire.repositoryimpl;
 
-import java.util.ArrayList;
+
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.questionaire.entity.Student;
-import com.questionaire.entity.SubjectEntity;
-import com.questionaire.entity.TeacherEntity;
-import com.questionaire.entity.TeacherSubject;
+import com.questionaire.dto.TeacherSubject;
+import com.questionaire.entity.TeacherSubjectEntity;
 import com.questionaire.entity.TeacherSubjectModel;
 import com.questionaire.exception.DatabaseException;
-import com.questionaire.exception.RoomNoNotFoundException;
-import com.questionaire.exception.SubjectNotFoundException;
-import com.questionaire.exception.TeacherNotFoundException;
+import com.questionaire.mapper.TeacherSubjectMapper;
 import com.questionaire.repository.TeacherSubjectRepository;
-import com.questionaire.repositoryimpl.SubjectRepositoryImpl;
+
 
 @Repository
 @Transactional
 public class TeacherSubjectRepositoryImpl implements TeacherSubjectRepository {
+	
+	public static Logger logger=Logger.getLogger(TeacherSubjectRepositoryImpl.class);
 	@Autowired
 	private SessionFactory sessionFactory;
-	@Autowired
-	private TeacherRepositoryImpl teacherRepositoryImpl;
-	@Autowired
-	private SubjectRepositoryImpl subjectRepositoryImpl;
 
 	@Override
-	public TeacherSubject assignTeacherSubject(Long teacherId, String subjectCode, TeacherSubject teacherSubjectDetails)
+	public Long assignTeacherSubject(Long teacherId, String subjectCode, TeacherSubject teacherSubjectDetails)
 			throws DatabaseException {
-		TeacherSubject response = null;
+		Long count=0l;
 		Session session = null;
 		try {
-			teacherRepositoryImpl.checkTeacher(teacherId);
-
-			subjectRepositoryImpl.checkSubject(subjectCode);
 
 			session = sessionFactory.getCurrentSession();
 
-			TeacherEntity teacherDetails = new TeacherEntity();
-			teacherDetails.setId(teacherId);
-			SubjectEntity subjectDetails = new SubjectEntity();
-			subjectDetails.setSubCode(subjectCode);
-			TeacherSubject teacherSubjectAssignDetails = new TeacherSubject();
-			teacherSubjectAssignDetails.setTeacher(teacherDetails);
-			teacherSubjectAssignDetails.setSubject(subjectDetails);
-
-			Long count = (Long) session.save(teacherSubjectAssignDetails);
+			count = (Long) session.save(TeacherSubjectMapper.mapTeacherSubject(teacherId, subjectCode, teacherSubjectDetails));
 			if (count > 0)
-
-				response = teacherSubjectAssignDetails;
-		} catch (HibernateException | TeacherNotFoundException | SubjectNotFoundException e) {
+				logger.info("Subjects are assigned to staffs successfully...!");
+				
+		} catch (HibernateException e) {
+			logger.error("Error in assigning subjects to staffs...!");
 			throw new DatabaseException(e.getMessage());
 		}
 
-		return response;
+		return count;
 	}
 
 	@Override
-	public TeacherSubject updateTeacherSubjectAssign(Long teacherId, String subjectCode,
+	public TeacherSubjectEntity updateTeacherSubjectAssign(Long teacherId, String subjectCode,
 			TeacherSubject teacherSubjectDetails) throws DatabaseException {
-		// TODO Auto-generated method stub
-		TeacherSubject response = null;
+		TeacherSubjectEntity response = null;
 		Session session = null;
 		try {
-			 teacherRepositoryImpl.checkTeacher(teacherId);
-
-			subjectRepositoryImpl.checkSubject(subjectCode);
 
 			session = sessionFactory.getCurrentSession();
 
-			Query updateByTeacherId = session.createQuery("UPDATE TeacherSubject SET subCode=:code WHERE id=:staffId");
+			TeacherSubjectEntity teacherSubject=TeacherSubjectMapper.mapTeacherSubject(teacherId, subjectCode, teacherSubjectDetails);
+			Query updateByTeacherId = session.createQuery("UPDATE TeacherSubjectEntity SET subCode=:code WHERE id=:staffId");
 			updateByTeacherId.setParameter("code", subjectCode);
 			updateByTeacherId.setParameter("staffId", teacherId);
 			long countOfUpdationById = updateByTeacherId.executeUpdate();
-
-			if (countOfUpdationById > 0) {
-				response = (TeacherSubject) updateByTeacherId;
-			}
-		} catch (HibernateException | SubjectNotFoundException | TeacherNotFoundException e) {
+			session.merge(updateByTeacherId);
+			
+				response = (TeacherSubjectEntity) updateByTeacherId;
+			
+		} catch (HibernateException e) {
 			throw new DatabaseException(e.getMessage());
 		}
 		return response;
@@ -96,17 +75,13 @@ public class TeacherSubjectRepositoryImpl implements TeacherSubjectRepository {
 
 	@Override
 	public String deleteTeacherSubjectAssign(Long teacherId, String subjectCode) throws DatabaseException {
-		// TODO Auto-generated method stub
+	
 		String response = null;
 		Session session = null;
 		try {
-			 teacherRepositoryImpl.checkTeacher(teacherId);
-
-			 subjectRepositoryImpl.checkSubject(subjectCode);
-
 			session = sessionFactory.getCurrentSession();
 
-			Query query = session.createQuery("DELETE FROM TeacherSubject WHERE id=:staffId AND subCode=:code");
+			Query query = session.createQuery("DELETE FROM TeacherSubjectEntity WHERE id=:staffId AND subCode=:code");
 			query.setParameter("staffId", teacherId);
 			query.setParameter("code", subjectCode);
 			long count = query.executeUpdate();
@@ -114,7 +89,7 @@ public class TeacherSubjectRepositoryImpl implements TeacherSubjectRepository {
 			if (count > 0) {
 				response = "Subject Assigned for teacher deleted!";
 			}
-		} catch (HibernateException | SubjectNotFoundException | TeacherNotFoundException e) {
+		} catch (HibernateException e) {
 			throw new DatabaseException(e.getMessage());
 		}
 		return response;
@@ -128,14 +103,13 @@ public class TeacherSubjectRepositoryImpl implements TeacherSubjectRepository {
 		try {
 
 			session = sessionFactory.getCurrentSession();
-			teacherRepositoryImpl.checkTeacher(id);
 
 			Query query = session.createQuery("SELECT new com.questionaire.entity.TeacherSubjectModel"
-					+ "(t.teacher.id,t.subject.subCode) " + "FROM TeacherSubject t WHERE t.teacher.id=:id ");
+					+ "(t.teacher.id,t.subject.subCode) " + "FROM TeacherSubjectEntity t WHERE t.teacher.id=:id ");
 			query.setParameter("id", id);
 			teacher = query.getResultList();
 
-		} catch (HibernateException | TeacherNotFoundException e) {
+		} catch (HibernateException e) {
 			throw new DatabaseException(e.getMessage());
 		}
 		return teacher;

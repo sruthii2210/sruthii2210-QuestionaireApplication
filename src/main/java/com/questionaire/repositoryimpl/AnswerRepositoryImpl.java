@@ -1,35 +1,31 @@
 package com.questionaire.repositoryimpl;
 
-import java.util.List;
-
 import javax.persistence.Query;
+import org.apache.log4j.Logger;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.questionaire.dto.Answer;
 import com.questionaire.entity.AnswerEntity;
-import com.questionaire.entity.ClassRoom;
-import com.questionaire.entity.Question;
-import com.questionaire.entity.Student;
+
+import com.questionaire.entity.QuestionEntity;
 import com.questionaire.exception.DatabaseException;
 import com.questionaire.exception.QuestionNotFoundException;
-import com.questionaire.exception.RoomNoNotFoundException;
+
+import com.questionaire.mapper.AnswerMapper;
 import com.questionaire.repository.AnswerRepository;
-import com.sun.istack.logging.Logger;
+
 
 @Repository
 @Transactional
 public class AnswerRepositoryImpl implements AnswerRepository {
 
-	
+	public static Logger logger=Logger.getLogger(AnswerRepositoryImpl.class);
 	@Autowired
 	private SessionFactory sessionFactory;
 	
@@ -39,26 +35,23 @@ public class AnswerRepositoryImpl implements AnswerRepository {
 	@Override
 	public Long addAnswer(Integer quesNo, Answer answer) throws DatabaseException {
 		Session session=null;
-		AnswerEntity response=null;
+		Long count=0l;
 		try {
 			session=sessionFactory.getCurrentSession();
-			Question q=new Question();
-			q.setQuesNo(quesNo);
-			answer.setQues(q);
-			 session.save(answer);
-			
-			Long count = (Long) session.save(answer);
+			count = (Long) session.save(AnswerMapper.mapAnswer(quesNo, answer));
 			if(count>0)
 			{
-				response = answer;
+				logger.info("Answer is added to question "+quesNo);
+		
 			}
 		}
 		catch(HibernateException e)
 		{
+			logger.error("Error in adding answers to question "+quesNo);
 			throw new DatabaseException(e.getMessage());
 		}
 		
-		return response;
+		return count;
 	}
 
 	@Override
@@ -68,37 +61,31 @@ public class AnswerRepositoryImpl implements AnswerRepository {
 		
 		
 		try {
-			Object obj=questionRepo.checkQuestion(quesNo);
-			if(obj!=null) {
 			session=sessionFactory.getCurrentSession();
-			Query query=session.createQuery("from Answer where ques.quesNo=:quesNo");
+			Query query=session.createQuery("from AnswerEntity where ques.quesNo=:quesNo");
 			query.setParameter("quesNo", quesNo);
+			logger.info("Fetching answer for question "+quesNo);
 			answer=(AnswerEntity) query.getSingleResult();
-			}
-			else
-			{
-				throw new QuestionNotFoundException("Question is not found");
-			}
 		}
 		catch(HibernateException e)
 		{
+			logger.error("Error in fetching answer to question "+quesNo);
 			throw new DatabaseException(e.getMessage());
 		}
 		return answer;
 	}
 
 	@Override
-	public AnswerEntity updateAnswer(Long autoId,Integer quesNo, AnswerEntity answer) throws DatabaseException {
+	public AnswerEntity updateAnswer(Long autoId,Integer quesNo, Answer answer) throws DatabaseException {
 		Session session=null;
 		AnswerEntity response=null;
 		
 		try {
 			
 			session=sessionFactory.getCurrentSession();
-			questionRepo.checkQuestion(quesNo);
+			AnswerEntity answerEntity=AnswerMapper.mapAnswer(quesNo, answer);
 			session.find(AnswerEntity.class, autoId);
 			AnswerEntity ans=session.load(AnswerEntity.class, autoId);
-			Question q=new Question();
 			
 			ans.setOption1(answer.getOption1());
 			ans.setOption2(answer.getOption2());
@@ -106,11 +93,13 @@ public class AnswerRepositoryImpl implements AnswerRepository {
 			ans.setOption4(answer.getOption4());
 			ans.setCrctAns(answer.getCrctAns());
 			
-			
 			response=(AnswerEntity) session.merge(ans);
+			logger.info("Answer is updated to question "+quesNo);
+
 			}
-		catch(HibernateException | QuestionNotFoundException e)
+		catch(HibernateException  e)
 		{
+			logger.info("Error in updating answer for question "+quesNo);
 			throw new DatabaseException(e.getMessage());
 		}
 	

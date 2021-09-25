@@ -2,21 +2,24 @@ package com.questionaire.repository;
 
 import java.util.List;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-
-import com.questionaire.entity.Question;
+import com.questionaire.dto.Question;
+import com.questionaire.entity.QuestionEntity;
 import com.questionaire.exception.DatabaseException;
 import com.questionaire.exception.QuestionNotFoundException;
 import com.questionaire.exception.QuizIdNotFoundException;
 
 public interface QuestionRepository {
 
-	Question addQuestion(Long id, Question question) throws DatabaseException;
-	List<Question> getQuestion(Long id) throws DatabaseException;
-	Question updateQuestion(Long id,Integer quesNo,Question question) throws DatabaseException;
+	void checkQuizByQuesNo(Long id, Integer quesNo) throws QuizIdNotFoundException;
+
+	void checkQuestion(Integer quesNo) throws QuestionNotFoundException;
+
+	Integer addQuestion(Long id, Question question) throws DatabaseException;
+
+	List<QuestionEntity> getQuestion(Long id) throws DatabaseException;
+
+	QuestionEntity updateQuestion(Long id, Integer quesNo, Question question) throws DatabaseException;
+
 	String deleteQuestion(Integer quesNo) throws DatabaseException;
-	
-	
+
 }

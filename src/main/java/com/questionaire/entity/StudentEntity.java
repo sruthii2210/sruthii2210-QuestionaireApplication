@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -30,28 +31,31 @@ import lombok.ToString;
 @NoArgsConstructor
 @Entity
 @Table(name = "Student")
-public class Student implements Serializable{
+public class StudentEntity implements Serializable{
 	
 	@ManyToOne(targetEntity=ClassRoom.class,fetch=FetchType.LAZY)
 	@JoinColumn(name="roomNo",nullable=false)
 	@JsonIgnore
 	   private ClassRoom classRoom;
 	
-	@OneToMany(mappedBy="stud",fetch=FetchType.LAZY)
+	@OneToMany(mappedBy="student",fetch=FetchType.LAZY)
 	@JsonIgnore
-	private Set<Result>results;
+	private Set<ResultEntity>results;
 	
 	@Id
-	//@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long rollNo;
+	@Column(nullable=false)
 	private String name;
+	@Column(nullable=false)
 	@Temporal(TemporalType.DATE)
 	private Date dateOfBirth;
+	@Column(nullable=false)
 	private String gender;
+	@Column(nullable=false)
 	private String address;
-	//private Long roomNo;
+	
 
-	public Student(Long rollNo, String name, Date dateOfBirth, String gender, String address) {
+	public StudentEntity(Long rollNo, String name, Date dateOfBirth, String gender, String address) {
 		super();
 		this.rollNo = rollNo;
 		this.name = name;

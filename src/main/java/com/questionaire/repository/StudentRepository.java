@@ -1,23 +1,24 @@
 package com.questionaire.repository;
 
 import java.util.List;
-
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-
-import com.questionaire.entity.Student;
+import com.questionaire.dto.Student;
+import com.questionaire.entity.StudentEntity;
 import com.questionaire.exception.DatabaseException;
+import com.questionaire.exception.StudentIdNotFoundException;
 
 public interface StudentRepository {
 
-	Student addStudent(Long roomNo, Student student) throws DatabaseException;
+	void checkStudent(Long rollNo) throws StudentIdNotFoundException;
 
-	List<Student> getStudent(Long roomNo) throws DatabaseException;
+	void checkClassStud(Long roomNo, Long rollNo) throws StudentIdNotFoundException;
 
-	Student getStudentById(Long rollNo) throws DatabaseException;
+	Long addStudent(Long roomNo, Student student) throws DatabaseException;
 
-	Student updateStudent(Long roomNo, Long rollNo, Student student) throws DatabaseException;
+	List<StudentEntity> getStudent(Long roomNo) throws DatabaseException;
+
+	StudentEntity getStudentById(Long rollNo) throws DatabaseException;
+
+	StudentEntity updateStudent(Long roomNo, Long rollNo, Student student) throws DatabaseException;
 
 	String deleteStudent(Long rollNo) throws DatabaseException;
 

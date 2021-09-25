@@ -3,120 +3,108 @@ package com.questionaire.repositoryimpl;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.NoResultException;
-import javax.persistence.Query;
-
+import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.questionaire.entity.ClassRoom;
-import com.questionaire.entity.Question;
-import com.questionaire.entity.QuizEntity;
-import com.questionaire.entity.Student;
+import com.questionaire.dto.Question;
+import com.questionaire.entity.QuestionEntity;
 import com.questionaire.exception.DatabaseException;
 import com.questionaire.exception.QuestionNotFoundException;
 import com.questionaire.exception.QuizIdNotFoundException;
+import com.questionaire.mapper.QuestionMapper;
 import com.questionaire.repository.QuestionRepository;
 
 @Repository
 @Transactional
 public class QuestionRepositoryImpl implements QuestionRepository {
 
+	public static Logger logger = Logger.getLogger(QuestionRepositoryImpl.class);
 	@Autowired
 	private SessionFactory sessionFactory;
 	
 	@Autowired
 	private QuizRepositoryImpl quiz;
-	public boolean checkQuiz(Long id,Integer quesNo) throws QuizIdNotFoundException
+	public void checkQuizByQuesNo(Long id,Integer quesNo) throws QuizIdNotFoundException
 	{
 		Session session=null;
 		session=sessionFactory.getCurrentSession();
-		Object quiz=null;
-		Query query=session.createQuery("from Question where quiz.id=:id and quesNo=:ques");
+		QuestionEntity question;
+		Query<QuestionEntity> query=session.createQuery("from QuestionEntity where quiz.id=:id and quesNo=:ques");
 		query.setParameter("id",id);
 		query.setParameter("ques", quesNo);
-		//List quiz=query.getResultList();
-		try {
-	        quiz =query.getSingleResult();
-	        }
-	        catch(NoResultException e)
-	        {
-	           return false;
-	        }
-		if(quiz==null)
+		logger.info("In checkQuizByQuesNo method...");
+	        question =query.uniqueResultOptional().orElse(null);
+	       
+		if(question==null)
+		{
+			logger.warn("Warning in checkQuizByQuesNo method...");
 			throw new QuizIdNotFoundException("Quiz Id or Question not found!");
-		return true;
+		}
 	}
 	
-	public boolean checkQuestion(Integer quesNo) throws QuestionNotFoundException
+	public void checkQuestion(Integer quesNo) throws QuestionNotFoundException
 	{
 		Session session=null;
 		session=sessionFactory.getCurrentSession();
-		Object question=null;
-		Query query=session.createQuery("from Question where quesNo=:ques");
+		QuestionEntity question;
+		Query<QuestionEntity> query=session.createQuery("from QuestionEntity where quesNo=:ques");
 		query.setParameter("ques", quesNo);
-		//List ques=query.getResultList();
-		try {
-	        question =query.getSingleResult();
-	        }
-	        catch(NoResultException e)
-	        {
-	           
-	        }
+		logger.info("In checkQuestion method...");
+	    question =query.uniqueResultOptional().orElse(null);
+	   
+	       
 		if(question==null)
+		{
+			logger.warn("Warning in checkQuesNo method...");
 			throw new QuestionNotFoundException("Question Not Found with "+quesNo+"!");
-		return true;
+		}
+		
 	}
 	
 	@Override
-	public Question addQuestion(Long id, Question question) throws DatabaseException {
+	public Integer addQuestion(Long id, Question question) throws DatabaseException {
 		Session session=null;
-		Question response=null;
+		Integer count=0;
 		try {
 			session=sessionFactory.getCurrentSession();
-			QuizEntity q=new QuizEntity();
-			q.setAutoId(id);
-			question.setQuiz(q);
-			question.setQuestion(question.getQuestion());
-			session.save(question);
-			Integer count = (Integer) session.save(question);
+			count = (Integer) session.save(QuestionMapper.mapQuestion(id,question));
 			if(count>0)
 			{
-				response = question;
+				logger.info("Adding Question in Quiz "+id);
 			}
-			
 			
 		}
 		catch(HibernateException e)
 		{
+			logger.error("Error in addQuestion...!");
 			throw new DatabaseException(e.getMessage());
 		}
 		
-		return response;
+		return count;
 	}
 	@Override
-	public List<Question> getQuestion(Long id) throws DatabaseException {
+	public List<QuestionEntity> getQuestion(Long id) throws DatabaseException {
 		
 		Session session=null;
-		List<Question> question=new ArrayList<Question>();
+		List<QuestionEntity> question=new ArrayList<QuestionEntity>();
 		try {
 			session=sessionFactory.getCurrentSession();
-			
-			quiz.checkQuiz(id);
-			Query query=session.createQuery("from Question where quiz.id=:id");
+			Query query=session.createQuery("from QuestionEntity where quiz.id=:id");
 			query.setParameter("id", id);
 			question=query.getResultList();
+			logger.info("Fetching Questions...");
 		
 			}
-		catch(HibernateException | QuizIdNotFoundException e)
+		catch(HibernateException e)
 		{
+			logger.error("Error in fetching questions..");
 			throw new DatabaseException(e.getMessage());
 			
 		}
@@ -124,19 +112,21 @@ public class QuestionRepositoryImpl implements QuestionRepository {
 		return question;
 	}
 	@Override
-	public Question updateQuestion(Long id, Integer quesNo, Question question) throws DatabaseException {
+	public QuestionEntity updateQuestion(Long id, Integer quesNo, Question question) throws DatabaseException {
 		Session session=null;
-		Question response=null;
+		QuestionEntity response=null;
 		try {
 			session=sessionFactory.getCurrentSession();
-			boolean status=checkQuiz(id,quesNo);
-			session.find(Question.class, quesNo);
-			Question ques=session.load(Question.class, quesNo);
-			ques.setQuestion(question.getQuestion());
-			response=(Question) session.merge(ques);
+			QuestionEntity ques=QuestionMapper.mapQuestion(id, question);
+			session.find(QuestionEntity.class, quesNo);
+			QuestionEntity questionEntity=session.load(QuestionEntity.class, quesNo);
+			questionEntity.setQuestion(question.getQuestion());
+			response=(QuestionEntity) session.merge(questionEntity);
+			logger.info("Updating question..");
 		}
-		catch(HibernateException | QuizIdNotFoundException e)
+		catch(HibernateException e)
 		{
+			logger.info("Error in Updating question..");
 			throw new DatabaseException(e.getMessage());
 		}
 		
@@ -149,15 +139,16 @@ public class QuestionRepositoryImpl implements QuestionRepository {
 		String response=null;
 		try {
 			session=sessionFactory.getCurrentSession();
-			boolean status=checkQuestion(quesNo);
-			Query query=session.createQuery("delete from Question where quesNo=:ques");
+			Query query=session.createQuery("delete from QuestionEntity where quesNo=:ques");
 			query.setParameter("ques", quesNo);
 			query.executeUpdate();
+			logger.info("Deleting question...");
 			response="Question is removed Successfully!";
 			
 		}
-		catch(HibernateException | QuestionNotFoundException e)
+		catch(HibernateException  e)
 		{
+			logger.error("Error in deleting question");
 			throw new DatabaseException(e.getMessage());
 		}
 		

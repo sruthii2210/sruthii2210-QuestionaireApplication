@@ -29,7 +29,7 @@ public class ClassRepositoryImpl implements ClassRepository{
 	
 	
 	public void checkClassRoomNo(Long roomNo) throws RoomNoNotFoundException {
-		ClassRoom classDetail= new ClassRoom();
+		ClassRoom classDetail;
 	 
 	      Session session =sessionFactory.getCurrentSession();
 	      Query<ClassRoom> query=session.createQuery("from ClassRoom where roomNo=:roomNo");
@@ -70,7 +70,7 @@ public class ClassRepositoryImpl implements ClassRepository{
 		Session session=null;
 		try {
 			session=sessionFactory.getCurrentSession();
-			Query query=session.createQuery("from ClassRoom c");
+			Query<ClassRoom> query=session.createQuery("from ClassRoom c");
 			classDetails=query.getResultList();
 		}
 		catch(HibernateException e)
@@ -87,7 +87,7 @@ public class ClassRepositoryImpl implements ClassRepository{
 		try {
 			session=sessionFactory.getCurrentSession();
 			
-			ClassRoom classRoom=ClassMapper.mapClassRoom(classDetails);
+			ClassMapper.mapClassRoom(classDetails);
 			session.find(ClassRoom.class, roomNo);
 			ClassRoom clsRoom=session.load(ClassRoom.class, roomNo);
 			
@@ -113,11 +113,9 @@ public class ClassRepositoryImpl implements ClassRepository{
 			Query<ClassRoom> query=session.createQuery("from ClassRoom c where c.standard=:standard and c.section=:section");
 			query.setParameter("standard", standard);
 			query.setParameter("section", section);
-			try {
-		    	  classRoom = (ClassRoom) query.getSingleResult();
-				} catch (NoResultException e) {
+			
+		    	  classRoom = query.uniqueResultOptional().orElse(null);
 
-				}
 		}
 		catch(HibernateException e)
 		{

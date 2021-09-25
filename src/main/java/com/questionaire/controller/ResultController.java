@@ -13,7 +13,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.questionaire.entity.Result;
+import com.questionaire.dto.Result;
+import com.questionaire.entity.ResultEntity;
+import com.questionaire.exception.NotFoundException;
+import com.questionaire.exception.QuizIdNotFoundException;
+import com.questionaire.exception.StudentIdNotFoundException;
+import com.questionaire.exception.SubjectNotFoundException;
 import com.questionaire.exception.ServiceException;
 import com.questionaire.service.ResultService;
 
@@ -24,23 +29,34 @@ public class ResultController {
 	@Autowired
 	private ResultService resultService;
 	
-	@PostMapping("/{rollNo}/{subCode}/{id}/{score}")
-	public ResponseEntity<Response> addResult(@PathVariable("rollNo") Long rollNo,@PathVariable("subCode") String subCode,@PathVariable("id") Long id, @PathVariable("score") Integer score,@RequestBody Result result)
+	@PostMapping("/{rollNo}/{subCode}/{id}")
+	public ResponseEntity<Response> addResult(@PathVariable("rollNo") Long rollNo,@PathVariable("subCode") String subCode,@PathVariable("id") Long id, @RequestBody Result result)
 	{
+		Long autoId=0l;
 		ResponseEntity<Response> responseEntity = null;
 		Response response = new Response();
 		try {
-			Result res=resultService.addResult(rollNo,subCode,id,score,result);
-			response.setStatusText("OK");
+			autoId=resultService.addResult(rollNo,subCode,id,result);
+			response.setStatusText("Result is added to the student "+rollNo+" in quiz "+id+" for subject "+subCode+" ");
 			 response.setStatusCode(200);
-			 response.setData(res);
-			 responseEntity=new ResponseEntity<Response>(response,new HttpHeaders(),HttpStatus.OK);
-		} catch (ServiceException e) {
+			 response.setData(autoId);
+			 responseEntity=new ResponseEntity<>(response,new HttpHeaders(),HttpStatus.OK);
+		} catch ( NotFoundException e) {
 			
-			     response.setStatusCode(500);
-			     response.setStatusText("Internal Server Error");
-			     responseEntity = new ResponseEntity<Response>(response,new HttpHeaders(),HttpStatus.INTERNAL_SERVER_ERROR);
-			 
+			if(e instanceof QuizIdNotFoundException||e instanceof StudentIdNotFoundException||e instanceof SubjectNotFoundException)
+			{
+				response.setStatusCode(404);
+				response.setStatusText(e.getMessage());
+				responseEntity = new ResponseEntity<>(response, new HttpHeaders(),
+						HttpStatus.NOT_FOUND);
+			}
+		}
+		catch(ServiceException e)
+		{
+			response.setStatusCode(500);
+			response.setStatusText(e.getMessage());
+			responseEntity = new ResponseEntity<>(response, new HttpHeaders(),
+					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return responseEntity;
 	}
@@ -50,21 +66,29 @@ public class ResultController {
 	{
 		ResponseEntity<Response> responseEntity = null;
 		Response response = new Response();
-		List<Result>res;
+		List<ResultEntity>res;
 		try {
 			res= resultService.getResult(id);
 			response.setStatusText("OK");
 			 response.setStatusCode(200);
 			 response.setData(res);
-			 responseEntity=new ResponseEntity<Response>(response,new HttpHeaders(),HttpStatus.OK);
-		} catch (ServiceException e) {
-			String name = e.getClass().getName();
-			  if(name.equals("com.questionaire.exception.ServiceException"))
-			  {
-			     response.setStatusCode(500);
-			     response.setStatusText("Internal Server Error");
-			     responseEntity = new ResponseEntity<Response>(response,new HttpHeaders(),HttpStatus.INTERNAL_SERVER_ERROR);
-			  } 
+			 responseEntity=new ResponseEntity<>(response,new HttpHeaders(),HttpStatus.OK);
+		} catch ( NotFoundException e) {
+			
+			if(e instanceof QuizIdNotFoundException)
+			{
+				response.setStatusCode(404);
+				response.setStatusText(e.getMessage());
+				responseEntity = new ResponseEntity<>(response, new HttpHeaders(),
+						HttpStatus.NOT_FOUND);
+			}
+		}
+		catch(ServiceException e)
+		{
+			response.setStatusCode(500);
+			response.setStatusText(e.getMessage());
+			responseEntity = new ResponseEntity<>(response, new HttpHeaders(),
+					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return responseEntity;
 	}

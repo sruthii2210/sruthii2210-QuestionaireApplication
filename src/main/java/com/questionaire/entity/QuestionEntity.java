@@ -2,12 +2,13 @@ package com.questionaire.entity;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -21,19 +22,20 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name="login")
-public class TeacherLogin implements Serializable{
+@Table(name="question")
+public class QuestionEntity implements Serializable{
 
-	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	private Long autoId;
+	private Integer quesNo;
+	private String question;
 	
-	@OneToOne(targetEntity=TeacherEntity.class)
-	@JoinColumn(name="id",nullable=false,unique=true)
+	@OneToOne(mappedBy="question")
+	private AnswerEntity ans;
+	
+	@ManyToOne(targetEntity=QuizEntity.class,fetch=FetchType.LAZY)
+	@JoinColumn(name="id",nullable=false)
 	@JsonIgnore
-	private TeacherEntity userid;
+	private QuizEntity quiz;
 	
-	@Column(nullable=false)
-	private String password;
 }

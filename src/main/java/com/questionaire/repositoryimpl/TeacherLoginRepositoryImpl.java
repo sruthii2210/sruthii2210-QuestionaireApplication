@@ -3,87 +3,98 @@ package com.questionaire.repositoryimpl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
 
-import com.questionaire.entity.Student;
-import com.questionaire.entity.TeacherEntity;
-import com.questionaire.entity.TeacherLogin;
+import com.questionaire.dto.TeacherLogin;
+import com.questionaire.entity.StudentEntity;
+import com.questionaire.entity.TeacherLoginEntity;
 import com.questionaire.exception.DatabaseException;
-import com.questionaire.exception.TeacherNotFoundException;
+import com.questionaire.exception.IdNotFoundException;
+import com.questionaire.exception.StudentIdNotFoundException;
+import com.questionaire.mapper.TeacherLoginMapper;
 import com.questionaire.repository.TeacherLoginRepository;
+
 
 @Repository
 @Transactional
 public class TeacherLoginRepositoryImpl implements TeacherLoginRepository{
 
+	public static Logger logger=Logger.getLogger(TeacherLoginRepositoryImpl.class);
 	@Autowired
 	private SessionFactory sessionFactory;
-	
 	@Autowired
 	private TeacherRepositoryImpl teacherRepo;
+	
+	public void checkAutoId(Long id) throws IdNotFoundException
+	{
+		Session session = sessionFactory.getCurrentSession();
+		Query<TeacherLoginEntity> query = session.createQuery("FROM TeacherLoginEntity WHERE autoId=:id");
+		query.setParameter("id", id);
+		TeacherLoginEntity teacher = null;
+
+		teacher = query.uniqueResultOptional().orElse(null);
+		logger.info("In checkAutoId method in TeacherLogin..!");
+		if (teacher == null) {
+			logger.error("Error in checkAutoId method in TeacherLogin..!");
+			throw new IdNotFoundException("No Record found for given Id "+id);
+		}
+	}
+	
 	@Override
-	public TeacherLogin createLogin(Long id,TeacherLogin login) throws DatabaseException {
+	public Long createLogin(Long id,TeacherLogin login) throws DatabaseException {
 		Session session=null;
-		TeacherLogin response=null;
+		Long count=0l;
+		TeacherLoginEntity response=null;
 		try {
 			session=sessionFactory.getCurrentSession();
-			TeacherEntity teacher=new TeacherEntity();
-			TeacherLogin teachLogin=new TeacherLogin();
 			
-			teacher.setId(id);
-			teachLogin.setUserid(teacher);
-			teachLogin.setPassword(login.getPassword());
-			
-			Long count=(Long) session.save(teachLogin);
+			count=(Long) session.save(TeacherLoginMapper.mapTeacherLogin(id, login));
 			
 			if(count>0)
-			response=teachLogin;
+				logger.info("Login details created successfully...!");
+			
 		}
 		catch(HibernateException e)
 		{
 			throw new DatabaseException(e.getMessage());
 		}
 		
-		return response;
+		return count;
 
 	}
 	@Override
-	public List<TeacherLogin> getDetails(Long id) throws DatabaseException {
-		List<TeacherLogin> teacher=new ArrayList<TeacherLogin>();
+	public List<TeacherLoginEntity> getDetails(Long id) throws DatabaseException {
+		List<TeacherLoginEntity> teacher=new ArrayList<>();
 		Session session=null;
 		try {
 			session=sessionFactory.getCurrentSession();
-			boolean status=teacherRepo.checkTeacher(id);
+
 			Query query=session.createSQLQuery("select * from login where id=:staffId");
 			query.setParameter("staffId", id);
 			teacher=query.getResultList();	
 		}
-		catch(HibernateException | TeacherNotFoundException e)
+		catch(HibernateException e)
 		{
 			throw new DatabaseException(e.getMessage());
 		}
 		return teacher;
 	}
 	@Override
-	public TeacherLogin updateLogin(Long id, TeacherLogin login) throws DatabaseException {
+	public TeacherLoginEntity updateLogin(Long id, TeacherLogin login) throws DatabaseException {
 		Session session=null;
-		TeacherLogin response=null;
+		TeacherLoginEntity response=null;
 		try {
 			session=sessionFactory.getCurrentSession();
-			//boolean status=teacherRepo.checkTeacher(id);
-			//System.out.println(status);
-			session.find(TeacherLogin.class, id);
-			TeacherLogin teachLogin=session.load(TeacherLogin.class, id);
+			TeacherLoginEntity teacherLogin=TeacherLoginMapper.mapTeacherLogin(id, login);
+			session.find(TeacherLoginEntity.class, id);
+			TeacherLoginEntity teachLogin=session.load(TeacherLoginEntity.class, id);
 			
 			teachLogin.setPassword(login.getPassword());
 			

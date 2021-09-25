@@ -66,13 +66,10 @@ public class ClassController {
 			
 		} catch(ServiceException e)
 		{
-			 String name = e.getClass().getName();
-			  if(name.equals("com.questionaire.exception.ServiceException"))
-			  {
-			     response.setStatusCode(500);
-			     response.setStatusText("Internal Server Error");
-			     responseEntity = new ResponseEntity<>(response,new HttpHeaders(),HttpStatus.INTERNAL_SERVER_ERROR);
-			  } 
+			response.setStatusCode(500);
+			response.setStatusText(e.getMessage());
+			responseEntity= new ResponseEntity<>(response, new HttpHeaders(),
+					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return responseEntity;
 	}
@@ -90,16 +87,23 @@ public class ClassController {
 			 response.setData(updatedClass);
 			 responseEntity=new ResponseEntity<>(response,new HttpHeaders(),HttpStatus.OK);
 			
-		} catch (ServiceException | NotFoundException e) {
+		} catch ( NotFoundException e) {
 			  
 			  if(e instanceof RoomNoNotFoundException)
 			  {
 			     response.setStatusCode(404);
 			     response.setStatusText(e.getMessage());
-			     responseEntity = new ResponseEntity<>(response,new HttpHeaders(),HttpStatus.INTERNAL_SERVER_ERROR);
+			     responseEntity = new ResponseEntity<>(response,new HttpHeaders(),HttpStatus.NOT_FOUND);
 			  } 
 		
 		} 
+		catch(ServiceException e)
+		{
+			response.setStatusCode(500);
+			response.setStatusText(e.getMessage());
+			responseEntity = new ResponseEntity<>(response, new HttpHeaders(),
+					HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 		
 		return responseEntity;
 	}
@@ -116,15 +120,12 @@ public class ClassController {
 			 response.setStatusCode(200);
 			 response.setData(cls);
 			 responseEntity=new ResponseEntity<>(response,new HttpHeaders(),HttpStatus.OK);
-		} catch (ServiceException e) {
-			String name = e.getClass().getName();
-			  if(name.equals("com.questionaire.exception.ServiceException"))
-			  {
-			     response.setStatusCode(500);
-			     response.setStatusText("Internal Server Error");
-			     responseEntity = new ResponseEntity<>(response,new HttpHeaders(),HttpStatus.INTERNAL_SERVER_ERROR);
-			  } 
-		
+		} catch(ServiceException e)
+		{
+			response.setStatusCode(500);
+			response.setStatusText(e.getMessage());
+			responseEntity = new ResponseEntity<>(response, new HttpHeaders(),
+					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return responseEntity;
 	}

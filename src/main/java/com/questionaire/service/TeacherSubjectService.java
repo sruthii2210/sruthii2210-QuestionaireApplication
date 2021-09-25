@@ -2,22 +2,20 @@ package com.questionaire.service;
 
 import java.util.List;
 
-import org.springframework.http.ResponseEntity;
-
-import com.questionaire.entity.TeacherSubject;
+import com.questionaire.dto.TeacherSubject;
+import com.questionaire.entity.TeacherSubjectEntity;
 import com.questionaire.entity.TeacherSubjectModel;
+import com.questionaire.exception.NotFoundException;
 import com.questionaire.exception.ServiceException;
-import com.questionaire.exception.SubjectNotFoundException;
-import com.questionaire.exception.TeacherNotFoundException;
 
 public interface TeacherSubjectService {
-	TeacherSubject assignTeacherSubject(Long id, String subCode, TeacherSubject teacherSubjectDetails)
-			throws ServiceException;
+	Long assignTeacherSubject(Long id, String subCode, TeacherSubject teacherSubjectDetails)
+			throws ServiceException, NotFoundException;
 
-	TeacherSubject updateTeacherSubjectAssign(Long id, String subCode, TeacherSubject teacherSubjectDetails)
-			throws ServiceException;
+	TeacherSubjectEntity updateTeacherSubjectAssign(Long id, String subCode, TeacherSubject teacherSubjectDetails)
+			throws ServiceException, NotFoundException;
 
-	String deleteTeacherSubjectAssign(Long id, String subCode) throws ServiceException;
+	String deleteTeacherSubjectAssign(Long id, String subCode) throws ServiceException, NotFoundException;
 
-	List<TeacherSubjectModel> getSubject(Long id) throws ServiceException;
+	List<TeacherSubjectModel> getSubject(Long id) throws ServiceException, NotFoundException;
 }

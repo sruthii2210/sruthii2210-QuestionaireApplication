@@ -3,15 +3,15 @@ package com.questionaire.serviceimpl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.questionaire.entity.Question;
+import com.questionaire.dto.Question;
+import com.questionaire.entity.QuestionEntity;
 import com.questionaire.exception.DatabaseException;
-import com.questionaire.exception.QuestionNotFoundException;
-import com.questionaire.exception.QuizIdNotFoundException;
+import com.questionaire.exception.NotFoundException;
 import com.questionaire.exception.ServiceException;
 import com.questionaire.repository.QuestionRepository;
+import com.questionaire.repository.QuizRepository;
 import com.questionaire.service.QuestionService;
 
 @Service
@@ -19,45 +19,55 @@ public class QuestionServiceImpl implements QuestionService {
 
 	@Autowired
 	private QuestionRepository questionRepository;
+
+	@Autowired
+	private QuizRepository quizRepository;
+
 	@Override
-	public Question addQuestion(Long id, Question question) throws ServiceException {
+	public Integer addQuestion(Long id, Question question) throws ServiceException, NotFoundException {
 		try {
-			Question ques= questionRepository.addQuestion(id,question);
+			quizRepository.checkQuiz(id);
+			Integer ques = questionRepository.addQuestion(id, question);
 			return ques;
-		}
-		catch(DatabaseException e)
-		{
+		} catch (DatabaseException e) {
 			throw new ServiceException(e.getMessage());
 		}
 	}
+
 	@Override
-	public List<Question> getQuestion(Long id) throws ServiceException {
+	public List<QuestionEntity> getQuestion(Long id) throws ServiceException, NotFoundException {
 		try {
-			List<Question>q=questionRepository.getQuestion(id);
+			quizRepository.checkQuiz(id);
+			List<QuestionEntity> q = questionRepository.getQuestion(id);
 			return q;
 		} catch (DatabaseException e) {
 			throw new ServiceException(e.getMessage());
 		}
 	}
+
 	@Override
-	public Question updateQuestion(Long id, Integer quesNo, Question question) throws ServiceException{
+	public QuestionEntity updateQuestion(Long id, Integer quesNo, Question question)
+			throws ServiceException, NotFoundException {
 		try {
-			return questionRepository.updateQuestion(id,quesNo,question);
-		}
-		catch (DatabaseException  e) {
+			quizRepository.checkQuiz(id);
+			questionRepository.checkQuestion(quesNo);
+			questionRepository.checkQuizByQuesNo(id, quesNo);
+			return questionRepository.updateQuestion(id, quesNo, question);
+		} catch (DatabaseException e) {
 			throw new ServiceException(e.getMessage());
 		}
 	}
+
 	@Override
-	public String deleteQuestion(Integer quesNo) throws  ServiceException {
-		try{
-			 questionRepository.deleteQuestion(quesNo);
-			String response="Question is removed Successfully!";
-			 return response;
+	public String deleteQuestion(Integer quesNo) throws ServiceException, NotFoundException {
+		try {
+			questionRepository.checkQuestion(quesNo);
+			questionRepository.deleteQuestion(quesNo);
+			String response = "Question is removed Successfully!";
+			return response;
 		}
-		
-		catch(DatabaseException e)
-		{
+
+		catch (DatabaseException e) {
 			throw new ServiceException(e.getMessage());
 		}
 	}

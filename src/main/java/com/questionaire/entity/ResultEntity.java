@@ -21,24 +21,24 @@ import javax.persistence.ManyToOne;
 @NoArgsConstructor
 @Entity
 @Table(name="result")
-public class Result implements Serializable{
+public class ResultEntity implements Serializable{
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	private Long autoId;
+	private Long id;
 	
-	@ManyToOne(targetEntity=Student.class,fetch=FetchType.LAZY)
+	@ManyToOne(targetEntity=StudentEntity.class,fetch=FetchType.LAZY)
 	@JoinColumn(name="rollNo",nullable=false)
 	@JsonIgnore
-	private Student stud;
+	private StudentEntity student;
 	
 	@ManyToOne(targetEntity=SubjectEntity.class,fetch=FetchType.LAZY)
-	@JoinColumn(name="subCode",nullable=false)
+	@JoinColumn(name="code",nullable=false)
 	@JsonIgnore
-	private SubjectEntity sub;
+	private SubjectEntity subject;
 	
 	@ManyToOne(targetEntity=QuizEntity.class,fetch=FetchType.LAZY)
-	@JoinColumn(name="id",nullable=false)
+	@JoinColumn(name="autoId",nullable=false)
 	@JsonIgnore
 	private QuizEntity quiz;
 	

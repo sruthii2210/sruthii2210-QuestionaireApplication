@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.questionaire.entity.TeacherSubject;
+import com.questionaire.dto.TeacherSubject;
+import com.questionaire.entity.TeacherSubjectEntity;
 import com.questionaire.entity.TeacherSubjectModel;
+import com.questionaire.exception.NotFoundException;
 import com.questionaire.exception.ServiceException;
 import com.questionaire.exception.SubjectNotFoundException;
 import com.questionaire.exception.TeacherNotFoundException;
@@ -32,80 +34,114 @@ public class TeacherSubjectController {
 
 	@PostMapping("/teacher/{id}/subject/{subCode}")
 	public ResponseEntity<Response> assignTeacherSubject(@PathVariable("id") Long teacherId,
-			@PathVariable("subCode") String subCode, @RequestBody TeacherSubject teacherSubjectDetails)
-			throws TeacherNotFoundException, SubjectNotFoundException {
+			@PathVariable("subCode") String subCode, @RequestBody TeacherSubject teacherSubjectDetails) {
+		Long autoId = 0l;
 		Response response = new Response();
-		ResponseEntity responseBody = null;
+		ResponseEntity<Response> responseBody = null;
 		try {
-			TeacherSubject teacher = teacherSubjectServiceImpl.assignTeacherSubject(teacherId, subCode,
-					teacherSubjectDetails);
-			response.setData(teacher);
-			response.setStatusCode(404);
+			autoId = teacherSubjectServiceImpl.assignTeacherSubject(teacherId, subCode, teacherSubjectDetails);
+			response.setData(autoId);
+			response.setStatusCode(200);
 			response.setStatusText("Subjects assigned to staffs successfully!");
-			responseBody = new ResponseEntity<Response>(response, new HttpHeaders(), HttpStatus.OK);
-		} catch (ServiceException e) {
+			responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
+		} catch ( NotFoundException e) {
 
+			if (e instanceof TeacherNotFoundException || e instanceof SubjectNotFoundException) {
+				response.setStatusCode(404);
+				response.setStatusText(e.getMessage());
+				responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.NOT_FOUND);
+			}
+		}
+		catch(ServiceException e)
+		{
 			response.setStatusCode(500);
 			response.setStatusText(e.getMessage());
-			responseBody = new ResponseEntity<Response>(response, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+			responseBody = new ResponseEntity<>(response, new HttpHeaders(),
+					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return responseBody;
 	}
 
 	@PutMapping("/teacher/{id}/subject/{subCode}")
 	public ResponseEntity<Response> updateTeacherSubjectAssign(@PathVariable("id") Long teacherId,
-			@PathVariable("subCode") String subCode, @RequestBody TeacherSubject teacherSubjectDetails)
-			throws TeacherNotFoundException, SubjectNotFoundException {
+			@PathVariable("subCode") String subCode, @RequestBody TeacherSubject teacherSubjectDetails) {
 		Response response = new Response();
-		ResponseEntity responseBody = null;
+		ResponseEntity<Response> responseBody = null;
 		try {
-			TeacherSubject teacher = teacherSubjectServiceImpl.updateTeacherSubjectAssign(teacherId, subCode,
+			TeacherSubjectEntity teacher = teacherSubjectServiceImpl.updateTeacherSubjectAssign(teacherId, subCode,
 					teacherSubjectDetails);
 			response.setData(teacher);
 			response.setStatusCode(200);
 			response.setStatusText("Subjects assigned to staffs updated successfully!");
-			responseBody = new ResponseEntity<Response>(response, new HttpHeaders(), HttpStatus.OK);
-		} catch (ServiceException e) {
-			response.setStatusCode(404);
+			responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
+		} catch ( NotFoundException e) {
+			if (e instanceof TeacherNotFoundException || e instanceof SubjectNotFoundException) {
+				response.setStatusCode(404);
+				response.setStatusText(e.getMessage());
+				responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.NOT_FOUND);
+			}
+		}
+		catch(ServiceException e)
+		{
+			response.setStatusCode(500);
 			response.setStatusText(e.getMessage());
-			responseBody = new ResponseEntity<Response>(response, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+			responseBody = new ResponseEntity<>(response, new HttpHeaders(),
+					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return responseBody;
 	}
 
 	@DeleteMapping("/teacher/{id}/subject/{subCode}")
 	public ResponseEntity<Response> deleteTeacherSubjectAssign(@PathVariable("id") Long teacherId,
-			@PathVariable("subCode") String subCode) throws TeacherNotFoundException, SubjectNotFoundException {
+			@PathVariable("subCode") String subCode) {
 		Response response = new Response();
-		ResponseEntity responseBody = null;
+		ResponseEntity<Response> responseBody = null;
 		try {
 			String string = teacherSubjectServiceImpl.deleteTeacherSubjectAssign(teacherId, subCode);
 			response.setData(string);
 			response.setStatusCode(200);
 			response.setStatusText("Subjects assigned to staffs deleted..");
-			responseBody = new ResponseEntity<Response>(response, new HttpHeaders(), HttpStatus.OK);
-		} catch (ServiceException e) {
-			response.setStatusCode(404);
+			responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
+		} catch (NotFoundException e) {
+			if (e instanceof TeacherNotFoundException || e instanceof SubjectNotFoundException) {
+				response.setStatusCode(404);
+				response.setStatusText(e.getMessage());
+				responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.NOT_FOUND);
+			}
+		}
+		catch(ServiceException e)
+		{
+			response.setStatusCode(500);
 			response.setStatusText(e.getMessage());
-			responseBody = new ResponseEntity<Response>(response, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+			responseBody = new ResponseEntity<>(response, new HttpHeaders(),
+					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return responseBody;
 	}
 
 	@GetMapping("/teacher/{id}")
-	public ResponseEntity<Response> getSubject(@PathVariable("id") Long teacherId) throws TeacherNotFoundException {
+	public ResponseEntity<Response> getSubject(@PathVariable("id") Long teacherId) {
 		Response response = new Response();
-		ResponseEntity responseBody = null;
+		ResponseEntity<Response> responseBody = null;
 		try {
 			List<TeacherSubjectModel> teacher = teacherSubjectServiceImpl.getSubject(teacherId);
 			response.setData(teacher);
 			response.setStatusCode(200);
 			response.setStatusText("Subjects assigned to staffs deleted..");
-			responseBody = new ResponseEntity<Response>(response, new HttpHeaders(), HttpStatus.OK);
-		} catch (ServiceException e) {
-			response.setStatusCode(404);
+			responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
+		} catch (NotFoundException e) {
+			if (e instanceof TeacherNotFoundException) {
+				response.setStatusCode(404);
+				response.setStatusText(e.getMessage());
+				responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.NOT_FOUND);
+			}
+		}
+		catch(ServiceException e)
+		{
+			response.setStatusCode(500);
 			response.setStatusText(e.getMessage());
-			responseBody = new ResponseEntity<Response>(response, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+			responseBody = new ResponseEntity<>(response, new HttpHeaders(),
+					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return responseBody;
 	}

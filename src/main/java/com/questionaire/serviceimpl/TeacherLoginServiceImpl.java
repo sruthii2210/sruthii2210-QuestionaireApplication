@@ -3,15 +3,15 @@ package com.questionaire.serviceimpl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
-import com.questionaire.entity.TeacherEntity;
-import com.questionaire.entity.TeacherLogin;
+import com.questionaire.dto.TeacherLogin;
+import com.questionaire.entity.TeacherLoginEntity;
 import com.questionaire.exception.DatabaseException;
+import com.questionaire.exception.NotFoundException;
 import com.questionaire.exception.ServiceException;
 import com.questionaire.repository.TeacherLoginRepository;
+import com.questionaire.repository.TeacherRepository;
 import com.questionaire.service.TeacherLoginService;
 
 @Service
@@ -19,20 +19,24 @@ public class TeacherLoginServiceImpl implements TeacherLoginService {
 
 	@Autowired
 	private TeacherLoginRepository teacherLoginRepository;
+	@Autowired
+	private TeacherRepository teacherRepository;
 	
-	public TeacherLogin createLogin(Long id,TeacherLogin login) throws ServiceException
+	public Long createLogin(Long id,TeacherLogin login) throws ServiceException,NotFoundException
 	{
 		try {
+			teacherRepository.checkTeacher(id);
 			return teacherLoginRepository.createLogin(id,login);
 		} catch (DatabaseException e) {
 			throw new ServiceException(e.getMessage());
 		}
 	}
 	@Override
-	public List<TeacherLogin> getDetails(Long id) throws ServiceException {
+	public List<TeacherLoginEntity> getDetails(Long id) throws ServiceException, NotFoundException {
 		
-		List<TeacherLogin> teacher;
+		List<TeacherLoginEntity> teacher;
 		try {
+			teacherRepository.checkTeacher(id);
 			teacher = teacherLoginRepository.getDetails(id);
 		} catch (DatabaseException e) {
 		throw new ServiceException(e.getMessage());
@@ -40,8 +44,9 @@ public class TeacherLoginServiceImpl implements TeacherLoginService {
 		return teacher;
 	}
 	@Override
-	public TeacherLogin updateLogin(Long id,TeacherLogin login) throws ServiceException {
+	public TeacherLoginEntity updateLogin(Long id,TeacherLogin login) throws ServiceException, NotFoundException {
 		try {
+			teacherLoginRepository.checkAutoId(id);
 			return teacherLoginRepository.updateLogin(id,login);
 		} catch (DatabaseException e) {
 			throw new ServiceException(e.getMessage());

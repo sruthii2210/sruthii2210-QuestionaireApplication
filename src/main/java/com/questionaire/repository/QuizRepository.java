@@ -13,6 +13,8 @@ public interface QuizRepository {
 
 	void checkQuizBySubCode(String subCode) throws QuizIdNotFoundException;
 
+	void checkQuiz(Long id) throws QuizIdNotFoundException;
+
 	List<QuizEntity> getQuiz(Long id, String subCode) throws DatabaseException;
 
 	List<QuizEntity> getQuizBySubCode(String subCode) throws DatabaseException;

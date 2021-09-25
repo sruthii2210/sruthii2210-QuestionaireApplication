@@ -3,76 +3,62 @@ package com.questionaire.repositoryimpl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.questionaire.entity.ClassRoom;
-import com.questionaire.entity.QuizEntity;
-import com.questionaire.entity.Result;
-import com.questionaire.entity.Student;
-import com.questionaire.entity.SubjectEntity;
+import com.questionaire.dto.Result;
+import com.questionaire.entity.ResultEntity;
 import com.questionaire.exception.DatabaseException;
+import com.questionaire.mapper.ResultMapper;
 import com.questionaire.repository.ResultRepository;
 
 @Repository
 @Transactional
 public class ResultRepositoryImpl implements ResultRepository{
 
+	public static Logger logger=Logger.getLogger(ResultRepositoryImpl.class);
 	@Autowired
 	private SessionFactory sessionFactory;
 	@Override
-	public Result addResult(Long rollNo, String subCode, Long id, Integer score,Result result) throws DatabaseException {
+	public Long addResult(Long rollNo, String subCode, Long id, Result result) throws DatabaseException {
 		Session session=null;
-		Result response=null;
+		Long autoId=0l;
 		try {
 			session=sessionFactory.getCurrentSession();
-			Student stud=new Student();
-			SubjectEntity sub=new SubjectEntity();
-			QuizEntity quiz=new QuizEntity();
 			
-			stud.setRollNo(rollNo);
-			sub.setSubCode(subCode);
-			quiz.setAutoId(id);
+			autoId=(Long) session.save(ResultMapper.mapResult(rollNo, subCode, id, result));
+			logger.info("Adding result to student...");
 			
-			result.setQuiz(quiz);
-			result.setStud(stud);
-			result.setSub(sub);
-			result.setScore(score);
-			session.save(result);
-		Long count=(Long) session.save(result);
-			if(count>0)
-			{
-				response = result;
-			}
-			
+
 		}
 		catch(HibernateException e)
 		{
+			logger.error("Error in adding result to student...");
 			throw new DatabaseException(e.getMessage());
 		}
-		return response;
+		return autoId;
 	}
 	@Override
-	public List<Result> getResult(Long id) throws DatabaseException {
-		List<Result> result=new ArrayList<Result>();
+	public List<ResultEntity> getResult(Long id) throws DatabaseException {
+		List<ResultEntity> result=new ArrayList<>();
 		Session session=null;
 		try {
 			session=sessionFactory.getCurrentSession();
-			Query query=session.createQuery("from Result where quiz.id=:id");
+			Query query=session.createQuery("from ResultEntity where quiz.id=:id");
 			query.setParameter("id", id);
 			result=query.getResultList();
+			logger.info("Fetching results for quiz "+id);
 			
 		}
 		catch(HibernateException e)
 		{
+			logger.error("Error in fetching results for quiz "+id);
 			throw new DatabaseException(e.getMessage());
 		}
 		return result;

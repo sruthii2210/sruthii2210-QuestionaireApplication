@@ -3,13 +3,14 @@ package com.questionaire.serviceimpl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
-import com.questionaire.entity.Student;
+import com.questionaire.dto.Student;
+import com.questionaire.entity.StudentEntity;
 import com.questionaire.exception.DatabaseException;
+import com.questionaire.exception.NotFoundException;
 import com.questionaire.exception.ServiceException;
+import com.questionaire.repository.ClassRepository;
 import com.questionaire.repository.StudentRepository;
 import com.questionaire.service.StudentService;
 
@@ -18,18 +19,23 @@ public class StudentServiceImpl implements StudentService{
 
 	@Autowired
 	private StudentRepository studentRepository;
+	@Autowired
+	private ClassRepository classRepository;
+	
 	@Override
-	public Student addStudent(Long roomNo,Student student) throws ServiceException {
+	public Long addStudent(Long roomNo,Student student) throws ServiceException, NotFoundException {
 		try {
+			classRepository.checkClassRoomNo(roomNo);
 			return studentRepository.addStudent(roomNo,student);
 		} catch (DatabaseException e) {
 			throw new ServiceException(e.getMessage());
 		}
 	}
 	@Override
-	public List<Student> getStudent(Long roomNo) throws ServiceException {
-		List<Student> student;
+	public List<StudentEntity> getStudent(Long roomNo) throws ServiceException, NotFoundException {
+		List<StudentEntity> student;
 		try {
+			classRepository.checkClassRoomNo(roomNo);
 			student = studentRepository.getStudent(roomNo);
 		} catch (DatabaseException e) {
 			throw new ServiceException(e.getMessage());
@@ -37,25 +43,30 @@ public class StudentServiceImpl implements StudentService{
 		return student;
 	}
 	@Override
-	public Student getStudentById(Long rollNo) throws ServiceException {
+	public StudentEntity getStudentById(Long rollNo) throws ServiceException, NotFoundException {
 		
 		try {
+			studentRepository.checkStudent(rollNo);
 			return studentRepository.getStudentById(rollNo);
 		} catch (DatabaseException e) {
 			throw new ServiceException(e.getMessage());
 		}
 	}
 	@Override
-	public Student updateStudent(Long roomNo,Long rollNo, Student student) throws ServiceException {
+	public StudentEntity updateStudent(Long roomNo,Long rollNo, Student student) throws ServiceException, NotFoundException {
 		try {
+			classRepository.checkClassRoomNo(roomNo);
+			studentRepository.checkStudent(rollNo);
+			studentRepository.checkClassStud(roomNo, rollNo);
 			return studentRepository.updateStudent(roomNo,rollNo,student);
 		} catch (DatabaseException e) {
 			throw new ServiceException(e.getMessage());
 		}
 	}
 	@Override
-	public String deleteStudent(Long rollNo) throws ServiceException {
+	public String deleteStudent(Long rollNo) throws ServiceException, NotFoundException {
 		try {
+			studentRepository.checkStudent(rollNo);
 			return studentRepository.deleteStudent(rollNo);
 		} catch (DatabaseException e) {
 			throw new ServiceException(e.getMessage());

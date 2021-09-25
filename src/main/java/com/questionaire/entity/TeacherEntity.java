@@ -32,10 +32,10 @@ public class TeacherEntity {
 	
 	@OneToMany(mappedBy="teacher",fetch=FetchType.LAZY)
 	@JsonIgnore
-	private Set<TeacherSubject> teacherSub;
+	private Set<TeacherSubjectEntity> teacherSub;
 
-	@OneToOne(mappedBy="userid")
-	private TeacherLogin staffId;
+	@OneToOne(mappedBy="teacherId")
+	private TeacherLoginEntity staffId;
 	
 	@OneToMany(mappedBy="teacher",fetch=FetchType.LAZY)
 	@JsonIgnore

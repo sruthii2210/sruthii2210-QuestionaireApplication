@@ -1,24 +1,22 @@
 package com.questionaire.service;
 
 import java.util.List;
-
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-
-import com.questionaire.entity.Student;
+import com.questionaire.dto.Student;
+import com.questionaire.entity.StudentEntity;
+import com.questionaire.exception.NotFoundException;
 import com.questionaire.exception.ServiceException;
+
 
 public interface StudentService {
 
-	Student addStudent(Long roomNo, Student student) throws ServiceException;
+	Long addStudent(Long roomNo, Student student) throws ServiceException, NotFoundException;
 
-	List<Student> getStudent(Long roomNo) throws ServiceException;
+	List<StudentEntity> getStudent(Long roomNo) throws ServiceException, NotFoundException;
 
-	Student getStudentById(Long rollNo) throws ServiceException;
+	StudentEntity getStudentById(Long rollNo) throws ServiceException, NotFoundException;
 
-	Student updateStudent(Long roomNo, Long rollNo, Student student) throws ServiceException;
+	StudentEntity updateStudent(Long roomNo, Long rollNo, Student student) throws ServiceException, NotFoundException;
 
-	String deleteStudent(Long rollNo) throws ServiceException;
+	String deleteStudent(Long rollNo) throws ServiceException, NotFoundException;
 
 }
