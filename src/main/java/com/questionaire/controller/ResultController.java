@@ -3,8 +3,6 @@ package com.questionaire.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +19,7 @@ import com.questionaire.exception.StudentIdNotFoundException;
 import com.questionaire.exception.SubjectNotFoundException;
 import com.questionaire.exception.ServiceException;
 import com.questionaire.service.ResultService;
+import com.questionaire.util.ResponseUtil;
 
 @RestController
 @RequestMapping("/api/result")
@@ -34,29 +33,19 @@ public class ResultController {
 	{
 		Long autoId=0l;
 		ResponseEntity<Response> responseEntity = null;
-		Response response = new Response();
 		try {
 			autoId=resultService.addResult(rollNo,subCode,id,result);
-			response.setStatusText("Result is added to the student "+rollNo+" in quiz "+id+" for subject "+subCode+" ");
-			 response.setStatusCode(200);
-			 response.setData(autoId);
-			 responseEntity=new ResponseEntity<>(response,new HttpHeaders(),HttpStatus.OK);
+			 responseEntity=ResponseUtil.getResponse(200,"Result is added to the student "+rollNo+" in quiz "+id+" for subject "+subCode+" ",autoId);
 		} catch ( NotFoundException e) {
 			
 			if(e instanceof QuizIdNotFoundException||e instanceof StudentIdNotFoundException||e instanceof SubjectNotFoundException)
 			{
-				response.setStatusCode(404);
-				response.setStatusText(e.getMessage());
-				responseEntity = new ResponseEntity<>(response, new HttpHeaders(),
-						HttpStatus.NOT_FOUND);
+				 responseEntity=ResponseUtil.getResponse(404,e.getMessage());
 			}
 		}
 		catch(ServiceException e)
 		{
-			response.setStatusCode(500);
-			response.setStatusText(e.getMessage());
-			responseEntity = new ResponseEntity<>(response, new HttpHeaders(),
-					HttpStatus.INTERNAL_SERVER_ERROR);
+			 responseEntity=ResponseUtil.getResponse(500,e.getMessage());
 		}
 		return responseEntity;
 	}
@@ -65,30 +54,20 @@ public class ResultController {
 	public ResponseEntity<Response> getResult(@PathVariable("id") Long id)
 	{
 		ResponseEntity<Response> responseEntity = null;
-		Response response = new Response();
-		List<ResultEntity>res;
+		List<ResultEntity>result;
 		try {
-			res= resultService.getResult(id);
-			response.setStatusText("OK");
-			 response.setStatusCode(200);
-			 response.setData(res);
-			 responseEntity=new ResponseEntity<>(response,new HttpHeaders(),HttpStatus.OK);
+			result= resultService.getResult(id);
+			 responseEntity=ResponseUtil.getResponse(200,"Fetched result Details in quiz "+id,result);
 		} catch ( NotFoundException e) {
 			
 			if(e instanceof QuizIdNotFoundException)
 			{
-				response.setStatusCode(404);
-				response.setStatusText(e.getMessage());
-				responseEntity = new ResponseEntity<>(response, new HttpHeaders(),
-						HttpStatus.NOT_FOUND);
+				responseEntity=ResponseUtil.getResponse(404,e.getMessage());
 			}
 		}
 		catch(ServiceException e)
 		{
-			response.setStatusCode(500);
-			response.setStatusText(e.getMessage());
-			responseEntity = new ResponseEntity<>(response, new HttpHeaders(),
-					HttpStatus.INTERNAL_SERVER_ERROR);
+			responseEntity=ResponseUtil.getResponse(500,e.getMessage());
 		}
 		return responseEntity;
 	}

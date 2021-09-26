@@ -1,7 +1,5 @@
 package com.questionaire.serviceimpl;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,9 +30,9 @@ public class TeacherLoginServiceImpl implements TeacherLoginService {
 		}
 	}
 	@Override
-	public List<TeacherLoginEntity> getDetails(Long id) throws ServiceException, NotFoundException {
+	public TeacherLoginEntity getDetails(Long id) throws ServiceException, NotFoundException {
 		
-		List<TeacherLoginEntity> teacher;
+		TeacherLoginEntity teacher;
 		try {
 			teacherRepository.checkTeacher(id);
 			teacher = teacherLoginRepository.getDetails(id);

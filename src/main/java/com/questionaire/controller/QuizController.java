@@ -3,8 +3,6 @@ package com.questionaire.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +19,7 @@ import com.questionaire.exception.TeacherNotFoundException;
 import com.questionaire.exception.SubjectNotFoundException;
 import com.questionaire.exception.ServiceException;
 import com.questionaire.service.QuizService;
+import com.questionaire.util.ResponseUtil;
 
 @RestController
 @RequestMapping("/api/quiz")
@@ -30,95 +29,65 @@ public class QuizController {
 	@Autowired
 	private QuizService quizService;
 
-	@PostMapping("/{id}/{subCode}")
-	ResponseEntity<Response> addQuiz(@PathVariable("id") Long id, @PathVariable("subCode") String subCode,
+	@PostMapping("/{id}/{code}")
+	ResponseEntity<Response> addQuiz(@PathVariable("id") Long id, @PathVariable("code") String subCode,
 			@RequestBody Quiz quiz) {
 		ResponseEntity<Response> responseBody = null;
-		Response response = new Response();
 		try {
 			Long quizId = quizService.addQuiz(id, subCode, quiz);
-			response.setData(quizId);
-			response.setStatusText("Quiz created Successfully!..");
-			response.setStatusCode(200);
-			responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
+			responseBody=ResponseUtil.getResponse(200,"Quiz created Successfully!..",quizId);
 		} catch (NotFoundException e) {
 
 			if(e instanceof TeacherNotFoundException||e instanceof SubjectNotFoundException)
 			{
-				response.setStatusCode(404);
-				response.setStatusText(e.getMessage());
-				responseBody = new ResponseEntity<>(response, new HttpHeaders(),
-						HttpStatus.NOT_FOUND);
+				responseBody=ResponseUtil.getResponse(404,e.getMessage());
 			}
 		}
 		catch(ServiceException e)
 		{
-			response.setStatusCode(500);
-			response.setStatusText(e.getMessage());
-			responseBody = new ResponseEntity<>(response, new HttpHeaders(),
-					HttpStatus.INTERNAL_SERVER_ERROR);
+			responseBody=ResponseUtil.getResponse(500,e.getMessage());
 		}
 		return responseBody;
 
 	}
 
-	@GetMapping("/{id}/{subCode}")
-	ResponseEntity<Response> getQuiz(@PathVariable("id") Long id, @PathVariable("subCode") String subCode) {
+	@GetMapping("/{id}/{code}")
+	ResponseEntity<Response> getQuiz(@PathVariable("id") Long id, @PathVariable("code") String subCode) {
 		ResponseEntity<Response> responseBody = null;
-		Response response = new Response();
 		List<QuizEntity> quiz;
 		try {
 			quiz = quizService.getQuiz(id, subCode);
-			response.setData(quiz);
-			response.setStatusText("Fetched Quiz Details..!");
-			response.setStatusCode(200);
-			responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
+			responseBody=ResponseUtil.getResponse(200,"Fetched Quiz Details..!",quiz);
 
 		} catch (NotFoundException e) {
 			
 			if (e instanceof TeacherNotFoundException||e instanceof SubjectNotFoundException ) {
-				response.setStatusCode(404);
-				response.setStatusText(e.getMessage());
-				responseBody = new ResponseEntity<>(response, new HttpHeaders(),
-						HttpStatus.NOT_FOUND);
+				responseBody=ResponseUtil.getResponse(404,e.getMessage());
 			}
 		}
 		catch(ServiceException e)
 		{
-			response.setStatusCode(500);
-			response.setStatusText(e.getMessage());
-			responseBody = new ResponseEntity<>(response, new HttpHeaders(),
-					HttpStatus.INTERNAL_SERVER_ERROR);
+			responseBody=ResponseUtil.getResponse(500,e.getMessage());
 		}
 		return responseBody;
 	}
 
-	@GetMapping("/{subCode}")
-	ResponseEntity<Response> getQuiz(@PathVariable("subCode") String subCode) {
+	@GetMapping("/{code}")
+	ResponseEntity<Response> getQuiz(@PathVariable("code") String subCode) {
 		ResponseEntity<Response> responseBody = null;
-		Response response = new Response();
 		try {
-			List<QuizEntity> q = quizService.getQuizBySubCode(subCode);
-			response.setData(q);
-			response.setStatusText("Fetched Quiz Details for "+subCode+" ..");
-			response.setStatusCode(200);
-			responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
+			List<QuizEntity> quiz = quizService.getQuizBySubCode(subCode);
+			responseBody=ResponseUtil.getResponse(200,"Fetched Quiz Details for "+subCode+" ..",quiz);
 
 		} catch (NotFoundException e) {
 			
 			if (e instanceof SubjectNotFoundException) {
-				response.setStatusCode(404);
-				response.setStatusText(e.getMessage());
-				responseBody = new ResponseEntity<>(response, new HttpHeaders(),
-						HttpStatus.NOT_FOUND);
+				responseBody=ResponseUtil.getResponse(404,e.getMessage());
 			}
 		}
 		catch(ServiceException e)
 		{
-			response.setStatusCode(500);
-			response.setStatusText(e.getMessage());
-			responseBody = new ResponseEntity<>(response, new HttpHeaders(),
-					HttpStatus.INTERNAL_SERVER_ERROR);
+			responseBody=ResponseUtil.getResponse(500,e.getMessage());
 		}
 		return responseBody;
 	}

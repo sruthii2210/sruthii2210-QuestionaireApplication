@@ -3,8 +3,7 @@ package com.questionaire.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +20,7 @@ import com.questionaire.exception.NotFoundException;
 import com.questionaire.exception.RoomNoNotFoundException;
 import com.questionaire.exception.ServiceException;
 import com.questionaire.service.ClassService;
+import com.questionaire.util.ResponseUtil;
 
 
 @RestController
@@ -34,19 +34,14 @@ public class ClassController {
 	@PostMapping
 	public ResponseEntity<Response> addClass(@RequestBody ClassDetails classDetails) {
 		ResponseEntity<Response> responseEntity = null;
-		Response response = new Response();
+		
 		try {
 		Long roomNo=classServiceImp.addClass(classDetails);
-		 response.setStatusText("ClassDetails added..!");
-		 response.setStatusCode(200);
-		 response.setData(roomNo);
-		 responseEntity=new ResponseEntity<>(response,new HttpHeaders(),HttpStatus.OK);
+		 responseEntity=ResponseUtil.getResponse(200,"ClassDetails added..!",roomNo);
 		}
 		catch(ServiceException e)
 		{
-			response.setStatusCode(500);
-			response.setStatusText(e.getMessage());
-			responseEntity = new ResponseEntity<>(response,new HttpHeaders(),HttpStatus.INTERNAL_SERVER_ERROR); 
+			responseEntity=ResponseUtil.getResponse(500,e.getMessage());
 		}
 		return responseEntity;
 	}
@@ -55,21 +50,14 @@ public class ClassController {
 	public ResponseEntity<Response> getClassDetails()
 	{
 		ResponseEntity<Response> responseEntity = null;
-		Response response = new Response();
 		List<ClassRoom> classDetails;
 		try {
 			classDetails = classServiceImp.getClassDetails();
-			response.setStatusText("Fetched classDetails..");
-			 response.setStatusCode(200);
-			 response.setData(classDetails);
-			 responseEntity=new ResponseEntity<>(response,new HttpHeaders(),HttpStatus.OK);
+			responseEntity=ResponseUtil.getResponse(200,"Fetched classDetails..!",classDetails);
 			
 		} catch(ServiceException e)
 		{
-			response.setStatusCode(500);
-			response.setStatusText(e.getMessage());
-			responseEntity= new ResponseEntity<>(response, new HttpHeaders(),
-					HttpStatus.INTERNAL_SERVER_ERROR);
+			responseEntity=ResponseUtil.getResponse(500,e.getMessage());
 		}
 		return responseEntity;
 	}
@@ -78,31 +66,22 @@ public class ClassController {
 	public ResponseEntity<Response> updateClass(@PathVariable("roomNo")Long roomNo,@RequestBody ClassDetails classDetails)
 	{
 		ResponseEntity<Response> responseEntity = null;
-		Response response = new Response();
 		
 		try {	
 			 ClassRoom updatedClass= classServiceImp.updateClass(roomNo,classDetails);
-			response.setStatusText("ClassDetails updated for roomNo "+roomNo+" !");
-			 response.setStatusCode(200);
-			 response.setData(updatedClass);
-			 responseEntity=new ResponseEntity<>(response,new HttpHeaders(),HttpStatus.OK);
+			 responseEntity=ResponseUtil.getResponse(200,"ClassDetails updated for roomNo "+roomNo+" !",updatedClass);
 			
 		} catch ( NotFoundException e) {
 			  
 			  if(e instanceof RoomNoNotFoundException)
 			  {
-			     response.setStatusCode(404);
-			     response.setStatusText(e.getMessage());
-			     responseEntity = new ResponseEntity<>(response,new HttpHeaders(),HttpStatus.NOT_FOUND);
+					responseEntity=ResponseUtil.getResponse(404,e.getMessage());
 			  } 
 		
 		} 
 		catch(ServiceException e)
 		{
-			response.setStatusCode(500);
-			response.setStatusText(e.getMessage());
-			responseEntity = new ResponseEntity<>(response, new HttpHeaders(),
-					HttpStatus.INTERNAL_SERVER_ERROR);
+			responseEntity=ResponseUtil.getResponse(500,e.getMessage());
 		}
 		
 		return responseEntity;
@@ -112,20 +91,13 @@ public class ClassController {
 	public ResponseEntity<Response> getClass(@PathVariable("standard") String standard,@PathVariable("section") String section)
 	{
 		ResponseEntity<Response> responseEntity = null;
-		Response response = new Response();
-		ClassRoom cls;
+		ClassRoom classDetails;
 		try {
-			cls = classServiceImp.getClass(standard,section);
-			response.setStatusText("Fetched classDetails...!");
-			 response.setStatusCode(200);
-			 response.setData(cls);
-			 responseEntity=new ResponseEntity<>(response,new HttpHeaders(),HttpStatus.OK);
+			classDetails = classServiceImp.getClass(standard,section);
+			 responseEntity=ResponseUtil.getResponse(200,"Fetching ClassDetails...!",classDetails);
 		} catch(ServiceException e)
 		{
-			response.setStatusCode(500);
-			response.setStatusText(e.getMessage());
-			responseEntity = new ResponseEntity<>(response, new HttpHeaders(),
-					HttpStatus.INTERNAL_SERVER_ERROR);
+			responseEntity=ResponseUtil.getResponse(500,e.getMessage());
 		}
 		return responseEntity;
 	}

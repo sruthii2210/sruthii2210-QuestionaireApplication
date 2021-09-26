@@ -9,14 +9,16 @@ import com.questionaire.exception.DatabaseException;
 
 
 public interface TeacherSubjectRepository {
-	Long assignTeacherSubject(Long teacherId, String subjectCode, TeacherSubject teacherSubjectDetails)
+	Long assignTeacherSubject(Long teacherId, String subjectCode, Long roomNo,TeacherSubject teacherSubjectDetails)
 			throws DatabaseException;
 
-	TeacherSubjectEntity updateTeacherSubjectAssign(Long teacherId, String subjectCode, TeacherSubject teacherSubjectDetails)
+	TeacherSubjectEntity updateTeacherSubjectAssign(Long teacherId, String subjectCode, Long roomNo,TeacherSubject teacherSubjectDetails)
 			throws DatabaseException;
 
 	String deleteTeacherSubjectAssign(Long teacherId, String subjectCode) throws DatabaseException;
 
 	List<TeacherSubjectModel> getSubject(Long teacherId) throws DatabaseException;
+
+	TeacherSubjectModel getQuiz(Long roomNo, String code) throws DatabaseException;
 
 }

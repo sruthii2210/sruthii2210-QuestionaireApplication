@@ -3,8 +3,6 @@ package com.questionaire.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,12 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.questionaire.dto.Subject;
 import com.questionaire.entity.SubjectEntity;
 import com.questionaire.exception.NotFoundException;
-import com.questionaire.exception.RoomNoNotFoundException;
 import com.questionaire.exception.SubjectNotFoundException;
+import com.questionaire.exception.StandardNotFoundException;
 import com.questionaire.exception.ServiceException;
 import com.questionaire.service.SubjectService;
-
-
+import com.questionaire.util.ResponseUtil;
 
 @RestController
 @RequestMapping("/api/subject")
@@ -34,93 +31,64 @@ public class SubjectController {
 	@Autowired
 	private SubjectService subjectService;
 	
-	@PostMapping("/{roomNo}")
-	public ResponseEntity<Response> addSubject(@PathVariable("roomNo") Long roomNo,@RequestBody Subject subject)
+	@PostMapping("/{standard}")
+	public ResponseEntity<Response> addSubject(@PathVariable("standard") String standard,@RequestBody Subject subject)
 	{
 		ResponseEntity<Response> responseBody = null;
-		Response response = new Response();
 		try {
-			String subCode=subjectService.addSubject(roomNo,subject);
-			response.setData(subCode);
-			response.setStatusText("Subject added");
-			response.setStatusCode(200);
-			responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
-		} catch ( NotFoundException e) {
-			if(e instanceof RoomNoNotFoundException )
+			String subjectCode=subjectService.addSubject(standard,subject);
+			responseBody=ResponseUtil.getResponse(200,"Subject added",subjectCode);
+		} 
+		catch (NotFoundException e) {
+			if(e instanceof StandardNotFoundException)
 			{
-			response.setStatusCode(404);
-			response.setStatusText(e.getMessage());
-			responseBody = new ResponseEntity<>(response, new HttpHeaders(),
-					HttpStatus.NOT_FOUND);
+				responseBody=ResponseUtil.getResponse(404,e.getMessage());
 			}
 		}
 		catch(ServiceException e)
 		{
-			response.setStatusCode(500);
-			response.setStatusText(e.getMessage());
-			responseBody = new ResponseEntity<>(response, new HttpHeaders(),
-					HttpStatus.INTERNAL_SERVER_ERROR);
+			responseBody=ResponseUtil.getResponse(500,e.getMessage());
 		}
 		return responseBody;
 	}
 	
-	@GetMapping("/{roomNo}")
-	public ResponseEntity<Response> getSubject(@PathVariable("roomNo") Long roomNo)
+	@GetMapping("/{standard}")
+	public ResponseEntity<Response> getSubject(@PathVariable("standard") String standard)
 	{
 		ResponseEntity<Response> responseEntity = null;
-		Response response = new Response();
 		try {
-			List<SubjectEntity>subject=subjectService.getSubject(roomNo);
-			response.setData(subject);
-			response.setStatusText("Subject Details Fetched");
-			response.setStatusCode(200);
-			responseEntity = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
+			List<SubjectEntity>subjects=subjectService.getSubject(standard);
+			responseEntity=ResponseUtil.getResponse(200,"Subjects fetched",subjects);
 		} catch (NotFoundException e) {
-			if(e instanceof RoomNoNotFoundException)
+			if(e instanceof StandardNotFoundException)
 			{
-			response.setStatusCode(404);
-			response.setStatusText(e.getMessage());
-			responseEntity = new ResponseEntity<>(response, new HttpHeaders(),
-					HttpStatus.NOT_FOUND);
+				responseEntity=ResponseUtil.getResponse(404,e.getMessage());
 			}
 		}
 		catch(ServiceException e)
 		{
-			response.setStatusCode(500);
-			response.setStatusText(e.getMessage());
-			responseEntity = new ResponseEntity<>(response, new HttpHeaders(),
-					HttpStatus.INTERNAL_SERVER_ERROR);
+			responseEntity=ResponseUtil.getResponse(500,e.getMessage());
 		}
 		return responseEntity;
 		
 	}
 	
-	@PutMapping("{roomNo}/{subCode}")
-	public ResponseEntity<Response>updateSubject(@PathVariable("roomNo") Long roomNo,@PathVariable("subCode") String subCode,@RequestBody Subject subject)
+	@PutMapping("{standard}/{code}")
+	public ResponseEntity<Response>updateSubject(@PathVariable("standard") String standard,@PathVariable("code") String subCode,@RequestBody Subject subject)
 	{
 		ResponseEntity<Response>responseEntity=null;
-		Response response=new Response();
 		try {
-			SubjectEntity sub=subjectService.updateSubject(roomNo,subCode,subject);
-			response.setData(sub);
-			response.setStatusText("Subject Details updated!");
-			response.setStatusCode(200);
-			responseEntity = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
+			SubjectEntity subjectEntity=subjectService.updateSubject(standard,subCode,subject);
+			responseEntity=ResponseUtil.getResponse(200,"Subject Details updated!",subjectEntity);
 		} catch (NotFoundException e) {
-			if(e instanceof RoomNoNotFoundException||e instanceof SubjectNotFoundException)
+			if(e instanceof StandardNotFoundException||e instanceof SubjectNotFoundException)
 			{
-			response.setStatusCode(404);
-			response.setStatusText(e.getMessage());
-			responseEntity = new ResponseEntity<>(response, new HttpHeaders(),
-					HttpStatus.NOT_FOUND);
+				responseEntity=ResponseUtil.getResponse(404,e.getMessage());
 			}
 		}
 		catch(ServiceException e)
 		{
-			response.setStatusCode(500);
-			response.setStatusText(e.getMessage());
-			responseEntity = new ResponseEntity<>(response, new HttpHeaders(),
-					HttpStatus.INTERNAL_SERVER_ERROR);
+			responseEntity=ResponseUtil.getResponse(500,e.getMessage());
 		}
 		return responseEntity;
 	}
@@ -129,27 +97,18 @@ public class SubjectController {
 	public ResponseEntity<Response>deleteSubject(@PathVariable("subCode") String subCode)
 	{
 		ResponseEntity<Response>responseEntity=null;
-		Response response=new Response();
 		try {
 			String string=subjectService.deleteSubject(subCode);
-			response.setStatusText(string);
-			response.setStatusCode(200);
-			responseEntity = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
+			responseEntity=ResponseUtil.getResponse(200,"Subject is removed..!",string);
 		} catch (NotFoundException e) {
 			if(e instanceof SubjectNotFoundException)
 			{
-			response.setStatusCode(404);
-			response.setStatusText(e.getMessage());
-			responseEntity = new ResponseEntity<>(response, new HttpHeaders(),
-					HttpStatus.NOT_FOUND);
+				responseEntity=ResponseUtil.getResponse(404,e.getMessage());
 			}
 		}
 		catch(ServiceException e)
 		{
-			response.setStatusCode(500);
-			response.setStatusText(e.getMessage());
-			responseEntity = new ResponseEntity<>(response, new HttpHeaders(),
-					HttpStatus.INTERNAL_SERVER_ERROR);
+			responseEntity=ResponseUtil.getResponse(500,e.getMessage());
 		}
 		return responseEntity;
 	}

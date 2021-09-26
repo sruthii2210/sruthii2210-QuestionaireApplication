@@ -45,7 +45,7 @@ public class QuizRepositoryImpl implements QuizRepository {
 	public void checkQuizBySubCode(String subCode) throws QuizIdNotFoundException {
 		Session session = null;
 		session = sessionFactory.getCurrentSession();
-		Query query = session.createQuery("from QuizEntity where subject.subCode=:subCode ");
+		Query query = session.createQuery("from QuizEntity where subject.code=:subCode ");
 
 		query.setParameter("subCode", subCode);
 		List<QuizEntity> quiz;
@@ -82,7 +82,7 @@ public class QuizRepositoryImpl implements QuizRepository {
 		try {
 			session = sessionFactory.getCurrentSession();
 			checkQuizBySubCode(subCode);
-			Query query = session.createQuery("from QuizEntity  where teacher.id=:id and subject.subCode=:subCode");
+			Query query = session.createQuery("from QuizEntity  where teacher.id=:id and subject.code=:subCode");
 			query.setParameter("subCode", subCode);
 			query.setParameter("id", id);
 			quiz = query.getResultList();
@@ -100,7 +100,7 @@ public class QuizRepositoryImpl implements QuizRepository {
 		try {
 			session = sessionFactory.getCurrentSession();
 			sub.checkSubject(subCode);
-			Query query = session.createQuery("from QuizEntity  where subject.subCode=:subCode");
+			Query query = session.createQuery("from QuizEntity  where subject.code=:subCode");
 			query.setParameter("subCode", subCode);
 			quiz = query.getResultList();
 		} catch (HibernateException | SubjectNotFoundException e) {

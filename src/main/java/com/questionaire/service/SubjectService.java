@@ -9,11 +9,11 @@ import com.questionaire.exception.ServiceException;
 
 public interface SubjectService {
 
-	String addSubject(Long roomNo, Subject subject) throws ServiceException, NotFoundException;
+	String addSubject(String standard, Subject subject) throws ServiceException, NotFoundException;
 
-	List<SubjectEntity> getSubject(Long roomNo) throws ServiceException, NotFoundException;
+	List<SubjectEntity> getSubject(String standard) throws ServiceException, NotFoundException;
 
-	SubjectEntity updateSubject(Long roomNo, String subCode, Subject subject)
+	SubjectEntity updateSubject(String standard, String subCode, Subject subject)
 			throws ServiceException, NotFoundException;
 
 	String deleteSubject(String subCode) throws ServiceException, NotFoundException;

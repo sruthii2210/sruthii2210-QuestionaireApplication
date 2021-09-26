@@ -10,14 +10,14 @@ public class QuizMapper {
 	public static QuizEntity mapQuiz(Long id,String subCode,Quiz quiz) {
 
 		SubjectEntity subject = new SubjectEntity();
-		subject.setSubCode(subCode);
+		subject.setCode(subCode);
 		TeacherEntity teacher=new TeacherEntity();
 		teacher.setId(id);
-		QuizEntity entity=new QuizEntity();
-		entity.setSubject(subject);
-		entity.setTeacher(teacher);
-		entity.setName(quiz.getName());
-		return entity;
+		QuizEntity quizEntity=new QuizEntity();
+		quizEntity.setSubject(subject);
+		quizEntity.setTeacher(teacher);
+		quizEntity.setName(quiz.getName());
+		return quizEntity;
 		
 
 	}

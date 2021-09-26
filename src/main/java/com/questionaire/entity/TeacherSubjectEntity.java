@@ -3,6 +3,7 @@ package com.questionaire.entity;
 import java.io.Serializable;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -34,7 +35,12 @@ public class TeacherSubjectEntity implements Serializable {
 	private TeacherEntity teacher;
 
 	@ManyToOne(targetEntity = SubjectEntity.class)
-	@JoinColumn(name = "code", nullable = false, unique = true)
+	@JoinColumn(name = "code", nullable = false)
 	@JsonIgnore
 	private SubjectEntity subject;
+	
+	@ManyToOne(targetEntity = ClassRoom.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "roomNo", nullable = false)
+	//@JsonIgnore
+	private ClassRoom classRoom;
 }

@@ -36,7 +36,7 @@ public class QuestionRepositoryImpl implements QuestionRepository {
 		Session session=null;
 		session=sessionFactory.getCurrentSession();
 		QuestionEntity question;
-		Query<QuestionEntity> query=session.createQuery("from QuestionEntity where quiz.id=:id and quesNo=:ques");
+		Query<QuestionEntity> query=session.createQuery("from QuestionEntity where quiz.id=:id and questionNo=:ques");
 		query.setParameter("id",id);
 		query.setParameter("ques", quesNo);
 		logger.info("In checkQuizByQuesNo method...");
@@ -54,7 +54,7 @@ public class QuestionRepositoryImpl implements QuestionRepository {
 		Session session=null;
 		session=sessionFactory.getCurrentSession();
 		QuestionEntity question;
-		Query<QuestionEntity> query=session.createQuery("from QuestionEntity where quesNo=:ques");
+		Query<QuestionEntity> query=session.createQuery("from QuestionEntity where questionNo=:ques");
 		query.setParameter("ques", quesNo);
 		logger.info("In checkQuestion method...");
 	    question =query.uniqueResultOptional().orElse(null);

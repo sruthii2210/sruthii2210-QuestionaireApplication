@@ -14,16 +14,16 @@ public class ResultMapper {
 		QuizEntity quiz = new QuizEntity();
 
 		student.setRollNo(rollNo);
-		subject.setSubCode(subCode);
+		subject.setCode(subCode);
 		quiz.setAutoId(id);
-		ResultEntity entity = new ResultEntity();
+		ResultEntity resultEntity = new ResultEntity();
 		
-		entity.setStud(student);
-		entity.setSub(subject);
-		entity.setQuiz(quiz);
-		entity.setScore(result.getScore());
+		resultEntity.setStudent(student);
+		resultEntity.setSubject(subject);
+		resultEntity.setQuiz(quiz);
+		resultEntity.setScore(result.getScore());
 		
-		return entity;
+		return resultEntity;
 
 	}
 }

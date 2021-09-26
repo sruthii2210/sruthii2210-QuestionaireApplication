@@ -33,7 +33,7 @@ public class SubjectRepositoryImpl implements SubjectRepository {
 	public void checkSubject(String code) throws SubjectNotFoundException {
 		Session session = sessionFactory.getCurrentSession();
 		SubjectEntity subject = new SubjectEntity();
-		Query<SubjectEntity> query = session.createQuery("FROM SubjectEntity WHERE subCode=:subjectCode");
+		Query<SubjectEntity> query = session.createQuery("FROM SubjectEntity WHERE code=:subjectCode");
 		query.setParameter("subjectCode", code);
 
 		subject=query.uniqueResultOptional().orElse(null);
@@ -45,27 +45,28 @@ public class SubjectRepositoryImpl implements SubjectRepository {
 
 	}
 
-	public void checkSubjectRoom(Long roomNo, String code) throws SubjectNotFoundException {
-		SubjectEntity subject = new SubjectEntity();
-		Session session = sessionFactory.getCurrentSession();
-		Query<SubjectEntity> query = session.createQuery("FROM SubjectEntity WHERE subCode=:subjectCode and classRoom.roomNo=:roomNo");
-		query.setParameter("subjectCode", code);
-		query.setParameter("roomNo", roomNo);
-		subject = query.uniqueResultOptional().orElse(null);
-		logger.info("In checkSubject Method...");
-		if (subject == null) {
-			logger.warn("In checkSubjectRoom method...");
-			throw new SubjectNotFoundException("SubjectCode or RoomNo is not Valid..Enter valid one!");
-		}
+//	public void checkSubjectRoom(String standard, String code) throws SubjectNotFoundException {
+//		SubjectEntity subject = new SubjectEntity();
+//		Session session = sessionFactory.getCurrentSession();
+//		
+//		Query<SubjectEntity> query = session.createQuery("FROM SubjectEntity WHERE subCode=:subjectCode");
+//		query.setParameter("subjectCode", code);
+//		query.setParameter("standard", standard);
+//		subject = query.uniqueResultOptional().orElse(null);
+//		logger.info("In checkSubject Method...");
+//		if (subject == null) {
+//			logger.warn("In checkSubjectRoom method...");
+//			throw new SubjectNotFoundException("SubjectCode or RoomNo is not Valid..Enter valid one!");
+//		}
+//
+//	}
 
-	}
-
-	public String addSubject(Long roomNo, Subject subject) throws DatabaseException {
+	public String addSubject(String standard, Subject subject) throws DatabaseException {
 		Session session = null;
 		String subCode = null;
 		try {
 			session = sessionFactory.getCurrentSession();
-			subCode = (String) session.save(SubjectMapper.mapSubject(subject, roomNo));
+			subCode = (String) session.save(SubjectMapper.mapSubject(subject,standard));
 			logger.info("In addSubject Method...");
 
 		} catch (HibernateException e) {
@@ -77,13 +78,13 @@ public class SubjectRepositoryImpl implements SubjectRepository {
 	}
 
 	@Override
-	public List<SubjectEntity> getSubject(Long roomNo) throws DatabaseException {
+	public List<SubjectEntity> getSubject(String standard) throws DatabaseException {
 		List<SubjectEntity> subject = new ArrayList<>();
 		Session session = null;
 		try {
 			session = sessionFactory.getCurrentSession();
-			Query query = session.createQuery("from SubjectEntity s where roomNo=:room");
-			query.setParameter("room", roomNo);
+			Query query = session.createQuery("from SubjectEntity s where standard=:standard");
+			query.setParameter("standard",standard);
 			subject = query.getResultList();
 			logger.info("In getSubject Method for particular class...");
 
@@ -95,20 +96,20 @@ public class SubjectRepositoryImpl implements SubjectRepository {
 	}
 
 	@Override
-	public SubjectEntity updateSubject(Long roomNo, String subCode, Subject subject) throws DatabaseException {
+	public SubjectEntity updateSubject(String standard, String code, Subject subject) throws DatabaseException {
 		Session session = null;
 		SubjectEntity response = null;
 		try {
 			session = sessionFactory.getCurrentSession();
-			SubjectEntity sub = SubjectMapper.mapSubject(subject, roomNo);
-			session.find(SubjectEntity.class, subCode);
-			SubjectEntity subjectEntity = session.load(SubjectEntity.class, subCode);
+			SubjectEntity sub = SubjectMapper.mapSubject(subject, standard);
+			session.find(SubjectEntity.class, code);
+			SubjectEntity subjectEntity = session.load(SubjectEntity.class, code);
 			logger.info("In updateSubject Method ...");
-			ClassRoom classDetails = new ClassRoom();
-			classDetails.setRoomNo(roomNo);
-			subjectEntity.setClassRoom(classDetails);
+			
+			//subjectEntity.setClassRoom(classDetails);
 
-			subjectEntity.setSubName(subject.getSubName());
+			subjectEntity.setName(subject.getName());
+			//subjectEntity.setStandard(subject.getStandard());
 			session.merge(subjectEntity);
 
 			response = subjectEntity;
@@ -122,14 +123,14 @@ public class SubjectRepositoryImpl implements SubjectRepository {
 	}
 
 	@Override
-	public String deleteSubject(String subCode) throws DatabaseException {
+	public String deleteSubject(String code) throws DatabaseException {
 		Session session = null;
 		String response = null;
 		try {
 			session = sessionFactory.getCurrentSession();
 
-			session.find(SubjectEntity.class, subCode);
-			SubjectEntity subject = session.load(SubjectEntity.class, subCode);
+			session.find(SubjectEntity.class, code);
+			SubjectEntity subject = session.load(SubjectEntity.class, code);
 			logger.info("In deleteSubject Method ...");
 			session.delete(subject);
 			response = "Subject Details deleted Successfully!";

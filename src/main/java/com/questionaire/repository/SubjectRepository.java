@@ -11,13 +11,13 @@ public interface SubjectRepository {
 
 	void checkSubject(String code) throws SubjectNotFoundException;
 
-	void checkSubjectRoom(Long roomNo, String code) throws SubjectNotFoundException;
+	//void checkSubjectRoom(String standard, String code) throws SubjectNotFoundException;
 	
-	String addSubject(Long roomNo, Subject subject) throws DatabaseException;
+	String addSubject(String standard, Subject subject) throws DatabaseException;
 
-	List<SubjectEntity> getSubject(Long roomNo) throws DatabaseException;
+	List<SubjectEntity> getSubject(String standard) throws DatabaseException;
 
-	SubjectEntity updateSubject(Long roomNo, String subCode, Subject subject) throws DatabaseException;
+	SubjectEntity updateSubject(String standard, String subCode, Subject subject) throws DatabaseException;
 
 	String deleteSubject(String subCode) throws DatabaseException;
 

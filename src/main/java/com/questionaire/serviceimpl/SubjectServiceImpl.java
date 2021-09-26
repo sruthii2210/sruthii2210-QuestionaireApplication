@@ -23,22 +23,23 @@ public class SubjectServiceImpl implements SubjectService{
 	@Autowired
 	private ClassRepository classRepository;
 	@Override
-	public String addSubject(Long roomNo,Subject subject) throws ServiceException, NotFoundException {
+	public String addSubject(String standard,Subject subject) throws ServiceException, NotFoundException {
 		try {
-			classRepository.checkClassRoomNo(roomNo);
+			
+			classRepository.checkStandard(standard);
 			logger.info("In addSubject in subjectServiceImp...");
-			return subjectRepository.addSubject(roomNo,subject);
+			return subjectRepository.addSubject(standard,subject);
 		} catch (DatabaseException e) {
 			throw new ServiceException(e.getMessage());
 		}
 	}
-	public List<SubjectEntity> getSubject(Long roomNo) throws ServiceException, NotFoundException
+	public List<SubjectEntity> getSubject(String standard) throws ServiceException, NotFoundException
 	{
 		List<SubjectEntity> subject;
 		try {
-			classRepository.checkClassRoomNo(roomNo);
+			classRepository.checkStandard(standard);
 			logger.info("In getSubject in subjectServiceImp...");
-			subject = subjectRepository.getSubject(roomNo);
+			subject = subjectRepository.getSubject(standard);
 			
 		} catch (DatabaseException e) {
 		throw new ServiceException(e.getMessage());
@@ -46,11 +47,13 @@ public class SubjectServiceImpl implements SubjectService{
 		return subject;
 	}
 	@Override
-	public SubjectEntity updateSubject(Long roomNo, String subCode, Subject subject) throws ServiceException, NotFoundException {
+	public SubjectEntity updateSubject(String standard, String subCode, Subject subject) throws ServiceException, NotFoundException {
 		try {
-			subjectRepository.checkSubjectRoom(roomNo, subCode);
+			classRepository.checkStandard(standard);
+			
+			subjectRepository.checkSubject(subCode);
 			logger.info("In updateSubject in subjectServiceImp...");
-			return subjectRepository.updateSubject(roomNo,subCode,subject);
+			return subjectRepository.updateSubject(standard,subCode,subject);
 		} catch (DatabaseException e) {
 			throw new ServiceException(e.getMessage());
 		}

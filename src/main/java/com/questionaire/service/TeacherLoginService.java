@@ -1,6 +1,5 @@
 package com.questionaire.service;
 
-import java.util.List;
 
 import com.questionaire.dto.TeacherLogin;
 import com.questionaire.entity.TeacherLoginEntity;
@@ -11,7 +10,7 @@ public interface TeacherLoginService {
 
 	Long createLogin(Long id, TeacherLogin login) throws ServiceException, NotFoundException;
 
-	List<TeacherLoginEntity> getDetails(Long id) throws ServiceException, NotFoundException;
+	TeacherLoginEntity getDetails(Long id) throws ServiceException, NotFoundException;
 
 	TeacherLoginEntity updateLogin(Long id, TeacherLogin login) throws ServiceException, NotFoundException;
 

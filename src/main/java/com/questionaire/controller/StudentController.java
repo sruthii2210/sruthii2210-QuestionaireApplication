@@ -3,8 +3,6 @@ package com.questionaire.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,6 +21,7 @@ import com.questionaire.exception.RoomNoNotFoundException;
 import com.questionaire.exception.ServiceException;
 import com.questionaire.exception.StudentIdNotFoundException;
 import com.questionaire.service.StudentService;
+import com.questionaire.util.ResponseUtil;
 
 @RestController
 @RequestMapping("/api/student")
@@ -35,56 +34,34 @@ public class StudentController {
 	@PostMapping("/{roomNo}")
 	public ResponseEntity<Response> addStudent(@PathVariable("roomNo") Long roomNo, @RequestBody Student student) {
 		ResponseEntity<Response> responseEntity = null;
-		Response response = new Response();
 		try {
 			Long studId = studentService.addStudent(roomNo, student);
-			response.setStatusText("StudentDetails added");
-			response.setStatusCode(200);
-			response.setData(studId);
-			responseEntity = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
+			responseEntity = ResponseUtil.getResponse(200, "StudentDetails added", studId);
 
-		} catch ( NotFoundException e) {
+		} catch (NotFoundException e) {
 			if (e instanceof RoomNoNotFoundException) {
-				response.setStatusCode(404);
-				response.setStatusText(e.getMessage());
-				responseEntity = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.NOT_FOUND);
+				responseEntity = ResponseUtil.getResponse(404, e.getMessage());
 			}
-		}
-		catch(ServiceException e)
-		{
-			response.setStatusCode(500);
-			response.setStatusText(e.getMessage());
-			responseEntity = new ResponseEntity<>(response, new HttpHeaders(),
-					HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (ServiceException e) {
+			responseEntity = ResponseUtil.getResponse(500, e.getMessage());
 		}
 		return responseEntity;
 	}
 
 	@GetMapping("/room/{roomNo}")
 	public ResponseEntity<Response> getStudent(@PathVariable("roomNo") Long roomNo) {
-		List<StudentEntity> student;
+		List<StudentEntity> students;
 		ResponseEntity<Response> responseEntity = null;
-		Response response = new Response();
 		try {
-			student = studentService.getStudent(roomNo);
-			response.setStatusText("StudentDetails fetched!");
-			response.setStatusCode(200);
-			response.setData(student);
-			responseEntity = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
+			students = studentService.getStudent(roomNo);
+			responseEntity=ResponseUtil.getResponse(200,"StudentDetails fetched",students);
 
 		} catch (NotFoundException e) {
 			if (e instanceof RoomNoNotFoundException) {
-				response.setStatusCode(404);
-				response.setStatusText(e.getMessage());
-				responseEntity = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.NOT_FOUND);
+				responseEntity=ResponseUtil.getResponse(404,e.getMessage());
 			}
-		}
-		catch(ServiceException e)
-		{
-			response.setStatusCode(500);
-			response.setStatusText(e.getMessage());
-			responseEntity = new ResponseEntity<>(response, new HttpHeaders(),
-					HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (ServiceException e) {
+			responseEntity=ResponseUtil.getResponse(500,e.getMessage());
 		}
 		return responseEntity;
 	}
@@ -92,27 +69,16 @@ public class StudentController {
 	@GetMapping("/{rollNo}")
 	public ResponseEntity<Response> getStudentById(@PathVariable("rollNo") Long rollNo) {
 		ResponseEntity<Response> responseEntity = null;
-		Response response = new Response();
 		try {
 			StudentEntity student = studentService.getStudentById(rollNo);
-			response.setStatusText("StudentDetails fetched!");
-			response.setStatusCode(200);
-			response.setData(student);
-			responseEntity = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
+			responseEntity=ResponseUtil.getResponse(200,"StudentDetail fetched ",student);
 
-		} catch ( NotFoundException e) {
+		} catch (NotFoundException e) {
 			if (e instanceof StudentIdNotFoundException) {
-				response.setStatusCode(404);
-				response.setStatusText(e.getMessage());
-				responseEntity = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.NOT_FOUND);
+				responseEntity=ResponseUtil.getResponse(404,e.getMessage());
 			}
-		}
-		catch(ServiceException e)
-		{
-			response.setStatusCode(500);
-			response.setStatusText(e.getMessage());
-			responseEntity = new ResponseEntity<>(response, new HttpHeaders(),
-					HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (ServiceException e) {
+			responseEntity=ResponseUtil.getResponse(500,e.getMessage());
 		}
 		return responseEntity;
 
@@ -122,26 +88,15 @@ public class StudentController {
 	public ResponseEntity<Response> updateStudent(@PathVariable("roomNo") Long roomNo,
 			@PathVariable("rollNo") Long rollNo, @RequestBody Student student) {
 		ResponseEntity<Response> responseEntity = null;
-		Response response = new Response();
 		try {
-			StudentEntity stud = studentService.updateStudent(roomNo, rollNo, student);
-			response.setStatusText("StudentDetails Updated!");
-			response.setStatusCode(200);
-			response.setData(stud);
-			responseEntity = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
-		} catch ( NotFoundException e) {
+			StudentEntity updatedStudent = studentService.updateStudent(roomNo, rollNo, student);
+			responseEntity=ResponseUtil.getResponse(200,"StudentDetails updated",updatedStudent);
+		} catch (NotFoundException e) {
 			if (e instanceof StudentIdNotFoundException || e instanceof RoomNoNotFoundException) {
-				response.setStatusCode(404);
-				response.setStatusText(e.getMessage());
-				responseEntity = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.NOT_FOUND);
+				responseEntity=ResponseUtil.getResponse(400,e.getMessage());
 			}
-		}
-		catch(ServiceException e)
-		{
-			response.setStatusCode(500);
-			response.setStatusText(e.getMessage());
-			responseEntity = new ResponseEntity<>(response, new HttpHeaders(),
-					HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (ServiceException e) {
+			responseEntity=ResponseUtil.getResponse(500,e.getMessage());
 		}
 		return responseEntity;
 	}
@@ -149,27 +104,16 @@ public class StudentController {
 	@DeleteMapping("/{rollNo}")
 	public ResponseEntity<Response> deleteStudent(@PathVariable("rollNo") Long rollNo) {
 		ResponseEntity<Response> responseEntity = null;
-		Response response = new Response();
 		try {
 			String string = studentService.deleteStudent(rollNo);
-			response.setStatusText(string);
-			response.setStatusCode(200);
-
-			responseEntity = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
+			responseEntity=ResponseUtil.getResponse(200,"StudentDetail deleted",string);
 
 		} catch (NotFoundException e) {
 			if (e instanceof StudentIdNotFoundException) {
-				response.setStatusCode(404);
-				response.setStatusText(e.getMessage());
-				responseEntity = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.NOT_FOUND);
+				responseEntity=ResponseUtil.getResponse(404,e.getMessage());
 			}
-		}
-		catch(ServiceException e)
-		{
-			response.setStatusCode(500);
-			response.setStatusText(e.getMessage());
-			responseEntity = new ResponseEntity<>(response, new HttpHeaders(),
-					HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (ServiceException e) {
+			responseEntity=ResponseUtil.getResponse(500,e.getMessage());
 		}
 		return responseEntity;
 	}

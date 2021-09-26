@@ -10,9 +10,9 @@ public class QuestionMapper {
 	{
 		QuizEntity quiz=new QuizEntity();
 		quiz.setAutoId(id);
-		QuestionEntity entity=new QuestionEntity();
-		entity.setQuiz(quiz);
-		entity.setQuestion(question.getQuestion());
-		return entity;
+		QuestionEntity questionEntity=new QuestionEntity();
+		questionEntity.setQuiz(quiz);
+		questionEntity.setQuestion(question.getQuestion());
+		return questionEntity;
 	}
 }

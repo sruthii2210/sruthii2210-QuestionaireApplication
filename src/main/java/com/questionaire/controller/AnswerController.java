@@ -30,31 +30,22 @@ public class AnswerController {
 	private AnswerService answerService;
 
 	@PostMapping("/{quesNo}")
-	public ResponseEntity<Response> addAnswer(@Valid @PathVariable("quesNo") Integer quesNo, @RequestBody Answer answer) {
+	public ResponseEntity<Response> addAnswer(@Valid @PathVariable("quesNo") Integer quesNo,
+			@RequestBody Answer answer) {
 		ResponseEntity<Response> responseBody = null;
 		try {
 			Long autoId = answerService.addAnswer(quesNo, answer);
-//			response.setData(autoId);
-//			response.setStatusText("Answer is added successfully!..");
-//			response.setStatusCode(200);
 			responseBody = ResponseUtil.getResponse(200, "Answer is added successfully!..", autoId);
 
-		} catch ( NotFoundException e) {
+		} catch (NotFoundException e) {
 
-			if (e instanceof QuestionNotFoundException) 
-			{
-//				response.setStatusText(e.getMessage());
-//				response.setStatusCode(404);
+			if (e instanceof QuestionNotFoundException) {
 				responseBody = ResponseUtil.getResponse(404, e.getMessage());
 			}
+		} catch (ServiceException e) {
+			responseBody = ResponseUtil.getResponse(500, e.getMessage());
 		}
-			catch(ServiceException e)
-			{
-//				response.setStatusCode(500);
-//				response.setStatusText(e.getMessage());
-				responseBody = ResponseUtil.getResponse(500, e.getMessage());
-			}
-		
+
 		return responseBody;
 	}
 
@@ -63,24 +54,14 @@ public class AnswerController {
 		ResponseEntity<Response> responseBody = null;
 		try {
 			AnswerEntity answer = answerService.getAnswer(quesNo);
-//			response.setData(answer);
-//			response.setStatusText("OK");
-//			response.setStatusCode(200);
-			responseBody = ResponseUtil.getResponse(200, "Fetched options for quesNo "+quesNo, answer);
-		
-		} catch ( NotFoundException e) {
+			responseBody = ResponseUtil.getResponse(200, "Fetched options for quesNo " + quesNo, answer);
 
-			if(e instanceof QuestionNotFoundException)
-			{
-//			response.setStatusCode(404);
-//			response.setStatusText(e.getMessage());
-			responseBody = ResponseUtil.getResponse(404, e.getMessage());
+		} catch (NotFoundException e) {
+
+			if (e instanceof QuestionNotFoundException) {
+				responseBody = ResponseUtil.getResponse(404, e.getMessage());
 			}
-		}
-		catch(ServiceException e)
-		{
-//			response.setStatusCode(500);
-//			response.setStatusText(e.getMessage());
+		} catch (ServiceException e) {
 			responseBody = ResponseUtil.getResponse(500, e.getMessage());
 		}
 		return responseBody;
@@ -92,23 +73,14 @@ public class AnswerController {
 		ResponseEntity<Response> responseBody = null;
 		try {
 			AnswerEntity updatedAnswer = answerService.updateAnswer(autoId, quesNo, answer);
-//			response.setData(updatedAnswer);
-//			response.setStatusText("OK");
-//			response.setStatusCode(200);
+
 			responseBody = ResponseUtil.getResponse(200, "Updated answer!..", updatedAnswer);
 		} catch (NotFoundException e) {
 
-			if(e instanceof QuestionNotFoundException)
-			{
-//			response.setStatusCode(404);
-//			response.setStatusText(e.getMessage());
+			if (e instanceof QuestionNotFoundException) {
 				responseBody = ResponseUtil.getResponse(404, e.getMessage());
-		}
-		}
-		catch(ServiceException e)
-		{
-//			response.setStatusCode(500);
-//			response.setStatusText(e.getMessage());
+			}
+		} catch (ServiceException e) {
 			responseBody = ResponseUtil.getResponse(500, e.getMessage());
 		}
 		return responseBody;

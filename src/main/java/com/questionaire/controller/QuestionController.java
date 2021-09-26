@@ -3,8 +3,6 @@ package com.questionaire.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,6 +21,7 @@ import com.questionaire.exception.QuestionNotFoundException;
 import com.questionaire.exception.QuizIdNotFoundException;
 import com.questionaire.exception.ServiceException;
 import com.questionaire.service.QuestionService;
+import com.questionaire.util.ResponseUtil;
 
 @RestController
 @RequestMapping("/api/question")
@@ -35,24 +34,16 @@ public class QuestionController {
 	@PostMapping("/{id}")
 	public ResponseEntity<Response> addQuestion(@PathVariable("id") Long id, @RequestBody Question question) {
 		ResponseEntity<Response> responseBody = null;
-		Response response = new Response();
 		try {
-			Integer ques = questionService.addQuestion(id, question);
-			response.setData(ques);
-			response.setStatusText("Question is added...!");
-			response.setStatusCode(200);
-			responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
+			Integer quesNo = questionService.addQuestion(id, question);
+			 responseBody=ResponseUtil.getResponse(200,"Question is added...!",quesNo);
 
 		} catch (NotFoundException e) {
 			if (e instanceof QuizIdNotFoundException) {
-				response.setStatusCode(404);
-				response.setStatusText(e.getMessage());
-				responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.NOT_FOUND);
+				responseBody=ResponseUtil.getResponse(404,e.getMessage());
 			}
 		} catch (ServiceException e) {
-			response.setStatusCode(500);
-			response.setStatusText(e.getMessage());
-			responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+			responseBody=ResponseUtil.getResponse(500,e.getMessage());
 		}
 		return responseBody;
 	}
@@ -60,24 +51,16 @@ public class QuestionController {
 	@GetMapping("/{id}")
 	public ResponseEntity<Response> getQuestion(@PathVariable("id") Long id) {
 		ResponseEntity<Response> responseBody = null;
-		Response response = new Response();
-		List<QuestionEntity> ques;
+		List<QuestionEntity> questions;
 		try {
-			ques = questionService.getQuestion(id);
-			response.setData(ques);
-			response.setStatusText("Fetched Questions..");
-			response.setStatusCode(200);
-			responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
+			questions = questionService.getQuestion(id);
+			responseBody=ResponseUtil.getResponse(200,"Fetched Questions..",questions);
 		} catch (NotFoundException e) {
 			if (e instanceof QuizIdNotFoundException) {
-				response.setStatusCode(404);
-				response.setStatusText(e.getMessage());
-				responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.NOT_FOUND);
+				responseBody=ResponseUtil.getResponse(404,e.getMessage());
 			}
 		} catch (ServiceException e) {
-			response.setStatusCode(500);
-			response.setStatusText(e.getMessage());
-			responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+			responseBody=ResponseUtil.getResponse(500,e.getMessage());
 		}
 		return responseBody;
 	}
@@ -86,24 +69,16 @@ public class QuestionController {
 	public ResponseEntity<Response> updateQuestion(@PathVariable("id") Long id, @PathVariable("quesNo") Integer quesNo,
 			@RequestBody Question question) throws QuizIdNotFoundException {
 		ResponseEntity<Response> responseBody = null;
-		Response response = new Response();
 		try {
-			QuestionEntity ques = questionService.updateQuestion(id, quesNo, question);
-			response.setData(ques);
-			response.setStatusText("Question is updated");
-			response.setStatusCode(200);
-			responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
+			QuestionEntity questionEntity = questionService.updateQuestion(id, quesNo, question);
+			responseBody=ResponseUtil.getResponse(200,"Question is updated...!",questionEntity);
 		} catch (NotFoundException e) {
 			if (e instanceof QuizIdNotFoundException || e instanceof QuestionNotFoundException) {
-				response.setStatusCode(404);
-				response.setStatusText(e.getMessage());
-				responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.NOT_FOUND);
+				responseBody=ResponseUtil.getResponse(404,e.getMessage());
 			}
 
 		} catch (ServiceException e) {
-			response.setStatusCode(500);
-			response.setStatusText(e.getMessage());
-			responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+			responseBody=ResponseUtil.getResponse(500,e.getMessage());
 		}
 		return responseBody;
 	}
@@ -112,27 +87,18 @@ public class QuestionController {
 	public ResponseEntity<Response> deleteQuestion(@PathVariable("quesNo") Integer quesNo)
 			throws QuestionNotFoundException {
 		ResponseEntity<Response> responseBody = null;
-		Response response = new Response();
 		try {
-			String ques = questionService.deleteQuestion(quesNo);
-			response.setData(ques);
-			response.setStatusText("OK");
-			response.setStatusCode(200);
-			responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
+			String string= questionService.deleteQuestion(quesNo);
+			responseBody=ResponseUtil.getResponse(200,"Question is deleted...!",string);
 		} catch ( NotFoundException e) {
 
 			if (e instanceof QuestionNotFoundException) {
-				response.setStatusCode(404);
-				response.setStatusText(e.getMessage());
-				responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.NOT_FOUND);
+				responseBody=ResponseUtil.getResponse(404,e.getMessage());
 			}
 		}
 		catch(ServiceException e)
 		{
-			response.setStatusCode(500);
-			response.setStatusText(e.getMessage());
-			responseBody = new ResponseEntity<>(response, new HttpHeaders(),
-					HttpStatus.INTERNAL_SERVER_ERROR);
+			responseBody=ResponseUtil.getResponse(500,e.getMessage());
 		}
 		return responseBody;
 	}

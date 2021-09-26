@@ -31,7 +31,7 @@ public class ClassRoom implements Serializable {
 
 	@OneToMany(mappedBy = "classRoom", fetch = FetchType.LAZY)
 	@JsonIgnore
-	private Set<SubjectEntity> subjects;
+	private Set<TeacherSubjectEntity> teacherSubject;
 
 	@Id
 	@Column(nullable = false)

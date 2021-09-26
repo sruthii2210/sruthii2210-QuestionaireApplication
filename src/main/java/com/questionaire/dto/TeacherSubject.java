@@ -10,4 +10,5 @@ public class TeacherSubject {
 	private Long autoId;
 	private Teacher teacher;
 	private Subject subject;
+	private ClassDetails classDetails;
 }

@@ -3,6 +3,7 @@ package com.questionaire.entity;
 import java.io.Serializable;
 import java.util.Set;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -23,34 +24,32 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @Entity
-@Table(name="subject")
+@Table(name = "subject")
 public class SubjectEntity implements Serializable {
 
 	@Id
 	private String code;
+	@Column(nullable = false)
 	private String name;
+
+//	@ManyToOne(targetEntity = ClassRoom.class, fetch = FetchType.LAZY)
+//	@JoinColumn(name = "roomNo", nullable = false)
+//	@JsonIgnore
+//	private ClassRoom classRoom;
+
+	@Column(nullable = false)
+	private String standard;
 	
-	@ManyToOne(targetEntity=ClassRoom.class,fetch=FetchType.LAZY)
-	@JoinColumn(name="roomNo",nullable=false)
-	@JsonIgnore
-	private ClassRoom classRoom;
-	
-	@OneToMany(mappedBy="subject",fetch=FetchType.LAZY)
+	@OneToMany(mappedBy = "subject", fetch = FetchType.LAZY)
 	@JsonIgnore
 	private Set<QuizEntity> quiz;
-	
-	@OneToMany(mappedBy="subject",fetch=FetchType.LAZY)
+
+	@OneToMany(mappedBy = "subject", fetch = FetchType.LAZY)
 	@JsonIgnore
 	private Set<ResultEntity> results;
-	
-	@OneToMany(mappedBy="subject",fetch=FetchType.LAZY)
+
+	@OneToMany(mappedBy = "subject", fetch = FetchType.LAZY)
 	@JsonIgnore
 	private Set<TeacherSubjectEntity> teacherSubject;
-	
-	
-	
-	
-	
-	
-	
+
 }

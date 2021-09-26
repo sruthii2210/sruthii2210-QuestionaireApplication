@@ -1,8 +1,5 @@
 package com.questionaire.repositoryimpl;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -13,11 +10,9 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.questionaire.dto.TeacherLogin;
-import com.questionaire.entity.StudentEntity;
 import com.questionaire.entity.TeacherLoginEntity;
 import com.questionaire.exception.DatabaseException;
 import com.questionaire.exception.IdNotFoundException;
-import com.questionaire.exception.StudentIdNotFoundException;
 import com.questionaire.mapper.TeacherLoginMapper;
 import com.questionaire.repository.TeacherLoginRepository;
 
@@ -70,15 +65,15 @@ public class TeacherLoginRepositoryImpl implements TeacherLoginRepository{
 
 	}
 	@Override
-	public List<TeacherLoginEntity> getDetails(Long id) throws DatabaseException {
-		List<TeacherLoginEntity> teacher=new ArrayList<>();
+	public TeacherLoginEntity getDetails(Long id) throws DatabaseException {
+		TeacherLoginEntity teacher;
 		Session session=null;
 		try {
 			session=sessionFactory.getCurrentSession();
 
-			Query query=session.createSQLQuery("select * from login where id=:staffId");
+			Query<TeacherLoginEntity> query=session.createSQLQuery("select * from login where id=:staffId");
 			query.setParameter("staffId", id);
-			teacher=query.getResultList();	
+			teacher=query.uniqueResultOptional().orElse(null);
 		}
 		catch(HibernateException e)
 		{

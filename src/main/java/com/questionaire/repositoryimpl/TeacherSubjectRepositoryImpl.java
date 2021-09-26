@@ -29,15 +29,15 @@ public class TeacherSubjectRepositoryImpl implements TeacherSubjectRepository {
 	private SessionFactory sessionFactory;
 
 	@Override
-	public Long assignTeacherSubject(Long teacherId, String subjectCode, TeacherSubject teacherSubjectDetails)
+	public Long assignTeacherSubject(Long teacherId, String subjectCode, Long roomNo, TeacherSubject teacherSubjectDetails)
 			throws DatabaseException {
 		Long count=0l;
 		Session session = null;
 		try {
 
+			
 			session = sessionFactory.getCurrentSession();
-
-			count = (Long) session.save(TeacherSubjectMapper.mapTeacherSubject(teacherId, subjectCode, teacherSubjectDetails));
+			count = (Long) session.save(TeacherSubjectMapper.mapTeacherSubject(teacherId, subjectCode, roomNo,teacherSubjectDetails));
 			if (count > 0)
 				logger.info("Subjects are assigned to staffs successfully...!");
 				
@@ -51,15 +51,15 @@ public class TeacherSubjectRepositoryImpl implements TeacherSubjectRepository {
 
 	@Override
 	public TeacherSubjectEntity updateTeacherSubjectAssign(Long teacherId, String subjectCode,
-			TeacherSubject teacherSubjectDetails) throws DatabaseException {
+			Long roomNo,TeacherSubject teacherSubjectDetails) throws DatabaseException {
 		TeacherSubjectEntity response = null;
 		Session session = null;
 		try {
 
 			session = sessionFactory.getCurrentSession();
 
-			TeacherSubjectEntity teacherSubject=TeacherSubjectMapper.mapTeacherSubject(teacherId, subjectCode, teacherSubjectDetails);
-			Query updateByTeacherId = session.createQuery("UPDATE TeacherSubjectEntity SET subCode=:code WHERE id=:staffId");
+			TeacherSubjectEntity teacherSubject=TeacherSubjectMapper.mapTeacherSubject(teacherId, subjectCode,roomNo, teacherSubjectDetails);
+			Query updateByTeacherId = session.createQuery("UPDATE TeacherSubjectEntity SET code=:code WHERE id=:staffId");
 			updateByTeacherId.setParameter("code", subjectCode);
 			updateByTeacherId.setParameter("staffId", teacherId);
 			long countOfUpdationById = updateByTeacherId.executeUpdate();
@@ -81,7 +81,7 @@ public class TeacherSubjectRepositoryImpl implements TeacherSubjectRepository {
 		try {
 			session = sessionFactory.getCurrentSession();
 
-			Query query = session.createQuery("DELETE FROM TeacherSubjectEntity WHERE id=:staffId AND subCode=:code");
+			Query query = session.createQuery("DELETE FROM TeacherSubjectEntity WHERE id=:staffId AND code=:code");
 			query.setParameter("staffId", teacherId);
 			query.setParameter("code", subjectCode);
 			long count = query.executeUpdate();
@@ -105,7 +105,7 @@ public class TeacherSubjectRepositoryImpl implements TeacherSubjectRepository {
 			session = sessionFactory.getCurrentSession();
 
 			Query query = session.createQuery("SELECT new com.questionaire.entity.TeacherSubjectModel"
-					+ "(t.teacher.id,t.subject.subCode) " + "FROM TeacherSubjectEntity t WHERE t.teacher.id=:id ");
+					+ "(t.teacher.id,t.subject.code) " + "FROM TeacherSubjectEntity t WHERE t.teacher.id=:id ");
 			query.setParameter("id", id);
 			teacher = query.getResultList();
 
@@ -113,6 +113,28 @@ public class TeacherSubjectRepositoryImpl implements TeacherSubjectRepository {
 			throw new DatabaseException(e.getMessage());
 		}
 		return teacher;
+	}
+
+	@Override
+	public TeacherSubjectModel getQuiz(Long roomNo, String code) throws DatabaseException {
+		TeacherSubjectModel teacher;
+		Session session = null;
+
+		try {
+
+			session = sessionFactory.getCurrentSession();
+
+			Query<TeacherSubjectModel> query = session.createQuery("SELECT new com.questionaire.entity.TeacherSubjectModel"
+					+ "(t.classRoom.roomNo,t.teacher.id,t.subject.code) " + "FROM TeacherSubjectEntity t WHERE t.classRoom.roomNo=:roomNo and t.subject.code=:code ");
+			query.setParameter("roomNo", roomNo);
+			query.setParameter("code", code);
+			teacher = query.uniqueResultOptional().orElse(null);
+
+		} catch (HibernateException e) {
+			throw new DatabaseException(e.getMessage());
+		}
+		return teacher;
+
 	}
 
 }

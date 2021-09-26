@@ -29,7 +29,7 @@ public class AnswerEntity implements Serializable {
 	private Long autoId;
 
 	@OneToOne(targetEntity = QuestionEntity.class)
-	@JoinColumn(name = "quesNo")
+	@JoinColumn(name = "questionNo")
 	@JsonIgnore
 	private QuestionEntity question;
 	@Column(nullable = false)

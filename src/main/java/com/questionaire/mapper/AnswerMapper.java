@@ -9,9 +9,9 @@ public class AnswerMapper {
 	public static AnswerEntity mapAnswer(Integer quesNo,Answer answer)
 	{
 		QuestionEntity question=new QuestionEntity();
-		question.setQuesNo(quesNo);
+		question.setQuestionNo(quesNo);
 		AnswerEntity entity=new AnswerEntity();
-		entity.setQues(question);
+		entity.setQuestion(question);
 		entity.setOption1(answer.getOption1());
 		entity.setOption2(answer.getOption2());
 		entity.setOption3(answer.getOption3());

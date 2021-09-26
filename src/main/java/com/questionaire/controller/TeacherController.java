@@ -3,8 +3,6 @@ package com.questionaire.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -18,6 +16,7 @@ import com.questionaire.exception.NotFoundException;
 import com.questionaire.exception.ServiceException;
 import com.questionaire.exception.TeacherNotFoundException;
 import com.questionaire.service.TeacherService;
+import com.questionaire.util.ResponseUtil;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,38 +30,26 @@ public class TeacherController {
 
 	@PostMapping
 	public ResponseEntity<Response> addTeacherDetails(@RequestBody Teacher teacherDetails) {
-		Response response = new Response();
 		ResponseEntity<Response> responseBody = null;
 		try {
 			Long id = teacherServiceImpl.addTeacherDetails(teacherDetails);
-			response.setData(id);
-			response.setStatusCode(200);
-			response.setStatusText("Teacher Details added!");
-			responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
+			responseBody = ResponseUtil.getResponse(200, "Teacher Details added..!", id);
 		} catch (ServiceException e) {
 
-			response.setStatusCode(500);
-			response.setStatusText(e.getMessage());
-			responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+			responseBody = ResponseUtil.getResponse(500, e.getMessage());
 		}
 		return responseBody;
 	}
 
 	@GetMapping
 	public ResponseEntity<Response> getAllTeacherDetails() {
-		Response response = new Response();
 		ResponseEntity<Response> responseBody = null;
 		List<TeacherEntity> teacherList;
 		try {
 			teacherList = teacherServiceImpl.getAllTeacherDetails();
-			response.setData(teacherList);
-			response.setStatusCode(200);
-			response.setStatusText("Teacher Details fetchedd!");
-			responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
+			responseBody = ResponseUtil.getResponse(200, "Teacher Details fetched.!", teacherList);
 		} catch (ServiceException e) {
-			response.setStatusCode(500);
-			response.setStatusText(e.getMessage());
-			responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+			responseBody = ResponseUtil.getResponse(500, e.getMessage());
 		}
 		return responseBody;
 	}
@@ -70,81 +57,48 @@ public class TeacherController {
 	@PutMapping("/{id}")
 	public ResponseEntity<Response> updateTeacherDetails(@PathVariable("id") Long id,
 			@RequestBody Teacher teacherDetails) {
-		Response response = new Response();
 		ResponseEntity<Response> responseBody = null;
 		try {
 			TeacherEntity updatedTeacherDetails = teacherServiceImpl.updateTeacherDetails(id, teacherDetails);
-			response.setData(updatedTeacherDetails);
-			response.setStatusCode(200);
-			response.setStatusText("Teacher Details updated!");
-			responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
+			responseBody = ResponseUtil.getResponse(200, "Teacher Details updated..!", updatedTeacherDetails);
 		} catch (NotFoundException e) {
 			if (e instanceof TeacherNotFoundException) {
-				response.setStatusCode(404);
-				response.setStatusText(e.getMessage());
-				responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.NOT_FOUND);
+				responseBody = ResponseUtil.getResponse(404, e.getMessage());
 			}
-		}
-		catch(ServiceException e)
-		{
-			response.setStatusCode(500);
-			response.setStatusText(e.getMessage());
-			responseBody = new ResponseEntity<>(response, new HttpHeaders(),
-					HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (ServiceException e) {
+			responseBody = ResponseUtil.getResponse(500, e.getMessage());
 		}
 		return responseBody;
 	}
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Response> deleteTeacherDetails(@PathVariable("id") Long id) {
-		Response response = new Response();
 		ResponseEntity<Response> responseBody = null;
 		try {
 			String string = teacherServiceImpl.deleteTeacherDetails(id);
-			response.setData(string);
-			response.setStatusCode(200);
-			response.setStatusText("Teacher Details deleted for id " + id + " !");
-			responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
-		} catch ( NotFoundException e) {
+			responseBody = ResponseUtil.getResponse(200, "Teacher Details deleted for id " + id + " !", string);
+		} catch (NotFoundException e) {
 			if (e instanceof TeacherNotFoundException) {
-				response.setStatusCode(404);
-				response.setStatusText(e.getMessage());
-				responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.NOT_FOUND);
+				responseBody = ResponseUtil.getResponse(404, e.getMessage());
 			}
-		}
-		catch(ServiceException e)
-		{
-			response.setStatusCode(500);
-			response.setStatusText(e.getMessage());
-			responseBody = new ResponseEntity<>(response, new HttpHeaders(),
-					HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (ServiceException e) {
+			responseBody = ResponseUtil.getResponse(500, e.getMessage());
 		}
 		return responseBody;
 	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<Response> getParticularTeacherDetails(@PathVariable("id") Long id) {
-		Response response = new Response();
 		ResponseEntity<Response> responseBody = null;
 		try {
 			TeacherEntity teacher = teacherServiceImpl.getParticularTeacherDetails(id);
-			response.setData(teacher);
-			response.setStatusCode(200);
-			response.setStatusText("Teacher Detail fetched!");
-			responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
-		} catch ( NotFoundException e) {
+			responseBody = ResponseUtil.getResponse(200, "Teacher Details fetched..!", teacher);
+		} catch (NotFoundException e) {
 			if (e instanceof TeacherNotFoundException) {
-				response.setStatusCode(404);
-				response.setStatusText(e.getMessage());
-				responseBody = new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.NOT_FOUND);
+				responseBody = ResponseUtil.getResponse(404, e.getMessage());
 			}
-		}
-		catch(ServiceException e)
-		{
-			response.setStatusCode(500);
-			response.setStatusText(e.getMessage());
-			responseBody = new ResponseEntity<>(response, new HttpHeaders(),
-					HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (ServiceException e) {
+			responseBody = ResponseUtil.getResponse(500, e.getMessage());
 		}
 		return responseBody;
 	}

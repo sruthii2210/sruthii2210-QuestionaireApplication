@@ -2,6 +2,7 @@ package com.questionaire.entity;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -27,11 +28,12 @@ public class QuestionEntity implements Serializable{
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	private Integer quesNo;
+	private Integer questionNo;
+	@Column(nullable=false)
 	private String question;
 	
 	@OneToOne(mappedBy="question")
-	private AnswerEntity ans;
+	private AnswerEntity answer;
 	
 	@ManyToOne(targetEntity=QuizEntity.class,fetch=FetchType.LAZY)
 	@JoinColumn(name="id",nullable=false)

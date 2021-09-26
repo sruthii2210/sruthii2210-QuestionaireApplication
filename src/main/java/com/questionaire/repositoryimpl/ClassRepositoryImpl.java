@@ -17,6 +17,7 @@ import com.questionaire.dto.ClassDetails;
 import com.questionaire.entity.ClassRoom;
 import com.questionaire.exception.DatabaseException;
 import com.questionaire.exception.RoomNoNotFoundException;
+import com.questionaire.exception.StandardNotFoundException;
 import com.questionaire.mapper.ClassMapper;
 import com.questionaire.repository.ClassRepository;
 
@@ -40,6 +41,22 @@ public class ClassRepositoryImpl implements ClassRepository{
 	      if(classDetail==null)
 	      {
 	    	  throw new RoomNoNotFoundException("Class not Found,Enter the Valid Room No!");
+	      }
+	      
+	  }
+	
+	public void checkStandard(String standard) throws StandardNotFoundException  {
+		List<ClassRoom> classDetail;
+	 
+	      Session session =sessionFactory.getCurrentSession();
+	      Query<ClassRoom> query=session.createQuery("from ClassRoom where standard=:standard");
+	      query.setParameter("standard",standard);
+	
+	      classDetail =  query.getResultList();
+	      
+	      if(classDetail.isEmpty())
+	      {
+	    	  throw new StandardNotFoundException("Standard not found..First add standard..");
 	      }
 	      
 	  }
