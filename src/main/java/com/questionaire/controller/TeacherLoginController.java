@@ -1,6 +1,5 @@
 package com.questionaire.controller;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,16 +32,14 @@ public class TeacherLoginController {
 		ResponseEntity<Response> responseBody = null;
 		try {
 			autoId = teacherLoginService.createLogin(id, login);
-			responseBody=ResponseUtil.getResponse(200,"Login Details created Sucessfully!",autoId);
-		} catch ( NotFoundException e) {
+			responseBody = ResponseUtil.getResponse(200, "Login Details created Sucessfully!", autoId);
+		} catch (NotFoundException e) {
 
 			if (e instanceof TeacherNotFoundException) {
-				responseBody=ResponseUtil.getResponse(404,e.getMessage());
+				responseBody = ResponseUtil.getResponse(404, e.getMessage());
 			}
-		}
-		catch(ServiceException e)
-		{
-			responseBody=ResponseUtil.getResponse(500,e.getMessage());
+		} catch (ServiceException e) {
+			responseBody = ResponseUtil.getResponse(500, e.getMessage());
 		}
 		return responseBody;
 	}
@@ -53,16 +50,14 @@ public class TeacherLoginController {
 		TeacherLoginEntity teacher;
 		try {
 			teacher = teacherLoginService.getDetails(id);
-			responseBody=ResponseUtil.getResponse(200,"Login Details fetched!",teacher);
+			responseBody = ResponseUtil.getResponse(200, "Login Details fetched!", teacher);
 		} catch (NotFoundException e) {
 
 			if (e instanceof TeacherNotFoundException) {
-				responseBody=ResponseUtil.getResponse(404,e.getMessage());
+				responseBody = ResponseUtil.getResponse(404, e.getMessage());
 			}
-		}
-		catch(ServiceException e)
-		{
-			responseBody=ResponseUtil.getResponse(500,e.getMessage());
+		} catch (ServiceException e) {
+			responseBody = ResponseUtil.getResponse(500, e.getMessage());
 		}
 		return responseBody;
 	}
@@ -72,15 +67,13 @@ public class TeacherLoginController {
 		ResponseEntity<Response> responseBody = null;
 		try {
 			TeacherLoginEntity teacher = teacherLoginService.updateLogin(id, login);
-			responseBody=ResponseUtil.getResponse(200,"Login Details updated!",teacher);
+			responseBody = ResponseUtil.getResponse(200, "Login Details updated!", teacher);
 		} catch (NotFoundException e) {
 			if (e instanceof TeacherNotFoundException || e instanceof IdNotFoundException) {
-				responseBody=ResponseUtil.getResponse(404,e.getMessage());
+				responseBody = ResponseUtil.getResponse(404, e.getMessage());
 			}
-		}
-		catch(ServiceException e)
-		{
-			responseBody=ResponseUtil.getResponse(500,e.getMessage());
+		} catch (ServiceException e) {
+			responseBody = ResponseUtil.getResponse(500, e.getMessage());
 		}
 		return responseBody;
 	}

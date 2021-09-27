@@ -6,11 +6,10 @@ import com.questionaire.entity.QuizEntity;
 
 public class QuestionMapper {
 
-	public static QuestionEntity mapQuestion(Long id,Question question)
-	{
-		QuizEntity quiz=new QuizEntity();
+	public static QuestionEntity mapQuestion(Long id, Question question) {
+		QuizEntity quiz = new QuizEntity();
 		quiz.setAutoId(id);
-		QuestionEntity questionEntity=new QuestionEntity();
+		QuestionEntity questionEntity = new QuestionEntity();
 		questionEntity.setQuiz(quiz);
 		questionEntity.setQuestion(question.getQuestion());
 		return questionEntity;

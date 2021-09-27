@@ -8,7 +8,7 @@ import com.questionaire.entity.SubjectEntity;
 
 public class ResultMapper {
 
-	public static ResultEntity mapResult(Long rollNo, String subCode, Long id,  Result result) {
+	public static ResultEntity mapResult(Long rollNo, String subCode, Long id, Result result) {
 		StudentEntity student = new StudentEntity();
 		SubjectEntity subject = new SubjectEntity();
 		QuizEntity quiz = new QuizEntity();
@@ -17,12 +17,12 @@ public class ResultMapper {
 		subject.setCode(subCode);
 		quiz.setAutoId(id);
 		ResultEntity resultEntity = new ResultEntity();
-		
+
 		resultEntity.setStudent(student);
 		resultEntity.setSubject(subject);
 		resultEntity.setQuiz(quiz);
 		resultEntity.setScore(result.getScore());
-		
+
 		return resultEntity;
 
 	}

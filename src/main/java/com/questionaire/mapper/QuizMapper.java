@@ -7,18 +7,17 @@ import com.questionaire.entity.TeacherEntity;
 
 public class QuizMapper {
 
-	public static QuizEntity mapQuiz(Long id,String subCode,Quiz quiz) {
+	public static QuizEntity mapQuiz(Long id, String subCode, Quiz quiz) {
 
 		SubjectEntity subject = new SubjectEntity();
 		subject.setCode(subCode);
-		TeacherEntity teacher=new TeacherEntity();
+		TeacherEntity teacher = new TeacherEntity();
 		teacher.setId(id);
-		QuizEntity quizEntity=new QuizEntity();
+		QuizEntity quizEntity = new QuizEntity();
 		quizEntity.setSubject(subject);
 		quizEntity.setTeacher(teacher);
 		quizEntity.setName(quiz.getName());
 		return quizEntity;
-		
 
 	}
 }

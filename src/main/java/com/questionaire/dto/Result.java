@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Result {
 
-	
 	private Long autoId;
 	private Student student;
 	private Subject subject;

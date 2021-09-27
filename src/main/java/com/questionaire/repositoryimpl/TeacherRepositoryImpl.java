@@ -80,11 +80,11 @@ public class TeacherRepositoryImpl implements TeacherRepository {
 		Session session = null;
 		try {
 			session = sessionFactory.getCurrentSession();
-			TeacherEntity teacher=TeacherMapper.mapTeacher(teacherDetails);
-			
+			TeacherEntity teacher = TeacherMapper.mapTeacher(teacherDetails);
+
 			session.find(TeacherEntity.class, id);
 			TeacherEntity updatedTeacher = session.load(TeacherEntity.class, id);
-			
+
 			updatedTeacher.setFirstName(teacherDetails.getFirstName());
 			updatedTeacher.setLastName(teacherDetails.getLastName());
 			updatedTeacher.setDateOfBirth(teacherDetails.getDateOfBirth());
@@ -95,8 +95,8 @@ public class TeacherRepositoryImpl implements TeacherRepository {
 			updatedTeacher.setAddress(teacherDetails.getAddress());
 			session.merge(updatedTeacher);
 			response = updatedTeacher;
-			
-		} catch (HibernateException  e) {
+
+		} catch (HibernateException e) {
 			throw new DatabaseException(e.getMessage());
 		}
 
@@ -114,10 +114,10 @@ public class TeacherRepositoryImpl implements TeacherRepository {
 			session.find(TeacherEntity.class, id);
 			TeacherEntity teacherDetails = session.load(TeacherEntity.class, id);
 			session.delete(teacherDetails);
-		
+
 			response = "Teacher Details Deleted Successfully!";
-					
-		} catch (HibernateException  e) {
+
+		} catch (HibernateException e) {
 			throw new DatabaseException(e.getMessage());
 		}
 
@@ -132,11 +132,11 @@ public class TeacherRepositoryImpl implements TeacherRepository {
 		TeacherEntity teacherDetails = new TeacherEntity();
 		try {
 			session = sessionFactory.getCurrentSession();
-						Query query = session.createQuery("FROM TeacherEntity WHERE id=:teacherId");
+			Query query = session.createQuery("FROM TeacherEntity WHERE id=:teacherId");
 			query.setParameter("teacherId", id);
 			teacherDetails = (TeacherEntity) query.getSingleResult();
 			response = teacherDetails;
-		} catch (HibernateException  e) {
+		} catch (HibernateException e) {
 			throw new DatabaseException(e.getMessage());
 		}
 

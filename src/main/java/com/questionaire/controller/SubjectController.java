@@ -30,85 +30,70 @@ public class SubjectController {
 
 	@Autowired
 	private SubjectService subjectService;
-	
+
 	@PostMapping("/{standard}")
-	public ResponseEntity<Response> addSubject(@PathVariable("standard") String standard,@RequestBody Subject subject)
-	{
+	public ResponseEntity<Response> addSubject(@PathVariable("standard") String standard,
+			@RequestBody Subject subject) {
 		ResponseEntity<Response> responseBody = null;
 		try {
-			String subjectCode=subjectService.addSubject(standard,subject);
-			responseBody=ResponseUtil.getResponse(200,"Subject added",subjectCode);
-		} 
-		catch (NotFoundException e) {
-			if(e instanceof StandardNotFoundException)
-			{
-				responseBody=ResponseUtil.getResponse(404,e.getMessage());
+			String subjectCode = subjectService.addSubject(standard, subject);
+			responseBody = ResponseUtil.getResponse(200, "Subject added", subjectCode);
+		} catch (NotFoundException e) {
+			if (e instanceof StandardNotFoundException) {
+				responseBody = ResponseUtil.getResponse(404, e.getMessage());
 			}
-		}
-		catch(ServiceException e)
-		{
-			responseBody=ResponseUtil.getResponse(500,e.getMessage());
+		} catch (ServiceException e) {
+			responseBody = ResponseUtil.getResponse(500, e.getMessage());
 		}
 		return responseBody;
 	}
-	
+
 	@GetMapping("/{standard}")
-	public ResponseEntity<Response> getSubject(@PathVariable("standard") String standard)
-	{
+	public ResponseEntity<Response> getSubject(@PathVariable("standard") String standard) {
 		ResponseEntity<Response> responseEntity = null;
 		try {
-			List<SubjectEntity>subjects=subjectService.getSubject(standard);
-			responseEntity=ResponseUtil.getResponse(200,"Subjects fetched",subjects);
+			List<SubjectEntity> subjects = subjectService.getSubject(standard);
+			responseEntity = ResponseUtil.getResponse(200, "Subjects fetched", subjects);
 		} catch (NotFoundException e) {
-			if(e instanceof StandardNotFoundException)
-			{
-				responseEntity=ResponseUtil.getResponse(404,e.getMessage());
+			if (e instanceof StandardNotFoundException) {
+				responseEntity = ResponseUtil.getResponse(404, e.getMessage());
 			}
-		}
-		catch(ServiceException e)
-		{
-			responseEntity=ResponseUtil.getResponse(500,e.getMessage());
+		} catch (ServiceException e) {
+			responseEntity = ResponseUtil.getResponse(500, e.getMessage());
 		}
 		return responseEntity;
-		
+
 	}
-	
+
 	@PutMapping("{standard}/{code}")
-	public ResponseEntity<Response>updateSubject(@PathVariable("standard") String standard,@PathVariable("code") String subCode,@RequestBody Subject subject)
-	{
-		ResponseEntity<Response>responseEntity=null;
+	public ResponseEntity<Response> updateSubject(@PathVariable("standard") String standard,
+			@PathVariable("code") String subCode, @RequestBody Subject subject) {
+		ResponseEntity<Response> responseEntity = null;
 		try {
-			SubjectEntity subjectEntity=subjectService.updateSubject(standard,subCode,subject);
-			responseEntity=ResponseUtil.getResponse(200,"Subject Details updated!",subjectEntity);
+			SubjectEntity subjectEntity = subjectService.updateSubject(standard, subCode, subject);
+			responseEntity = ResponseUtil.getResponse(200, "Subject Details updated!", subjectEntity);
 		} catch (NotFoundException e) {
-			if(e instanceof StandardNotFoundException||e instanceof SubjectNotFoundException)
-			{
-				responseEntity=ResponseUtil.getResponse(404,e.getMessage());
+			if (e instanceof StandardNotFoundException || e instanceof SubjectNotFoundException) {
+				responseEntity = ResponseUtil.getResponse(404, e.getMessage());
 			}
-		}
-		catch(ServiceException e)
-		{
-			responseEntity=ResponseUtil.getResponse(500,e.getMessage());
+		} catch (ServiceException e) {
+			responseEntity = ResponseUtil.getResponse(500, e.getMessage());
 		}
 		return responseEntity;
 	}
-	
+
 	@DeleteMapping("/{subCode}")
-	public ResponseEntity<Response>deleteSubject(@PathVariable("subCode") String subCode)
-	{
-		ResponseEntity<Response>responseEntity=null;
+	public ResponseEntity<Response> deleteSubject(@PathVariable("subCode") String subCode) {
+		ResponseEntity<Response> responseEntity = null;
 		try {
-			String string=subjectService.deleteSubject(subCode);
-			responseEntity=ResponseUtil.getResponse(200,"Subject is removed..!",string);
+			String string = subjectService.deleteSubject(subCode);
+			responseEntity = ResponseUtil.getResponse(200, "Subject is removed..!", string);
 		} catch (NotFoundException e) {
-			if(e instanceof SubjectNotFoundException)
-			{
-				responseEntity=ResponseUtil.getResponse(404,e.getMessage());
+			if (e instanceof SubjectNotFoundException) {
+				responseEntity = ResponseUtil.getResponse(404, e.getMessage());
 			}
-		}
-		catch(ServiceException e)
-		{
-			responseEntity=ResponseUtil.getResponse(500,e.getMessage());
+		} catch (ServiceException e) {
+			responseEntity = ResponseUtil.getResponse(500, e.getMessage());
 		}
 		return responseEntity;
 	}

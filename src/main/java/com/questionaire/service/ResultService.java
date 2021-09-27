@@ -10,8 +10,8 @@ import com.questionaire.exception.ServiceException;
 
 public interface ResultService {
 
-	Long addResult(Long rollNo,String subCode,Long id, Result result) throws ServiceException, NotFoundException;
-	
-	 List<ResultEntity> getResult(Long id) throws ServiceException, QuizIdNotFoundException;
+	Long addResult(Long rollNo, String subCode, Long id, Result result) throws ServiceException, NotFoundException;
+
+	List<ResultEntity> getResult(Long id) throws ServiceException, QuizIdNotFoundException;
 
 }

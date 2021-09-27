@@ -54,14 +54,14 @@ public class StudentController {
 		ResponseEntity<Response> responseEntity = null;
 		try {
 			students = studentService.getStudent(roomNo);
-			responseEntity=ResponseUtil.getResponse(200,"StudentDetails fetched",students);
+			responseEntity = ResponseUtil.getResponse(200, "StudentDetails fetched", students);
 
 		} catch (NotFoundException e) {
 			if (e instanceof RoomNoNotFoundException) {
-				responseEntity=ResponseUtil.getResponse(404,e.getMessage());
+				responseEntity = ResponseUtil.getResponse(404, e.getMessage());
 			}
 		} catch (ServiceException e) {
-			responseEntity=ResponseUtil.getResponse(500,e.getMessage());
+			responseEntity = ResponseUtil.getResponse(500, e.getMessage());
 		}
 		return responseEntity;
 	}
@@ -71,14 +71,14 @@ public class StudentController {
 		ResponseEntity<Response> responseEntity = null;
 		try {
 			StudentEntity student = studentService.getStudentById(rollNo);
-			responseEntity=ResponseUtil.getResponse(200,"StudentDetail fetched ",student);
+			responseEntity = ResponseUtil.getResponse(200, "StudentDetail fetched ", student);
 
 		} catch (NotFoundException e) {
 			if (e instanceof StudentIdNotFoundException) {
-				responseEntity=ResponseUtil.getResponse(404,e.getMessage());
+				responseEntity = ResponseUtil.getResponse(404, e.getMessage());
 			}
 		} catch (ServiceException e) {
-			responseEntity=ResponseUtil.getResponse(500,e.getMessage());
+			responseEntity = ResponseUtil.getResponse(500, e.getMessage());
 		}
 		return responseEntity;
 
@@ -90,13 +90,13 @@ public class StudentController {
 		ResponseEntity<Response> responseEntity = null;
 		try {
 			StudentEntity updatedStudent = studentService.updateStudent(roomNo, rollNo, student);
-			responseEntity=ResponseUtil.getResponse(200,"StudentDetails updated",updatedStudent);
+			responseEntity = ResponseUtil.getResponse(200, "StudentDetails updated", updatedStudent);
 		} catch (NotFoundException e) {
 			if (e instanceof StudentIdNotFoundException || e instanceof RoomNoNotFoundException) {
-				responseEntity=ResponseUtil.getResponse(400,e.getMessage());
+				responseEntity = ResponseUtil.getResponse(400, e.getMessage());
 			}
 		} catch (ServiceException e) {
-			responseEntity=ResponseUtil.getResponse(500,e.getMessage());
+			responseEntity = ResponseUtil.getResponse(500, e.getMessage());
 		}
 		return responseEntity;
 	}
@@ -106,14 +106,14 @@ public class StudentController {
 		ResponseEntity<Response> responseEntity = null;
 		try {
 			String string = studentService.deleteStudent(rollNo);
-			responseEntity=ResponseUtil.getResponse(200,"StudentDetail deleted",string);
+			responseEntity = ResponseUtil.getResponse(200, "StudentDetail deleted", string);
 
 		} catch (NotFoundException e) {
 			if (e instanceof StudentIdNotFoundException) {
-				responseEntity=ResponseUtil.getResponse(404,e.getMessage());
+				responseEntity = ResponseUtil.getResponse(404, e.getMessage());
 			}
 		} catch (ServiceException e) {
-			responseEntity=ResponseUtil.getResponse(500,e.getMessage());
+			responseEntity = ResponseUtil.getResponse(500, e.getMessage());
 		}
 		return responseEntity;
 	}

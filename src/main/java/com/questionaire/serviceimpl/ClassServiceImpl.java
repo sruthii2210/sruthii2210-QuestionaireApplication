@@ -19,48 +19,39 @@ public class ClassServiceImpl implements ClassService {
 
 	@Autowired
 	private ClassRepository classRepositoryImp;
-	
-	public Long addClass(ClassDetails classDetails) throws ServiceException
-	{
+
+	public Long addClass(ClassDetails classDetails) throws ServiceException {
 		try {
-		return classRepositoryImp.addClass(classDetails);
-		}
-		catch(DatabaseException e)
-		{
-			 throw new ServiceException(e.getMessage());
-		}
-	}
-	
-	public List<ClassRoom> getClassDetails() throws ServiceException
-	{
-		try {
-		return classRepositoryImp.getClassDetails();
-		}
-		catch(DatabaseException e)
-		{
+			return classRepositoryImp.addClass(classDetails);
+		} catch (DatabaseException e) {
 			throw new ServiceException(e.getMessage());
 		}
-		
+	}
+
+	public List<ClassRoom> getClassDetails() throws ServiceException {
+		try {
+			return classRepositoryImp.getClassDetails();
+		} catch (DatabaseException e) {
+			throw new ServiceException(e.getMessage());
+		}
+
 	}
 
 	@Override
-	public ClassRoom updateClass(Long roomNo,ClassDetails classDetails) throws ServiceException, NotFoundException{
-		try
-		{
-		classRepositoryImp.checkClassRoomNo(roomNo);
-		return classRepositoryImp.updateClass(roomNo,classDetails);
-		}
-		catch(DatabaseException e)
-		{
+	public ClassRoom updateClass(Long roomNo, ClassDetails classDetails) throws ServiceException, NotFoundException {
+		try {
+			classRepositoryImp.checkClassRoomNo(roomNo);
+			return classRepositoryImp.updateClass(roomNo, classDetails);
+		} catch (DatabaseException e) {
 			throw new ServiceException(e.getMessage());
 		}
 	}
 
 	@Override
-	public ClassRoom getClass(String standard, String section) throws ServiceException  {
+	public ClassRoom getClass(String standard, String section) throws ServiceException {
 		ClassRoom cls;
 		try {
-			cls = classRepositoryImp.getClass(standard,section);
+			cls = classRepositoryImp.getClass(standard, section);
 		} catch (DatabaseException e) {
 			throw new ServiceException(e.getMessage());
 		}

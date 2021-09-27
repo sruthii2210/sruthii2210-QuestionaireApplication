@@ -25,36 +25,36 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name="Teacher")
+@Table(name = "Teacher")
 public class TeacherEntity {
 	@Id
 	private Long id;
-	
-	@OneToMany(mappedBy="teacher",fetch=FetchType.LAZY)
+
+	@OneToMany(mappedBy = "teacher", fetch = FetchType.LAZY)
 	@JsonIgnore
 	private Set<TeacherSubjectEntity> teacherSub;
 
-	@OneToOne(mappedBy="teacherId")
+	@OneToOne(mappedBy = "teacherId")
 	private TeacherLoginEntity staffId;
-	
-	@OneToMany(mappedBy="teacher",fetch=FetchType.LAZY)
+
+	@OneToMany(mappedBy = "teacher", fetch = FetchType.LAZY)
 	@JsonIgnore
 	private Set<QuizEntity> quiz;
-	
+
 	@NotNull
-	@Size(max=20)
+	@Size(max = 20)
 	private String firstName;
 	@NotNull
-	@Size(max=20)
+	@Size(max = 20)
 	private String lastName;
 	@NotNull
 	@Temporal(TemporalType.DATE)
 	private Date dateOfBirth;
 	@NotNull
-	@Size(max=7)
+	@Size(max = 7)
 	private String gender;
 	@NotNull
-	@Size(max=10)
+	@Size(max = 10)
 	private String qualification;
 	@Email
 	@NotNull
@@ -63,7 +63,7 @@ public class TeacherEntity {
 	private Long contactNo;
 	@NotNull
 	private String address;
-	
+
 	public TeacherEntity(Long id, @NotNull @Size(max = 20) String firstName, @NotNull @Size(max = 20) String lastName,
 			@NotNull Date dateOfBirth, @NotNull @Size(max = 7) String gender,
 			@NotNull @Size(max = 10) String qualification, @Email @NotNull String email, @NotNull Long contactNo,
@@ -79,5 +79,5 @@ public class TeacherEntity {
 		this.contactNo = contactNo;
 		this.address = address;
 	}
-	
+
 }

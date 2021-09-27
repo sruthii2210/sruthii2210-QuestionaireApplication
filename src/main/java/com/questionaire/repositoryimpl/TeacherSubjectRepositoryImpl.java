@@ -1,6 +1,5 @@
 package com.questionaire.repositoryimpl;
 
-
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -19,28 +18,27 @@ import com.questionaire.exception.DatabaseException;
 import com.questionaire.mapper.TeacherSubjectMapper;
 import com.questionaire.repository.TeacherSubjectRepository;
 
-
 @Repository
 @Transactional
 public class TeacherSubjectRepositoryImpl implements TeacherSubjectRepository {
-	
-	public static Logger logger=Logger.getLogger(TeacherSubjectRepositoryImpl.class);
+
+	public static Logger logger = Logger.getLogger(TeacherSubjectRepositoryImpl.class);
 	@Autowired
 	private SessionFactory sessionFactory;
 
 	@Override
-	public Long assignTeacherSubject(Long teacherId, String subjectCode, Long roomNo, TeacherSubject teacherSubjectDetails)
-			throws DatabaseException {
-		Long count=0l;
+	public Long assignTeacherSubject(Long teacherId, String subjectCode, Long roomNo,
+			TeacherSubject teacherSubjectDetails) throws DatabaseException {
+		Long count = 0l;
 		Session session = null;
 		try {
 
-			
 			session = sessionFactory.getCurrentSession();
-			count = (Long) session.save(TeacherSubjectMapper.mapTeacherSubject(teacherId, subjectCode, roomNo,teacherSubjectDetails));
+			count = (Long) session.save(
+					TeacherSubjectMapper.mapTeacherSubject(teacherId, subjectCode, roomNo, teacherSubjectDetails));
 			if (count > 0)
 				logger.info("Subjects are assigned to staffs successfully...!");
-				
+
 		} catch (HibernateException e) {
 			logger.error("Error in assigning subjects to staffs...!");
 			throw new DatabaseException(e.getMessage());
@@ -50,23 +48,25 @@ public class TeacherSubjectRepositoryImpl implements TeacherSubjectRepository {
 	}
 
 	@Override
-	public TeacherSubjectEntity updateTeacherSubjectAssign(Long teacherId, String subjectCode,
-			Long roomNo,TeacherSubject teacherSubjectDetails) throws DatabaseException {
+	public TeacherSubjectEntity updateTeacherSubjectAssign(Long teacherId, String subjectCode, Long roomNo,
+			TeacherSubject teacherSubjectDetails) throws DatabaseException {
 		TeacherSubjectEntity response = null;
 		Session session = null;
 		try {
 
 			session = sessionFactory.getCurrentSession();
 
-			TeacherSubjectEntity teacherSubject=TeacherSubjectMapper.mapTeacherSubject(teacherId, subjectCode,roomNo, teacherSubjectDetails);
-			Query updateByTeacherId = session.createQuery("UPDATE TeacherSubjectEntity SET code=:code WHERE id=:staffId");
+			TeacherSubjectEntity teacherSubject = TeacherSubjectMapper.mapTeacherSubject(teacherId, subjectCode, roomNo,
+					teacherSubjectDetails);
+			Query updateByTeacherId = session
+					.createQuery("UPDATE TeacherSubjectEntity SET code=:code WHERE id=:staffId");
 			updateByTeacherId.setParameter("code", subjectCode);
 			updateByTeacherId.setParameter("staffId", teacherId);
 			long countOfUpdationById = updateByTeacherId.executeUpdate();
 			session.merge(updateByTeacherId);
-			
-				response = (TeacherSubjectEntity) updateByTeacherId;
-			
+
+			response = (TeacherSubjectEntity) updateByTeacherId;
+
 		} catch (HibernateException e) {
 			throw new DatabaseException(e.getMessage());
 		}
@@ -75,7 +75,7 @@ public class TeacherSubjectRepositoryImpl implements TeacherSubjectRepository {
 
 	@Override
 	public String deleteTeacherSubjectAssign(Long teacherId, String subjectCode) throws DatabaseException {
-	
+
 		String response = null;
 		Session session = null;
 		try {
@@ -124,8 +124,10 @@ public class TeacherSubjectRepositoryImpl implements TeacherSubjectRepository {
 
 			session = sessionFactory.getCurrentSession();
 
-			Query<TeacherSubjectModel> query = session.createQuery("SELECT new com.questionaire.entity.TeacherSubjectModel"
-					+ "(t.classRoom.roomNo,t.teacher.id,t.subject.code) " + "FROM TeacherSubjectEntity t WHERE t.classRoom.roomNo=:roomNo and t.subject.code=:code ");
+			Query<TeacherSubjectModel> query = session
+					.createQuery("SELECT new com.questionaire.entity.TeacherSubjectModel"
+							+ "(t.classRoom.roomNo,t.teacher.id,t.subject.code) "
+							+ "FROM TeacherSubjectEntity t WHERE t.classRoom.roomNo=:roomNo and t.subject.code=:code ");
 			query.setParameter("roomNo", roomNo);
 			query.setParameter("code", code);
 			teacher = query.uniqueResultOptional().orElse(null);

@@ -20,45 +20,42 @@ import com.questionaire.repository.ResultRepository;
 
 @Repository
 @Transactional
-public class ResultRepositoryImpl implements ResultRepository{
+public class ResultRepositoryImpl implements ResultRepository {
 
-	public static Logger logger=Logger.getLogger(ResultRepositoryImpl.class);
+	public static Logger logger = Logger.getLogger(ResultRepositoryImpl.class);
 	@Autowired
 	private SessionFactory sessionFactory;
+
 	@Override
 	public Long addResult(Long rollNo, String subCode, Long id, Result result) throws DatabaseException {
-		Session session=null;
-		Long autoId=0l;
+		Session session = null;
+		Long autoId = 0l;
 		try {
-			session=sessionFactory.getCurrentSession();
-			
-			autoId=(Long) session.save(ResultMapper.mapResult(rollNo, subCode, id, result));
-			logger.info("Adding result to student...");
-			
+			session = sessionFactory.getCurrentSession();
 
-		}
-		catch(HibernateException e)
-		{
+			autoId = (Long) session.save(ResultMapper.mapResult(rollNo, subCode, id, result));
+			logger.info("Adding result to student...");
+
+		} catch (HibernateException e) {
 			logger.error("Error in adding result to student...");
 			throw new DatabaseException(e.getMessage());
 		}
 		return autoId;
 	}
+
 	@Override
 	public List<ResultEntity> getResult(Long id) throws DatabaseException {
-		List<ResultEntity> result=new ArrayList<>();
-		Session session=null;
+		List<ResultEntity> result = new ArrayList<>();
+		Session session = null;
 		try {
-			session=sessionFactory.getCurrentSession();
-			Query query=session.createQuery("from ResultEntity where quiz.id=:id");
+			session = sessionFactory.getCurrentSession();
+			Query query = session.createQuery("from ResultEntity where quiz.id=:id");
 			query.setParameter("id", id);
-			result=query.getResultList();
-			logger.info("Fetching results for quiz "+id);
-			
-		}
-		catch(HibernateException e)
-		{
-			logger.error("Error in fetching results for quiz "+id);
+			result = query.getResultList();
+			logger.info("Fetching results for quiz " + id);
+
+		} catch (HibernateException e) {
+			logger.error("Error in fetching results for quiz " + id);
 			throw new DatabaseException(e.getMessage());
 		}
 		return result;

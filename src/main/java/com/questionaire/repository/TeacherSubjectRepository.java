@@ -7,13 +7,12 @@ import com.questionaire.entity.TeacherSubjectEntity;
 import com.questionaire.entity.TeacherSubjectModel;
 import com.questionaire.exception.DatabaseException;
 
-
 public interface TeacherSubjectRepository {
-	Long assignTeacherSubject(Long teacherId, String subjectCode, Long roomNo,TeacherSubject teacherSubjectDetails)
+	Long assignTeacherSubject(Long teacherId, String subjectCode, Long roomNo, TeacherSubject teacherSubjectDetails)
 			throws DatabaseException;
 
-	TeacherSubjectEntity updateTeacherSubjectAssign(Long teacherId, String subjectCode, Long roomNo,TeacherSubject teacherSubjectDetails)
-			throws DatabaseException;
+	TeacherSubjectEntity updateTeacherSubjectAssign(Long teacherId, String subjectCode, Long roomNo,
+			TeacherSubject teacherSubjectDetails) throws DatabaseException;
 
 	String deleteTeacherSubjectAssign(Long teacherId, String subjectCode) throws DatabaseException;
 

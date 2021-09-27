@@ -16,19 +16,17 @@ import com.questionaire.exception.IdNotFoundException;
 import com.questionaire.mapper.TeacherLoginMapper;
 import com.questionaire.repository.TeacherLoginRepository;
 
-
 @Repository
 @Transactional
-public class TeacherLoginRepositoryImpl implements TeacherLoginRepository{
+public class TeacherLoginRepositoryImpl implements TeacherLoginRepository {
 
-	public static Logger logger=Logger.getLogger(TeacherLoginRepositoryImpl.class);
+	public static Logger logger = Logger.getLogger(TeacherLoginRepositoryImpl.class);
 	@Autowired
 	private SessionFactory sessionFactory;
 	@Autowired
 	private TeacherRepositoryImpl teacherRepo;
-	
-	public void checkAutoId(Long id) throws IdNotFoundException
-	{
+
+	public void checkAutoId(Long id) throws IdNotFoundException {
 		Session session = sessionFactory.getCurrentSession();
 		Query<TeacherLoginEntity> query = session.createQuery("FROM TeacherLoginEntity WHERE autoId=:id");
 		query.setParameter("id", id);
@@ -38,76 +36,69 @@ public class TeacherLoginRepositoryImpl implements TeacherLoginRepository{
 		logger.info("In checkAutoId method in TeacherLogin..!");
 		if (teacher == null) {
 			logger.error("Error in checkAutoId method in TeacherLogin..!");
-			throw new IdNotFoundException("No Record found for given Id "+id);
+			throw new IdNotFoundException("No Record found for given Id " + id);
 		}
 	}
-	
+
 	@Override
-	public Long createLogin(Long id,TeacherLogin login) throws DatabaseException {
-		Session session=null;
-		Long count=0l;
-		TeacherLoginEntity response=null;
+	public Long createLogin(Long id, TeacherLogin login) throws DatabaseException {
+		Session session = null;
+		Long count = 0l;
+		TeacherLoginEntity response = null;
 		try {
-			session=sessionFactory.getCurrentSession();
-			
-			count=(Long) session.save(TeacherLoginMapper.mapTeacherLogin(id, login));
-			
-			if(count>0)
+			session = sessionFactory.getCurrentSession();
+
+			count = (Long) session.save(TeacherLoginMapper.mapTeacherLogin(id, login));
+
+			if (count > 0)
 				logger.info("Login details created successfully...!");
-			
-		}
-		catch(HibernateException e)
-		{
+
+		} catch (HibernateException e) {
 			throw new DatabaseException(e.getMessage());
 		}
-		
+
 		return count;
 
 	}
+
 	@Override
 	public TeacherLoginEntity getDetails(Long id) throws DatabaseException {
 		TeacherLoginEntity teacher;
-		Session session=null;
+		Session session = null;
 		try {
-			session=sessionFactory.getCurrentSession();
+			session = sessionFactory.getCurrentSession();
 
-			Query<TeacherLoginEntity> query=session.createSQLQuery("select * from login where id=:staffId");
+			Query<TeacherLoginEntity> query = session.createSQLQuery("select * from login where id=:staffId");
 			query.setParameter("staffId", id);
-			teacher=query.uniqueResultOptional().orElse(null);
-		}
-		catch(HibernateException e)
-		{
+			teacher = query.uniqueResultOptional().orElse(null);
+		} catch (HibernateException e) {
 			throw new DatabaseException(e.getMessage());
 		}
 		return teacher;
 	}
+
 	@Override
 	public TeacherLoginEntity updateLogin(Long id, TeacherLogin login) throws DatabaseException {
-		Session session=null;
-		TeacherLoginEntity response=null;
+		Session session = null;
+		TeacherLoginEntity response = null;
 		try {
-			session=sessionFactory.getCurrentSession();
-			TeacherLoginEntity teacherLogin=TeacherLoginMapper.mapTeacherLogin(id, login);
+			session = sessionFactory.getCurrentSession();
+			TeacherLoginEntity teacherLogin = TeacherLoginMapper.mapTeacherLogin(id, login);
 			session.find(TeacherLoginEntity.class, id);
-			TeacherLoginEntity teachLogin=session.load(TeacherLoginEntity.class, id);
-			
+			TeacherLoginEntity teachLogin = session.load(TeacherLoginEntity.class, id);
+
 			teachLogin.setPassword(login.getPassword());
-			
+
 			session.merge(teachLogin);
-		
-			response=teachLogin;
-			
-		}
-		catch(HibernateException e)
-		{
+
+			response = teachLogin;
+
+		} catch (HibernateException e) {
 			throw new DatabaseException(e.getMessage());
 		}
-		
-		return response;
-			
-	}
-	
 
-	
-}
-;
+		return response;
+
+	}
+
+};

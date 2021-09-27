@@ -6,11 +6,10 @@ import com.questionaire.entity.QuestionEntity;
 
 public class AnswerMapper {
 
-	public static AnswerEntity mapAnswer(Integer quesNo,Answer answer)
-	{
-		QuestionEntity question=new QuestionEntity();
+	public static AnswerEntity mapAnswer(Integer quesNo, Answer answer) {
+		QuestionEntity question = new QuestionEntity();
 		question.setQuestionNo(quesNo);
-		AnswerEntity entity=new AnswerEntity();
+		AnswerEntity entity = new AnswerEntity();
 		entity.setQuestion(question);
 		entity.setOption1(answer.getOption1());
 		entity.setOption2(answer.getOption2());
@@ -18,6 +17,6 @@ public class AnswerMapper {
 		entity.setOption4(answer.getOption4());
 		entity.setCrctAns(answer.getCrctAns());
 		return entity;
-	
+
 	}
 }

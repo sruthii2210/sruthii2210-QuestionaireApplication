@@ -15,49 +15,53 @@ import com.questionaire.repository.SubjectRepository;
 import com.questionaire.service.SubjectService;
 
 @Service
-public class SubjectServiceImpl implements SubjectService{
+public class SubjectServiceImpl implements SubjectService {
 
-	public static Logger logger=Logger.getLogger(SubjectServiceImpl.class);
+	public static Logger logger = Logger.getLogger(SubjectServiceImpl.class);
 	@Autowired
 	private SubjectRepository subjectRepository;
 	@Autowired
 	private ClassRepository classRepository;
+
 	@Override
-	public String addSubject(String standard,Subject subject) throws ServiceException, NotFoundException {
+	public String addSubject(String standard, Subject subject) throws ServiceException, NotFoundException {
 		try {
-			
+
 			classRepository.checkStandard(standard);
 			logger.info("In addSubject in subjectServiceImp...");
-			return subjectRepository.addSubject(standard,subject);
+			return subjectRepository.addSubject(standard, subject);
 		} catch (DatabaseException e) {
 			throw new ServiceException(e.getMessage());
 		}
 	}
-	public List<SubjectEntity> getSubject(String standard) throws ServiceException, NotFoundException
-	{
+
+	public List<SubjectEntity> getSubject(String standard) throws ServiceException, NotFoundException {
 		List<SubjectEntity> subject;
 		try {
 			classRepository.checkStandard(standard);
 			logger.info("In getSubject in subjectServiceImp...");
 			subject = subjectRepository.getSubject(standard);
-			
+
 		} catch (DatabaseException e) {
-		throw new ServiceException(e.getMessage());
+			throw new ServiceException(e.getMessage());
 		}
 		return subject;
 	}
+
 	@Override
-	public SubjectEntity updateSubject(String standard, String subCode, Subject subject) throws ServiceException, NotFoundException {
+	public SubjectEntity updateSubject(String standard, String subCode, Subject subject)
+			throws ServiceException, NotFoundException {
 		try {
 			classRepository.checkStandard(standard);
-			
+
 			subjectRepository.checkSubject(subCode);
 			logger.info("In updateSubject in subjectServiceImp...");
-			return subjectRepository.updateSubject(standard,subCode,subject);
+			return subjectRepository.updateSubject(standard, subCode, subject);
 		} catch (DatabaseException e) {
 			throw new ServiceException(e.getMessage());
 		}
 	}
+
 	@Override
 	public String deleteSubject(String subCode) throws ServiceException, NotFoundException {
 		try {

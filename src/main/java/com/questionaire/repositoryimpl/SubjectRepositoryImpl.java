@@ -36,8 +36,8 @@ public class SubjectRepositoryImpl implements SubjectRepository {
 		Query<SubjectEntity> query = session.createQuery("FROM SubjectEntity WHERE code=:subjectCode");
 		query.setParameter("subjectCode", code);
 
-		subject=query.uniqueResultOptional().orElse(null);
-	
+		subject = query.uniqueResultOptional().orElse(null);
+
 		if (subject == null) {
 			logger.warn("In checkSubject method...");
 			throw new SubjectNotFoundException("SubjectCode is not found!");
@@ -66,7 +66,7 @@ public class SubjectRepositoryImpl implements SubjectRepository {
 		String subCode = null;
 		try {
 			session = sessionFactory.getCurrentSession();
-			subCode = (String) session.save(SubjectMapper.mapSubject(subject,standard));
+			subCode = (String) session.save(SubjectMapper.mapSubject(subject, standard));
 			logger.info("In addSubject Method...");
 
 		} catch (HibernateException e) {
@@ -84,7 +84,7 @@ public class SubjectRepositoryImpl implements SubjectRepository {
 		try {
 			session = sessionFactory.getCurrentSession();
 			Query query = session.createQuery("from SubjectEntity s where standard=:standard");
-			query.setParameter("standard",standard);
+			query.setParameter("standard", standard);
 			subject = query.getResultList();
 			logger.info("In getSubject Method for particular class...");
 
@@ -105,11 +105,11 @@ public class SubjectRepositoryImpl implements SubjectRepository {
 			session.find(SubjectEntity.class, code);
 			SubjectEntity subjectEntity = session.load(SubjectEntity.class, code);
 			logger.info("In updateSubject Method ...");
-			
-			//subjectEntity.setClassRoom(classDetails);
+
+			// subjectEntity.setClassRoom(classDetails);
 
 			subjectEntity.setName(subject.getName());
-			//subjectEntity.setStandard(subject.getStandard());
+			// subjectEntity.setStandard(subject.getStandard());
 			session.merge(subjectEntity);
 
 			response = subjectEntity;

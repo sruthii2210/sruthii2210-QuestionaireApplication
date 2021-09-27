@@ -13,43 +13,42 @@ import com.questionaire.repository.QuestionRepository;
 import com.questionaire.service.AnswerService;
 
 @Service
-public class AnswerServiceImpl implements AnswerService{
+public class AnswerServiceImpl implements AnswerService {
 
 	@Autowired
 	private AnswerRepository answerRepository;
-	
+
 	@Autowired
 	private QuestionRepository questionRepository;
+
 	@Override
 	public Long addAnswer(Integer quesNo, Answer answer) throws ServiceException, NotFoundException {
 		try {
 			questionRepository.checkQuestion(quesNo);
-		return answerRepository.addAnswer(quesNo,answer);
+			return answerRepository.addAnswer(quesNo, answer);
+		} catch (DatabaseException e) {
+			throw new ServiceException(e.getMessage());
 		}
-		catch (DatabaseException e) {
-	    throw new ServiceException(e.getMessage());
 	}
-	}
+
 	@Override
 	public AnswerEntity getAnswer(Integer quesNo) throws ServiceException, NotFoundException {
 		try {
 			questionRepository.checkQuestion(quesNo);
-		return answerRepository.getAnswer(quesNo);
-		}
-		catch(DatabaseException e)
-		{
-			throw new ServiceException(e.getMessage());	
+			return answerRepository.getAnswer(quesNo);
+		} catch (DatabaseException e) {
+			throw new ServiceException(e.getMessage());
 		}
 	}
+
 	@Override
-	public AnswerEntity updateAnswer( Long autoId,Integer quesNo, Answer answer) throws ServiceException, NotFoundException {
+	public AnswerEntity updateAnswer(Long autoId, Integer quesNo, Answer answer)
+			throws ServiceException, NotFoundException {
 		try {
 			questionRepository.checkQuestion(quesNo);
-		return answerRepository.updateAnswer(autoId,quesNo,answer);
-		}
-		catch(DatabaseException e)
-		{
-			throw new ServiceException(e.getMessage());	
+			return answerRepository.updateAnswer(autoId, quesNo, answer);
+		} catch (DatabaseException e) {
+			throw new ServiceException(e.getMessage());
 		}
 	}
 

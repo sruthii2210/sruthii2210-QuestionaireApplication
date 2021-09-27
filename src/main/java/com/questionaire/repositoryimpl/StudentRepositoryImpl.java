@@ -93,11 +93,11 @@ public class StudentRepositoryImpl implements StudentRepository {
 			Query query = session.createQuery("from StudentEntity s where roomNo=:room");
 			query.setParameter("room", roomNo);
 			student = query.getResultList();
-			logger.info("Fetching studentDetails for roomNo "+roomNo);
+			logger.info("Fetching studentDetails for roomNo " + roomNo);
 		}
 
 		catch (HibernateException e) {
-			logger.error("Error in fetching studentDetails for roomNo "+roomNo);
+			logger.error("Error in fetching studentDetails for roomNo " + roomNo);
 			throw new DatabaseException(e.getMessage());
 		}
 
@@ -111,14 +111,14 @@ public class StudentRepositoryImpl implements StudentRepository {
 		Session session = null;
 		try {
 			session = sessionFactory.getCurrentSession();
-			
+
 			Query query = session.createQuery("from StudentEntity s where s.rollNo=:rollNo");
 			query.setParameter("rollNo", rollNo);
 			student = (StudentEntity) query.getSingleResult();
-			logger.info("Fetching studentDetails of rollNo "+rollNo+" ..!");
+			logger.info("Fetching studentDetails of rollNo " + rollNo + " ..!");
 
-		} catch (HibernateException  e) {
-			logger.error("Error in fetching studentDetails of rollNo "+rollNo+" ..!");
+		} catch (HibernateException e) {
+			logger.error("Error in fetching studentDetails of rollNo " + rollNo + " ..!");
 			throw new DatabaseException(e.getMessage());
 		}
 		return student;
@@ -131,10 +131,10 @@ public class StudentRepositoryImpl implements StudentRepository {
 		StudentEntity response = null;
 		try {
 			session = sessionFactory.getCurrentSession();
-			StudentEntity studentEntity=StudentMapper.mapStudent(roomNo, student);
+			StudentEntity studentEntity = StudentMapper.mapStudent(roomNo, student);
 			session.find(StudentEntity.class, rollNo);
 			StudentEntity stud = session.load(StudentEntity.class, rollNo);
-			
+
 			stud.setAddress(student.getAddress());
 			stud.setName(student.getName());
 			stud.setDateOfBirth(student.getDateOfBirth());
@@ -142,10 +142,10 @@ public class StudentRepositoryImpl implements StudentRepository {
 			ClassRoom classDetails = new ClassRoom();
 			classDetails.setRoomNo(roomNo);
 			stud.setClassRoom(classDetails);
-			logger.info("updating studentDetails of rollNo "+rollNo);
+			logger.info("updating studentDetails of rollNo " + rollNo);
 			response = stud;
-		} catch (HibernateException  e) {
-			logger.error("Error in updating studentDetails of rollNo "+rollNo);
+		} catch (HibernateException e) {
+			logger.error("Error in updating studentDetails of rollNo " + rollNo);
 			throw new DatabaseException(e.getMessage());
 		}
 
@@ -161,10 +161,10 @@ public class StudentRepositoryImpl implements StudentRepository {
 			session.find(StudentEntity.class, rollNo);
 			StudentEntity studentEntity = session.load(StudentEntity.class, rollNo);
 			session.delete(studentEntity);
-			logger.info("Deleting studentDetails of rollNo "+rollNo);
+			logger.info("Deleting studentDetails of rollNo " + rollNo);
 			response = "Student Details deleted Successfully!";
 		} catch (HibernateException e) {
-			logger.info("Error in deleting studentDetails of rollNo "+rollNo);
+			logger.info("Error in deleting studentDetails of rollNo " + rollNo);
 			throw new DatabaseException(e.getMessage());
 		}
 

@@ -1,6 +1,5 @@
 package com.questionaire.dto;
 
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

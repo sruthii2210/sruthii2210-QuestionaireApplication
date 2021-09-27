@@ -39,7 +39,7 @@ public class SubjectEntity implements Serializable {
 
 	@Column(nullable = false)
 	private String standard;
-	
+
 	@OneToMany(mappedBy = "subject", fetch = FetchType.LAZY)
 	@JsonIgnore
 	private Set<QuizEntity> quiz;

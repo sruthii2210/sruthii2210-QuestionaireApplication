@@ -38,9 +38,9 @@ public class TeacherSubjectEntity implements Serializable {
 	@JoinColumn(name = "code", nullable = false)
 	@JsonIgnore
 	private SubjectEntity subject;
-	
+
 	@ManyToOne(targetEntity = ClassRoom.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "roomNo", nullable = false)
-	//@JsonIgnore
+	// @JsonIgnore
 	private ClassRoom classRoom;
 }

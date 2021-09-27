@@ -36,14 +36,14 @@ public class QuestionController {
 		ResponseEntity<Response> responseBody = null;
 		try {
 			Integer quesNo = questionService.addQuestion(id, question);
-			 responseBody=ResponseUtil.getResponse(200,"Question is added...!",quesNo);
+			responseBody = ResponseUtil.getResponse(200, "Question is added...!", quesNo);
 
 		} catch (NotFoundException e) {
 			if (e instanceof QuizIdNotFoundException) {
-				responseBody=ResponseUtil.getResponse(404,e.getMessage());
+				responseBody = ResponseUtil.getResponse(404, e.getMessage());
 			}
 		} catch (ServiceException e) {
-			responseBody=ResponseUtil.getResponse(500,e.getMessage());
+			responseBody = ResponseUtil.getResponse(500, e.getMessage());
 		}
 		return responseBody;
 	}
@@ -54,13 +54,13 @@ public class QuestionController {
 		List<QuestionEntity> questions;
 		try {
 			questions = questionService.getQuestion(id);
-			responseBody=ResponseUtil.getResponse(200,"Fetched Questions..",questions);
+			responseBody = ResponseUtil.getResponse(200, "Fetched Questions..", questions);
 		} catch (NotFoundException e) {
 			if (e instanceof QuizIdNotFoundException) {
-				responseBody=ResponseUtil.getResponse(404,e.getMessage());
+				responseBody = ResponseUtil.getResponse(404, e.getMessage());
 			}
 		} catch (ServiceException e) {
-			responseBody=ResponseUtil.getResponse(500,e.getMessage());
+			responseBody = ResponseUtil.getResponse(500, e.getMessage());
 		}
 		return responseBody;
 	}
@@ -71,14 +71,14 @@ public class QuestionController {
 		ResponseEntity<Response> responseBody = null;
 		try {
 			QuestionEntity questionEntity = questionService.updateQuestion(id, quesNo, question);
-			responseBody=ResponseUtil.getResponse(200,"Question is updated...!",questionEntity);
+			responseBody = ResponseUtil.getResponse(200, "Question is updated...!", questionEntity);
 		} catch (NotFoundException e) {
 			if (e instanceof QuizIdNotFoundException || e instanceof QuestionNotFoundException) {
-				responseBody=ResponseUtil.getResponse(404,e.getMessage());
+				responseBody = ResponseUtil.getResponse(404, e.getMessage());
 			}
 
 		} catch (ServiceException e) {
-			responseBody=ResponseUtil.getResponse(500,e.getMessage());
+			responseBody = ResponseUtil.getResponse(500, e.getMessage());
 		}
 		return responseBody;
 	}
@@ -88,17 +88,15 @@ public class QuestionController {
 			throws QuestionNotFoundException {
 		ResponseEntity<Response> responseBody = null;
 		try {
-			String string= questionService.deleteQuestion(quesNo);
-			responseBody=ResponseUtil.getResponse(200,"Question is deleted...!",string);
-		} catch ( NotFoundException e) {
+			String string = questionService.deleteQuestion(quesNo);
+			responseBody = ResponseUtil.getResponse(200, "Question is deleted...!", string);
+		} catch (NotFoundException e) {
 
 			if (e instanceof QuestionNotFoundException) {
-				responseBody=ResponseUtil.getResponse(404,e.getMessage());
+				responseBody = ResponseUtil.getResponse(404, e.getMessage());
 			}
-		}
-		catch(ServiceException e)
-		{
-			responseBody=ResponseUtil.getResponse(500,e.getMessage());
+		} catch (ServiceException e) {
+			responseBody = ResponseUtil.getResponse(500, e.getMessage());
 		}
 		return responseBody;
 	}

@@ -6,10 +6,9 @@ import com.questionaire.entity.StudentEntity;
 
 public class StudentMapper {
 
-	public static StudentEntity mapStudent(Long roomNo,Student student)
-	{
-		ClassRoom classRoom=new ClassRoom();
-		StudentEntity entity=new StudentEntity();
+	public static StudentEntity mapStudent(Long roomNo, Student student) {
+		ClassRoom classRoom = new ClassRoom();
+		StudentEntity entity = new StudentEntity();
 		classRoom.setRoomNo(roomNo);
 		entity.setClassRoom(classRoom);
 		entity.setRollNo(student.getRollNo());

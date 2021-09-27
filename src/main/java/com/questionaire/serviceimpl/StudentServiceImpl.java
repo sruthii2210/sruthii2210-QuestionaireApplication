@@ -15,22 +15,23 @@ import com.questionaire.repository.StudentRepository;
 import com.questionaire.service.StudentService;
 
 @Service
-public class StudentServiceImpl implements StudentService{
+public class StudentServiceImpl implements StudentService {
 
 	@Autowired
 	private StudentRepository studentRepository;
 	@Autowired
 	private ClassRepository classRepository;
-	
+
 	@Override
-	public Long addStudent(Long roomNo,Student student) throws ServiceException, NotFoundException {
+	public Long addStudent(Long roomNo, Student student) throws ServiceException, NotFoundException {
 		try {
 			classRepository.checkClassRoomNo(roomNo);
-			return studentRepository.addStudent(roomNo,student);
+			return studentRepository.addStudent(roomNo, student);
 		} catch (DatabaseException e) {
 			throw new ServiceException(e.getMessage());
 		}
 	}
+
 	@Override
 	public List<StudentEntity> getStudent(Long roomNo) throws ServiceException, NotFoundException {
 		List<StudentEntity> student;
@@ -42,9 +43,10 @@ public class StudentServiceImpl implements StudentService{
 		}
 		return student;
 	}
+
 	@Override
 	public StudentEntity getStudentById(Long rollNo) throws ServiceException, NotFoundException {
-		
+
 		try {
 			studentRepository.checkStudent(rollNo);
 			return studentRepository.getStudentById(rollNo);
@@ -52,17 +54,20 @@ public class StudentServiceImpl implements StudentService{
 			throw new ServiceException(e.getMessage());
 		}
 	}
+
 	@Override
-	public StudentEntity updateStudent(Long roomNo,Long rollNo, Student student) throws ServiceException, NotFoundException {
+	public StudentEntity updateStudent(Long roomNo, Long rollNo, Student student)
+			throws ServiceException, NotFoundException {
 		try {
 			classRepository.checkClassRoomNo(roomNo);
 			studentRepository.checkStudent(rollNo);
 			studentRepository.checkClassStud(roomNo, rollNo);
-			return studentRepository.updateStudent(roomNo,rollNo,student);
+			return studentRepository.updateStudent(roomNo, rollNo, student);
 		} catch (DatabaseException e) {
 			throw new ServiceException(e.getMessage());
 		}
 	}
+
 	@Override
 	public String deleteStudent(Long rollNo) throws ServiceException, NotFoundException {
 		try {

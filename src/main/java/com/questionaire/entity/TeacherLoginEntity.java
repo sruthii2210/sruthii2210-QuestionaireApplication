@@ -21,19 +21,18 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name="login")
-public class TeacherLoginEntity implements Serializable{
+@Table(name = "login")
+public class TeacherLoginEntity implements Serializable {
 
-	
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long autoId;
-	
-	@OneToOne(targetEntity=TeacherEntity.class)
-	@JoinColumn(name="id",nullable=false,unique=true)
+
+	@OneToOne(targetEntity = TeacherEntity.class)
+	@JoinColumn(name = "id", nullable = false, unique = true)
 	@JsonIgnore
 	private TeacherEntity teacherId;
-	
-	@Column(nullable=false)
+
+	@Column(nullable = false)
 	private String password;
 }

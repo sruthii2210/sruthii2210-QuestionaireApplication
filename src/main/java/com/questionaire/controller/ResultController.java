@@ -27,47 +27,43 @@ public class ResultController {
 
 	@Autowired
 	private ResultService resultService;
-	
+
 	@PostMapping("/{rollNo}/{subCode}/{id}")
-	public ResponseEntity<Response> addResult(@PathVariable("rollNo") Long rollNo,@PathVariable("subCode") String subCode,@PathVariable("id") Long id, @RequestBody Result result)
-	{
-		Long autoId=0l;
+	public ResponseEntity<Response> addResult(@PathVariable("rollNo") Long rollNo,
+			@PathVariable("subCode") String subCode, @PathVariable("id") Long id, @RequestBody Result result) {
+		Long autoId = 0l;
 		ResponseEntity<Response> responseEntity = null;
 		try {
-			autoId=resultService.addResult(rollNo,subCode,id,result);
-			 responseEntity=ResponseUtil.getResponse(200,"Result is added to the student "+rollNo+" in quiz "+id+" for subject "+subCode+" ",autoId);
-		} catch ( NotFoundException e) {
-			
-			if(e instanceof QuizIdNotFoundException||e instanceof StudentIdNotFoundException||e instanceof SubjectNotFoundException)
-			{
-				 responseEntity=ResponseUtil.getResponse(404,e.getMessage());
+			autoId = resultService.addResult(rollNo, subCode, id, result);
+			responseEntity = ResponseUtil.getResponse(200,
+					"Result is added to the student " + rollNo + " in quiz " + id + " for subject " + subCode + " ",
+					autoId);
+		} catch (NotFoundException e) {
+
+			if (e instanceof QuizIdNotFoundException || e instanceof StudentIdNotFoundException
+					|| e instanceof SubjectNotFoundException) {
+				responseEntity = ResponseUtil.getResponse(404, e.getMessage());
 			}
-		}
-		catch(ServiceException e)
-		{
-			 responseEntity=ResponseUtil.getResponse(500,e.getMessage());
+		} catch (ServiceException e) {
+			responseEntity = ResponseUtil.getResponse(500, e.getMessage());
 		}
 		return responseEntity;
 	}
-	
+
 	@GetMapping("/{id}")
-	public ResponseEntity<Response> getResult(@PathVariable("id") Long id)
-	{
+	public ResponseEntity<Response> getResult(@PathVariable("id") Long id) {
 		ResponseEntity<Response> responseEntity = null;
-		List<ResultEntity>result;
+		List<ResultEntity> result;
 		try {
-			result= resultService.getResult(id);
-			 responseEntity=ResponseUtil.getResponse(200,"Fetched result Details in quiz "+id,result);
-		} catch ( NotFoundException e) {
-			
-			if(e instanceof QuizIdNotFoundException)
-			{
-				responseEntity=ResponseUtil.getResponse(404,e.getMessage());
+			result = resultService.getResult(id);
+			responseEntity = ResponseUtil.getResponse(200, "Fetched result Details in quiz " + id, result);
+		} catch (NotFoundException e) {
+
+			if (e instanceof QuizIdNotFoundException) {
+				responseEntity = ResponseUtil.getResponse(404, e.getMessage());
 			}
-		}
-		catch(ServiceException e)
-		{
-			responseEntity=ResponseUtil.getResponse(500,e.getMessage());
+		} catch (ServiceException e) {
+			responseEntity = ResponseUtil.getResponse(500, e.getMessage());
 		}
 		return responseEntity;
 	}

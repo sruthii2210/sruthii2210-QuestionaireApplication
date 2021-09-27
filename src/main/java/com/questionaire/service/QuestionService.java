@@ -13,7 +13,8 @@ public interface QuestionService {
 
 	List<QuestionEntity> getQuestion(Long id) throws ServiceException, NotFoundException;
 
-	QuestionEntity updateQuestion(Long id, Integer quesNo, Question question) throws ServiceException, NotFoundException;
+	QuestionEntity updateQuestion(Long id, Integer quesNo, Question question)
+			throws ServiceException, NotFoundException;
 
 	String deleteQuestion(Integer quesNo) throws ServiceException, NotFoundException;
 

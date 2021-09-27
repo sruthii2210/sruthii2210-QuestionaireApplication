@@ -21,7 +21,7 @@ import com.questionaire.service.TeacherSubjectService;
 public class TeacherSubjectServiceImpl implements TeacherSubjectService {
 	@Autowired
 	private TeacherSubjectRepository teacherSubjectRepositoryImpl;
-	
+
 	@Autowired
 	private ClassRepositoryImpl classRepository;
 	@Autowired
@@ -30,24 +30,12 @@ public class TeacherSubjectServiceImpl implements TeacherSubjectService {
 	private SubjectRepositoryImpl subjectRepository;
 
 	@Override
-	public Long assignTeacherSubject(Long teacherId, String subjectCode,Long roomNo, TeacherSubject teacherSubjectDetails)
-			throws ServiceException, NotFoundException {
+	public Long assignTeacherSubject(Long teacherId, String subjectCode, Long roomNo,
+			TeacherSubject teacherSubjectDetails) throws ServiceException, NotFoundException {
 		try {
 			teacherRepository.checkTeacher(teacherId);
 			subjectRepository.checkSubject(subjectCode);
-			return teacherSubjectRepositoryImpl.assignTeacherSubject(teacherId, subjectCode,roomNo, teacherSubjectDetails);
-		} catch (DatabaseException e) {
-			throw new ServiceException(e.getMessage());
-		}
-	}
-
-	@Override
-	public TeacherSubjectEntity updateTeacherSubjectAssign(Long teacherId, String subjectCode,
-			Long roomNo,TeacherSubject teacherSubjectDetails) throws ServiceException, NotFoundException {
-		try {
-			teacherRepository.checkTeacher(teacherId);
-			subjectRepository.checkSubject(subjectCode);
-			return teacherSubjectRepositoryImpl.updateTeacherSubjectAssign(teacherId, subjectCode,roomNo,
+			return teacherSubjectRepositoryImpl.assignTeacherSubject(teacherId, subjectCode, roomNo,
 					teacherSubjectDetails);
 		} catch (DatabaseException e) {
 			throw new ServiceException(e.getMessage());
@@ -55,7 +43,21 @@ public class TeacherSubjectServiceImpl implements TeacherSubjectService {
 	}
 
 	@Override
-	public String deleteTeacherSubjectAssign(Long teacherId, String subjectCode) throws ServiceException, NotFoundException {
+	public TeacherSubjectEntity updateTeacherSubjectAssign(Long teacherId, String subjectCode, Long roomNo,
+			TeacherSubject teacherSubjectDetails) throws ServiceException, NotFoundException {
+		try {
+			teacherRepository.checkTeacher(teacherId);
+			subjectRepository.checkSubject(subjectCode);
+			return teacherSubjectRepositoryImpl.updateTeacherSubjectAssign(teacherId, subjectCode, roomNo,
+					teacherSubjectDetails);
+		} catch (DatabaseException e) {
+			throw new ServiceException(e.getMessage());
+		}
+	}
+
+	@Override
+	public String deleteTeacherSubjectAssign(Long teacherId, String subjectCode)
+			throws ServiceException, NotFoundException {
 
 		try {
 			teacherRepository.checkTeacher(teacherId);
@@ -82,7 +84,7 @@ public class TeacherSubjectServiceImpl implements TeacherSubjectService {
 		try {
 			classRepository.checkClassRoomNo(roomNo);
 			subjectRepository.checkSubject(code);
-			return teacherSubjectRepositoryImpl.getQuiz(roomNo,code);
+			return teacherSubjectRepositoryImpl.getQuiz(roomNo, code);
 		} catch (DatabaseException e) {
 			throw new ServiceException(e.getMessage());
 		}

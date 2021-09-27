@@ -6,7 +6,6 @@ import com.questionaire.entity.StudentEntity;
 import com.questionaire.exception.NotFoundException;
 import com.questionaire.exception.ServiceException;
 
-
 public interface StudentService {
 
 	Long addStudent(Long roomNo, Student student) throws ServiceException, NotFoundException;

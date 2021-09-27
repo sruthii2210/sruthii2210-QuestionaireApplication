@@ -31,29 +31,28 @@ import lombok.ToString;
 @NoArgsConstructor
 @Entity
 @Table(name = "Student")
-public class StudentEntity implements Serializable{
-	
-	@ManyToOne(targetEntity=ClassRoom.class,fetch=FetchType.LAZY)
-	@JoinColumn(name="roomNo",nullable=false)
+public class StudentEntity implements Serializable {
+
+	@ManyToOne(targetEntity = ClassRoom.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "roomNo", nullable = false)
 	@JsonIgnore
-	   private ClassRoom classRoom;
-	
-	@OneToMany(mappedBy="student",fetch=FetchType.LAZY)
+	private ClassRoom classRoom;
+
+	@OneToMany(mappedBy = "student", fetch = FetchType.LAZY)
 	@JsonIgnore
-	private Set<ResultEntity>results;
-	
+	private Set<ResultEntity> results;
+
 	@Id
 	private Long rollNo;
-	@Column(nullable=false)
+	@Column(nullable = false)
 	private String name;
-	@Column(nullable=false)
+	@Column(nullable = false)
 	@Temporal(TemporalType.DATE)
 	private Date dateOfBirth;
-	@Column(nullable=false)
+	@Column(nullable = false)
 	private String gender;
-	@Column(nullable=false)
+	@Column(nullable = false)
 	private String address;
-	
 
 	public StudentEntity(Long rollNo, String name, Date dateOfBirth, String gender, String address) {
 		super();
@@ -62,7 +61,6 @@ public class StudentEntity implements Serializable{
 		this.dateOfBirth = dateOfBirth;
 		this.gender = gender;
 		this.address = address;
-		
 
 	}
 

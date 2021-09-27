@@ -10,5 +10,5 @@ public class Subject {
 	private String code;
 	private String name;
 	private String standard;
-	//private ClassDetails classDetails;
+	// private ClassDetails classDetails;
 }

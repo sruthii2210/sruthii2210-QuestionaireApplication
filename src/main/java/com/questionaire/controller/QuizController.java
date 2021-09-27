@@ -35,17 +35,14 @@ public class QuizController {
 		ResponseEntity<Response> responseBody = null;
 		try {
 			Long quizId = quizService.addQuiz(id, subCode, quiz);
-			responseBody=ResponseUtil.getResponse(200,"Quiz created Successfully!..",quizId);
+			responseBody = ResponseUtil.getResponse(200, "Quiz created Successfully!..", quizId);
 		} catch (NotFoundException e) {
 
-			if(e instanceof TeacherNotFoundException||e instanceof SubjectNotFoundException)
-			{
-				responseBody=ResponseUtil.getResponse(404,e.getMessage());
+			if (e instanceof TeacherNotFoundException || e instanceof SubjectNotFoundException) {
+				responseBody = ResponseUtil.getResponse(404, e.getMessage());
 			}
-		}
-		catch(ServiceException e)
-		{
-			responseBody=ResponseUtil.getResponse(500,e.getMessage());
+		} catch (ServiceException e) {
+			responseBody = ResponseUtil.getResponse(500, e.getMessage());
 		}
 		return responseBody;
 
@@ -57,17 +54,15 @@ public class QuizController {
 		List<QuizEntity> quiz;
 		try {
 			quiz = quizService.getQuiz(id, subCode);
-			responseBody=ResponseUtil.getResponse(200,"Fetched Quiz Details..!",quiz);
+			responseBody = ResponseUtil.getResponse(200, "Fetched Quiz Details..!", quiz);
 
 		} catch (NotFoundException e) {
-			
-			if (e instanceof TeacherNotFoundException||e instanceof SubjectNotFoundException ) {
-				responseBody=ResponseUtil.getResponse(404,e.getMessage());
+
+			if (e instanceof TeacherNotFoundException || e instanceof SubjectNotFoundException) {
+				responseBody = ResponseUtil.getResponse(404, e.getMessage());
 			}
-		}
-		catch(ServiceException e)
-		{
-			responseBody=ResponseUtil.getResponse(500,e.getMessage());
+		} catch (ServiceException e) {
+			responseBody = ResponseUtil.getResponse(500, e.getMessage());
 		}
 		return responseBody;
 	}
@@ -77,17 +72,15 @@ public class QuizController {
 		ResponseEntity<Response> responseBody = null;
 		try {
 			List<QuizEntity> quiz = quizService.getQuizBySubCode(subCode);
-			responseBody=ResponseUtil.getResponse(200,"Fetched Quiz Details for "+subCode+" ..",quiz);
+			responseBody = ResponseUtil.getResponse(200, "Fetched Quiz Details for " + subCode + " ..", quiz);
 
 		} catch (NotFoundException e) {
-			
+
 			if (e instanceof SubjectNotFoundException) {
-				responseBody=ResponseUtil.getResponse(404,e.getMessage());
+				responseBody = ResponseUtil.getResponse(404, e.getMessage());
 			}
-		}
-		catch(ServiceException e)
-		{
-			responseBody=ResponseUtil.getResponse(500,e.getMessage());
+		} catch (ServiceException e) {
+			responseBody = ResponseUtil.getResponse(500, e.getMessage());
 		}
 		return responseBody;
 	}

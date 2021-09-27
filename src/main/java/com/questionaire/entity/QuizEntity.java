@@ -26,31 +26,30 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @Entity
-@Table(name="quiz")
-public class QuizEntity implements Serializable{
+@Table(name = "quiz")
+public class QuizEntity implements Serializable {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long autoId;
-	@Column(nullable=false)
+	@Column(nullable = false)
 	private String name;
-	
-	@OneToMany(mappedBy="quiz",fetch=FetchType.LAZY)
+
+	@OneToMany(mappedBy = "quiz", fetch = FetchType.LAZY)
 	@JsonIgnore
 	private Set<QuestionEntity> question;
 
-	@OneToMany(mappedBy="quiz",fetch=FetchType.LAZY)
+	@OneToMany(mappedBy = "quiz", fetch = FetchType.LAZY)
 	@JsonIgnore
 	private Set<ResultEntity> results;
 
-	
-	@ManyToOne(targetEntity=SubjectEntity.class,fetch=FetchType.LAZY)
-	@JoinColumn(name="code",nullable=false)
+	@ManyToOne(targetEntity = SubjectEntity.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "code", nullable = false)
 	@JsonIgnore
 	private SubjectEntity subject;
-	
-	@ManyToOne(targetEntity=TeacherEntity.class,fetch=FetchType.LAZY)
-	@JoinColumn(name="id",nullable=false)
+
+	@ManyToOne(targetEntity = TeacherEntity.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "id", nullable = false)
 	@JsonIgnore
 	private TeacherEntity teacher;
 }

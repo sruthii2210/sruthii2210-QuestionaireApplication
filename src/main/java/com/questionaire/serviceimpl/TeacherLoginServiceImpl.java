@@ -19,33 +19,34 @@ public class TeacherLoginServiceImpl implements TeacherLoginService {
 	private TeacherLoginRepository teacherLoginRepository;
 	@Autowired
 	private TeacherRepository teacherRepository;
-	
-	public Long createLogin(Long id,TeacherLogin login) throws ServiceException,NotFoundException
-	{
+
+	public Long createLogin(Long id, TeacherLogin login) throws ServiceException, NotFoundException {
 		try {
 			teacherRepository.checkTeacher(id);
-			return teacherLoginRepository.createLogin(id,login);
+			return teacherLoginRepository.createLogin(id, login);
 		} catch (DatabaseException e) {
 			throw new ServiceException(e.getMessage());
 		}
 	}
+
 	@Override
 	public TeacherLoginEntity getDetails(Long id) throws ServiceException, NotFoundException {
-		
+
 		TeacherLoginEntity teacher;
 		try {
 			teacherRepository.checkTeacher(id);
 			teacher = teacherLoginRepository.getDetails(id);
 		} catch (DatabaseException e) {
-		throw new ServiceException(e.getMessage());
+			throw new ServiceException(e.getMessage());
 		}
 		return teacher;
 	}
+
 	@Override
-	public TeacherLoginEntity updateLogin(Long id,TeacherLogin login) throws ServiceException, NotFoundException {
+	public TeacherLoginEntity updateLogin(Long id, TeacherLogin login) throws ServiceException, NotFoundException {
 		try {
 			teacherLoginRepository.checkAutoId(id);
-			return teacherLoginRepository.updateLogin(id,login);
+			return teacherLoginRepository.updateLogin(id, login);
 		} catch (DatabaseException e) {
 			throw new ServiceException(e.getMessage());
 		}

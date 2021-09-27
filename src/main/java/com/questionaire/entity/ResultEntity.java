@@ -16,33 +16,33 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name="result")
-public class ResultEntity implements Serializable{
-	
+@Table(name = "result")
+public class ResultEntity implements Serializable {
+
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	
-	@ManyToOne(targetEntity=StudentEntity.class,fetch=FetchType.LAZY)
-	@JoinColumn(name="rollNo",nullable=false)
+
+	@ManyToOne(targetEntity = StudentEntity.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "rollNo", nullable = false)
 	@JsonIgnore
 	private StudentEntity student;
-	
-	@ManyToOne(targetEntity=SubjectEntity.class,fetch=FetchType.LAZY)
-	@JoinColumn(name="code",nullable=false)
+
+	@ManyToOne(targetEntity = SubjectEntity.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "code", nullable = false)
 	@JsonIgnore
 	private SubjectEntity subject;
-	
-	@ManyToOne(targetEntity=QuizEntity.class,fetch=FetchType.LAZY)
-	@JoinColumn(name="autoId",nullable=false)
+
+	@ManyToOne(targetEntity = QuizEntity.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "autoId", nullable = false)
 	@JsonIgnore
 	private QuizEntity quiz;
-	
+
 	private Integer score;
-	
-	
+
 }

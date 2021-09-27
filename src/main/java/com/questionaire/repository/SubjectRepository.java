@@ -11,8 +11,9 @@ public interface SubjectRepository {
 
 	void checkSubject(String code) throws SubjectNotFoundException;
 
-	//void checkSubjectRoom(String standard, String code) throws SubjectNotFoundException;
-	
+	// void checkSubjectRoom(String standard, String code) throws
+	// SubjectNotFoundException;
+
 	String addSubject(String standard, Subject subject) throws DatabaseException;
 
 	List<SubjectEntity> getSubject(String standard) throws DatabaseException;

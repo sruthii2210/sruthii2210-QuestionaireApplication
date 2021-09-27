@@ -18,7 +18,7 @@ import com.questionaire.repository.SubjectRepository;
 import com.questionaire.service.ResultService;
 
 @Service
-public class ResultServiceImpl implements ResultService{
+public class ResultServiceImpl implements ResultService {
 
 	@Autowired
 	private ResultRepository resultRepository;
@@ -28,31 +28,27 @@ public class ResultServiceImpl implements ResultService{
 	private SubjectRepository subjectRepository;
 	@Autowired
 	private QuizRepository quizRepository;
-	
+
 	@Override
-	public Long addResult(Long rollNo, String subCode,Long id, Result result) throws ServiceException, NotFoundException {
-		try{
+	public Long addResult(Long rollNo, String subCode, Long id, Result result)
+			throws ServiceException, NotFoundException {
+		try {
 			studentRepository.checkStudent(rollNo);
 			subjectRepository.checkSubject(subCode);
 			quizRepository.checkQuizBySubCode(subCode);
 			quizRepository.checkQuiz(id);
-			return resultRepository.addResult(rollNo,subCode,id,result);
-		}
-		catch(DatabaseException e)
-		{
+			return resultRepository.addResult(rollNo, subCode, id, result);
+		} catch (DatabaseException e) {
 			throw new ServiceException(e.getMessage());
 		}
 	}
 
 	@Override
 	public List<ResultEntity> getResult(Long id) throws ServiceException, QuizIdNotFoundException {
-		try
-		{
+		try {
 			quizRepository.checkQuiz(id);
-		return resultRepository.getResult(id);
-		}
-		catch(DatabaseException e)
-		{
+			return resultRepository.getResult(id);
+		} catch (DatabaseException e) {
 			throw new ServiceException(e.getMessage());
 		}
 	}

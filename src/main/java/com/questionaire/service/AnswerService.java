@@ -11,7 +11,6 @@ public interface AnswerService {
 
 	AnswerEntity getAnswer(Integer quesNo) throws ServiceException, NotFoundException;
 
-	AnswerEntity updateAnswer(Long autoId, Integer quesNo, Answer answer)
-			throws ServiceException, NotFoundException;
+	AnswerEntity updateAnswer(Long autoId, Integer quesNo, Answer answer) throws ServiceException, NotFoundException;
 
 }

@@ -23,21 +23,21 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name="question")
-public class QuestionEntity implements Serializable{
+@Table(name = "question")
+public class QuestionEntity implements Serializable {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer questionNo;
-	@Column(nullable=false)
+	@Column(nullable = false)
 	private String question;
-	
-	@OneToOne(mappedBy="question")
+
+	@OneToOne(mappedBy = "question")
 	private AnswerEntity answer;
-	
-	@ManyToOne(targetEntity=QuizEntity.class,fetch=FetchType.LAZY)
-	@JoinColumn(name="id",nullable=false)
+
+	@ManyToOne(targetEntity = QuizEntity.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "id", nullable = false)
 	@JsonIgnore
 	private QuizEntity quiz;
-	
+
 }

@@ -6,5 +6,4 @@ public class IdNotFoundException extends NotFoundException {
 		super(msg);
 	}
 
-	
 }

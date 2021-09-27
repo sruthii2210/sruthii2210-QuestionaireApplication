@@ -34,41 +34,40 @@ public class TeacherSubjectController {
 
 	@PostMapping("/teacher/{id}/subject/{code}/{roomNo}")
 	public ResponseEntity<Response> assignTeacherSubject(@PathVariable("id") Long teacherId,
-			@PathVariable("code") String subCode,@PathVariable("roomNo") Long roomNo, @RequestBody TeacherSubject teacherSubjectDetails) {
+			@PathVariable("code") String subCode, @PathVariable("roomNo") Long roomNo,
+			@RequestBody TeacherSubject teacherSubjectDetails) {
 		Long autoId = 0l;
 		ResponseEntity<Response> responseBody = null;
 		try {
-			autoId = teacherSubjectServiceImpl.assignTeacherSubject(teacherId, subCode,roomNo, teacherSubjectDetails);
-			responseBody=ResponseUtil.getResponse(200,"Subjects assigned to staffs successfully!",autoId);
-		} catch ( NotFoundException e) {
+			autoId = teacherSubjectServiceImpl.assignTeacherSubject(teacherId, subCode, roomNo, teacherSubjectDetails);
+			responseBody = ResponseUtil.getResponse(200, "Subjects assigned to staffs successfully!", autoId);
+		} catch (NotFoundException e) {
 
 			if (e instanceof TeacherNotFoundException || e instanceof SubjectNotFoundException) {
-				responseBody=ResponseUtil.getResponse(404,e.getMessage());
+				responseBody = ResponseUtil.getResponse(404, e.getMessage());
 			}
-		}
-		catch(ServiceException e)
-		{
-			responseBody=ResponseUtil.getResponse(500,e.getMessage());
+		} catch (ServiceException e) {
+			responseBody = ResponseUtil.getResponse(500, e.getMessage());
 		}
 		return responseBody;
 	}
 
 	@PutMapping("/teacher/{id}/subject/{code}/{roomNo}")
 	public ResponseEntity<Response> updateTeacherSubjectAssign(@PathVariable("id") Long teacherId,
-			@PathVariable("code") String subCode,@PathVariable("roomNo") Long roomNo ,@RequestBody TeacherSubject teacherSubjectDetails) {
+			@PathVariable("code") String subCode, @PathVariable("roomNo") Long roomNo,
+			@RequestBody TeacherSubject teacherSubjectDetails) {
 		ResponseEntity<Response> responseBody = null;
 		try {
-			TeacherSubjectEntity teacherSubject = teacherSubjectServiceImpl.updateTeacherSubjectAssign(teacherId, subCode,roomNo,
-					teacherSubjectDetails);
-			responseBody=ResponseUtil.getResponse(200,"Subjects assigned to staffs updated successfully!",teacherSubject);
-		} catch ( NotFoundException e) {
+			TeacherSubjectEntity teacherSubject = teacherSubjectServiceImpl.updateTeacherSubjectAssign(teacherId,
+					subCode, roomNo, teacherSubjectDetails);
+			responseBody = ResponseUtil.getResponse(200, "Subjects assigned to staffs updated successfully!",
+					teacherSubject);
+		} catch (NotFoundException e) {
 			if (e instanceof TeacherNotFoundException || e instanceof SubjectNotFoundException) {
-				responseBody=ResponseUtil.getResponse(404,e.getMessage());
+				responseBody = ResponseUtil.getResponse(404, e.getMessage());
 			}
-		}
-		catch(ServiceException e)
-		{
-			responseBody=ResponseUtil.getResponse(500,e.getMessage());
+		} catch (ServiceException e) {
+			responseBody = ResponseUtil.getResponse(500, e.getMessage());
 		}
 		return responseBody;
 	}
@@ -79,15 +78,13 @@ public class TeacherSubjectController {
 		ResponseEntity<Response> responseBody = null;
 		try {
 			String string = teacherSubjectServiceImpl.deleteTeacherSubjectAssign(teacherId, subCode);
-			responseBody=ResponseUtil.getResponse(200,"Subjects assigned to staff deleted..",string);
+			responseBody = ResponseUtil.getResponse(200, "Subjects assigned to staff deleted..", string);
 		} catch (NotFoundException e) {
 			if (e instanceof TeacherNotFoundException || e instanceof SubjectNotFoundException) {
-				responseBody=ResponseUtil.getResponse(404,e.getMessage());
+				responseBody = ResponseUtil.getResponse(404, e.getMessage());
 			}
-		}
-		catch(ServiceException e)
-		{
-			responseBody=ResponseUtil.getResponse(500,e.getMessage());
+		} catch (ServiceException e) {
+			responseBody = ResponseUtil.getResponse(500, e.getMessage());
 		}
 		return responseBody;
 	}
@@ -97,32 +94,29 @@ public class TeacherSubjectController {
 		ResponseEntity<Response> responseBody = null;
 		try {
 			List<TeacherSubjectModel> teacher = teacherSubjectServiceImpl.getSubject(teacherId);
-			responseBody=ResponseUtil.getResponse(200,"Fetched subjects assigned to staffs..",teacher);
+			responseBody = ResponseUtil.getResponse(200, "Fetched subjects assigned to staffs..", teacher);
 		} catch (NotFoundException e) {
 			if (e instanceof TeacherNotFoundException) {
-				responseBody=ResponseUtil.getResponse(404,e.getMessage());
+				responseBody = ResponseUtil.getResponse(404, e.getMessage());
 			}
-		}
-		catch(ServiceException e)
-		{
-			responseBody=ResponseUtil.getResponse(500,e.getMessage());
+		} catch (ServiceException e) {
+			responseBody = ResponseUtil.getResponse(500, e.getMessage());
 		}
 		return responseBody;
 	}
+
 	@GetMapping("/{roomNo}/{code}")
-	public ResponseEntity<Response> getQuiz(@PathVariable("roomNo") Long roomNo,@PathVariable("code") String code) {
+	public ResponseEntity<Response> getQuiz(@PathVariable("roomNo") Long roomNo, @PathVariable("code") String code) {
 		ResponseEntity<Response> responseBody = null;
 		try {
-			TeacherSubjectModel quiz = teacherSubjectServiceImpl.getQuiz(roomNo,code);
-			responseBody=ResponseUtil.getResponse(200,"Fetched details of quiz..",quiz);
+			TeacherSubjectModel quiz = teacherSubjectServiceImpl.getQuiz(roomNo, code);
+			responseBody = ResponseUtil.getResponse(200, "Fetched details of quiz..", quiz);
 		} catch (NotFoundException e) {
-			if (e instanceof RoomNoNotFoundException||e instanceof SubjectNotFoundException) {
-				responseBody=ResponseUtil.getResponse(404,e.getMessage());
+			if (e instanceof RoomNoNotFoundException || e instanceof SubjectNotFoundException) {
+				responseBody = ResponseUtil.getResponse(404, e.getMessage());
 			}
-		}
-		catch(ServiceException e)
-		{
-			responseBody=ResponseUtil.getResponse(500,e.getMessage());
+		} catch (ServiceException e) {
+			responseBody = ResponseUtil.getResponse(500, e.getMessage());
 		}
 		return responseBody;
 	}
