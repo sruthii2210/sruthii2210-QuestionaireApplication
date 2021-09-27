@@ -1,5 +1,7 @@
 package com.questionaire.service;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 import com.questionaire.dto.Quiz;
@@ -14,5 +16,7 @@ public interface QuizService {
 	List<QuizEntity> getQuiz(Long id, String subCode) throws ServiceException, NotFoundException;
 
 	List<QuizEntity> getQuizBySubCode(String subCode) throws ServiceException, NotFoundException;
+
+	boolean getDatediff(LocalDate date);
 
 }

@@ -1,5 +1,7 @@
 package com.questionaire.dto;
 
+import java.util.Date;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,4 +16,5 @@ public class Quiz {
 	private String subCode;
 
 	private Long id;
+	private Date quizDate;
 }

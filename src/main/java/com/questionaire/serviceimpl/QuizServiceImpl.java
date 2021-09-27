@@ -1,5 +1,7 @@
 package com.questionaire.serviceimpl;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +66,12 @@ public class QuizServiceImpl implements QuizService {
 			throw new ServiceException(e.getMessage());
 		}
 		return quiz;
+	}
+
+	@Override
+	public boolean getDatediff(LocalDate date) {
+		boolean status= quizRepository.getDatediff(date);
+		return status;
 	}
 
 }

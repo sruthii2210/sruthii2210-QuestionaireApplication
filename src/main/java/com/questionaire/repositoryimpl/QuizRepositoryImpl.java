@@ -1,5 +1,7 @@
 package com.questionaire.repositoryimpl;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.HibernateException;
@@ -18,6 +20,7 @@ import com.questionaire.exception.QuizIdNotFoundException;
 import com.questionaire.exception.SubjectNotFoundException;
 import com.questionaire.mapper.QuizMapper;
 import com.questionaire.repository.QuizRepository;
+import com.questionaire.util.DateCompare;
 
 @Repository
 @Transactional
@@ -108,6 +111,13 @@ public class QuizRepositoryImpl implements QuizRepository {
 		}
 
 		return quiz;
+	}
+
+	@Override
+	public boolean getDatediff(LocalDate date) {
+		DateCompare dateCompare=new DateCompare();
+		boolean status=dateCompare.dateDifference(date);
+		return status;
 	}
 
 }

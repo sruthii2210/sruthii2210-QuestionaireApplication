@@ -78,15 +78,15 @@ public class AnswerRepositoryImpl implements AnswerRepository {
 			session = sessionFactory.getCurrentSession();
 			AnswerEntity answerEntity = AnswerMapper.mapAnswer(quesNo, answer);
 			session.find(AnswerEntity.class, autoId);
-			AnswerEntity ans = session.load(AnswerEntity.class, autoId);
+			AnswerEntity updatedAnswer=session.load(AnswerEntity.class, autoId);
 
-			ans.setOption1(answer.getOption1());
-			ans.setOption2(answer.getOption2());
-			ans.setOption3(answer.getOption3());
-			ans.setOption4(answer.getOption4());
-			ans.setCrctAns(answer.getCrctAns());
+			updatedAnswer.setOption1(answer.getOption1());
+			updatedAnswer.setOption2(answer.getOption2());
+			updatedAnswer.setOption3(answer.getOption3());
+			updatedAnswer.setOption4(answer.getOption4());
+			updatedAnswer.setCrctAns(answer.getCrctAns());
 
-			response = (AnswerEntity) session.merge(ans);
+			response = (AnswerEntity) session.merge(updatedAnswer);
 			logger.info("Answer is updated to question " + quesNo);
 
 		} catch (HibernateException e) {

@@ -1,5 +1,9 @@
 package com.questionaire.controller;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,4 +88,17 @@ public class QuizController {
 		}
 		return responseBody;
 	}
+	@GetMapping("/date/{date}")
+	ResponseEntity<Response>getDatediff(@PathVariable("date") String date)
+	{
+		ResponseEntity<Response> responseBody = null;
+		
+//		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd"); 
+//		LocalDateTime localDate = LocalDateTime.parse(date, formatter);
+
+		
+		boolean status  = quizService.getDatediff(LocalDate.parse(date));
+		return responseBody = ResponseUtil.getResponse(200, "gotdatediff", status);
+	}
+	
 }

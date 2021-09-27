@@ -17,6 +17,7 @@ public class QuizMapper {
 		quizEntity.setSubject(subject);
 		quizEntity.setTeacher(teacher);
 		quizEntity.setName(quiz.getName());
+		quizEntity.setQuizDate(quiz.getQuizDate());
 		return quizEntity;
 
 	}

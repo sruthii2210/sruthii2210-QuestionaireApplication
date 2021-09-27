@@ -1,6 +1,7 @@
 package com.questionaire.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -13,6 +14,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -34,6 +37,8 @@ public class QuizEntity implements Serializable {
 	private Long autoId;
 	@Column(nullable = false)
 	private String name;
+	@Temporal(TemporalType.DATE)
+	private Date quizDate;
 
 	@OneToMany(mappedBy = "quiz", fetch = FetchType.LAZY)
 	@JsonIgnore

@@ -1,5 +1,7 @@
 package com.questionaire.repository;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 import com.questionaire.dto.Quiz;
@@ -18,5 +20,7 @@ public interface QuizRepository {
 	List<QuizEntity> getQuiz(Long id, String subCode) throws DatabaseException;
 
 	List<QuizEntity> getQuizBySubCode(String subCode) throws DatabaseException;
+
+	boolean getDatediff(LocalDate date);
 
 }
