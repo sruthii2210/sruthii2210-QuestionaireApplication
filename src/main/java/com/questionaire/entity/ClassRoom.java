@@ -25,7 +25,7 @@ import lombok.ToString;
 @Table(name = "class")
 public class ClassRoom implements Serializable {
 
-	@OneToMany(mappedBy = "classRoom", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "classRoom", fetch = FetchType.EAGER)
 	@JsonIgnore
 	private Set<StudentEntity> students;
 

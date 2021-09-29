@@ -56,6 +56,21 @@ public class ClassController {
 		}
 		return responseEntity;
 	}
+	@GetMapping("/{roomNo}")
+	public ResponseEntity<Response> getClassDetails(@PathVariable("roomNo") Long roomNo) {
+		ResponseEntity<Response> responseEntity = null;
+		ClassRoom classDetails;
+		try {
+			classDetails = classServiceImp.getClassDetails(roomNo);
+			responseEntity = ResponseUtil.getResponse(200, "Fetched classDetails..!", classDetails);
+
+		} catch (ServiceException e) {
+			responseEntity = ResponseUtil.getResponse(500, e.getMessage());
+		} catch (NotFoundException e) {
+			responseEntity = ResponseUtil.getResponse(404, e.getMessage());
+		}
+		return responseEntity;
+	}
 
 	@PutMapping("/{roomNo}")
 	public ResponseEntity<Response> updateClass(@PathVariable("roomNo") Long roomNo,

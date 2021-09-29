@@ -22,4 +22,6 @@ public interface ClassRepository {
 
 	ClassRoom getClass(String standard, String section) throws DatabaseException;
 
+	ClassRoom getClassDetails(Long roomNo) throws DatabaseException;
+
 }

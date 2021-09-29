@@ -44,7 +44,7 @@ public class QuizEntity implements Serializable {
 	@JsonIgnore
 	private Set<QuestionEntity> question;
 
-	@OneToMany(mappedBy = "quiz", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "quiz", fetch = FetchType.EAGER)
 	@JsonIgnore
 	private Set<ResultEntity> results;
 

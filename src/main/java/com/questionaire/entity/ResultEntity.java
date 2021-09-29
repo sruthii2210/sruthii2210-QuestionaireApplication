@@ -28,19 +28,19 @@ public class ResultEntity implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@ManyToOne(targetEntity = StudentEntity.class, fetch = FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(name = "rollNo", nullable = false)
-	@JsonIgnore
+	//@JsonIgnore
 	private StudentEntity student;
 
-	@ManyToOne(targetEntity = SubjectEntity.class, fetch = FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(name = "code", nullable = false)
-	@JsonIgnore
+	//@JsonIgnore
 	private SubjectEntity subject;
 
-	@ManyToOne(targetEntity = QuizEntity.class, fetch = FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(name = "autoId", nullable = false)
-	@JsonIgnore
+	//@JsonIgnore
 	private QuizEntity quiz;
 
 	private Integer score;

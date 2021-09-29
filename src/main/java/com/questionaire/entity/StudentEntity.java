@@ -33,12 +33,12 @@ import lombok.ToString;
 @Table(name = "Student")
 public class StudentEntity implements Serializable {
 
-	@ManyToOne(targetEntity = ClassRoom.class, fetch = FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(name = "roomNo", nullable = false)
-	@JsonIgnore
+	//@JsonIgnore
 	private ClassRoom classRoom;
 
-	@OneToMany(mappedBy = "student", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "student", fetch = FetchType.EAGER)
 	@JsonIgnore
 	private Set<ResultEntity> results;
 

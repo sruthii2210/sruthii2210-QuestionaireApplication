@@ -73,7 +73,7 @@ public class ResultController {
 	@GetMapping("/{rollNo}/{id}")
 	public ResponseEntity<Response> getResultByRollNo(@PathVariable("rollNo") Long rollNo,@PathVariable("id") Long id) {
 		ResponseEntity<Response> responseEntity = null;
-		List<ResultEntity> result;
+		ResultEntity result=null;
 		try {
 			result = resultService.getResultByRollNo(rollNo,id);
 			responseEntity = ResponseUtil.getResponse(200, "Fetched result Details in quiz " + id, result);

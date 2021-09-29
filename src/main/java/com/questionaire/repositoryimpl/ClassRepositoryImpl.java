@@ -131,4 +131,19 @@ public class ClassRepositoryImpl implements ClassRepository {
 		return classRoom;
 	}
 
+	@Override
+	public ClassRoom getClassDetails(Long roomNo) throws DatabaseException {
+		ClassRoom classDetail = null;
+		Session session = null;
+		try {
+			session = sessionFactory.getCurrentSession();
+			Query<ClassRoom> query = session.createQuery("from ClassRoom c where c.roomNo=:roomNo");
+			query.setParameter("roomNo", roomNo);
+			classDetail = query.uniqueResultOptional().orElse(null);
+		} catch (HibernateException e) {
+			throw new DatabaseException(e.getMessage());
+		}
+		return classDetail;
+	}
+
 }

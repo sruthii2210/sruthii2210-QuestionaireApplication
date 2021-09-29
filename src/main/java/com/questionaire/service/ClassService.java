@@ -17,4 +17,6 @@ public interface ClassService {
 
 	ClassRoom getClass(String standard, String section) throws ServiceException;
 
+	ClassRoom getClassDetails(Long roomNo) throws ServiceException, NotFoundException;
+
 }

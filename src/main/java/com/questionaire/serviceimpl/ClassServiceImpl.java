@@ -9,7 +9,7 @@ import com.questionaire.dto.ClassDetails;
 import com.questionaire.entity.ClassRoom;
 import com.questionaire.exception.DatabaseException;
 import com.questionaire.exception.NotFoundException;
-
+import com.questionaire.exception.RoomNoNotFoundException;
 import com.questionaire.exception.ServiceException;
 import com.questionaire.repository.ClassRepository;
 import com.questionaire.service.ClassService;
@@ -56,5 +56,15 @@ public class ClassServiceImpl implements ClassService {
 			throw new ServiceException(e.getMessage());
 		}
 		return cls;
+	}
+
+	@Override
+	public ClassRoom getClassDetails(Long roomNo) throws ServiceException, NotFoundException {
+		try {
+			classRepositoryImp.checkClassRoomNo(roomNo);
+			return classRepositoryImp.getClassDetails(roomNo);
+		} catch (DatabaseException e) {
+			throw new ServiceException(e.getMessage());
+		}
 	}
 }
