@@ -53,4 +53,14 @@ public class ResultServiceImpl implements ResultService {
 		}
 	}
 
+	@Override
+	public List<ResultEntity> getResultByRollNo(Long rollNo, Long id) throws ServiceException, NotFoundException {
+		try {
+			quizRepository.checkQuiz(id);
+			return resultRepository.getResultByRollNo(rollNo,id);
+		} catch (DatabaseException e) {
+			throw new ServiceException(e.getMessage());
+		}
+	}
+
 }

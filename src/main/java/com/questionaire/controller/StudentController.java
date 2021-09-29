@@ -84,6 +84,7 @@ public class StudentController {
 
 	}
 
+	
 	@PutMapping("/{roomNo}/{rollNo}")
 	public ResponseEntity<Response> updateStudent(@PathVariable("roomNo") Long roomNo,
 			@PathVariable("rollNo") Long rollNo, @RequestBody Student student) {

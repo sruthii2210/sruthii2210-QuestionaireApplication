@@ -64,6 +64,23 @@ public class QuestionController {
 		}
 		return responseBody;
 	}
+	
+	@GetMapping("/questionCount/{id}")
+	public ResponseEntity<Response> getQuestionCount(@PathVariable("id") Long id) {
+		ResponseEntity<Response> responseBody = null;
+		Long questionCount;
+		try {
+			questionCount = questionService.getQuestionCount(id);
+			responseBody = ResponseUtil.getResponse(200, "Fetched QuestionCount..", questionCount);
+		} catch (NotFoundException e) {
+			if (e instanceof QuizIdNotFoundException) {
+				responseBody = ResponseUtil.getResponse(404, e.getMessage());
+			}
+		} catch (ServiceException e) {
+			responseBody = ResponseUtil.getResponse(500, e.getMessage());
+		}
+		return responseBody;
+	}
 
 	@PutMapping("/{id}/{quesNo}")
 	public ResponseEntity<Response> updateQuestion(@PathVariable("id") Long id, @PathVariable("quesNo") Integer quesNo,

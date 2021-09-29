@@ -12,4 +12,6 @@ public interface ResultRepository {
 
 	List<ResultEntity> getResult(Long id) throws DatabaseException;
 
+	List<ResultEntity> getResultByRollNo(Long rollNo, Long id) throws DatabaseException;
+
 }

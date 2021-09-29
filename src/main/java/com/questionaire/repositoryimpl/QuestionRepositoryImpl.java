@@ -144,4 +144,26 @@ public class QuestionRepositoryImpl implements QuestionRepository {
 		return response;
 	}
 
+	@Override
+	public Long getQuestionCount(Long id) throws DatabaseException {
+		Session session = null;
+		Long questionCount = 0l;
+		try {
+			session = sessionFactory.getCurrentSession();
+			Query query = session.createQuery("select count(*) from QuestionEntity where quiz.id=:id");
+			query.setParameter("id", id);
+			
+			questionCount=(Long) query.uniqueResult();
+			System.out.println(questionCount);
+			logger.info("Fetching Questions...");
+
+		} catch (HibernateException e) {
+			logger.error("Error in fetching questions..");
+			throw new DatabaseException(e.getMessage());
+
+		}
+
+		return questionCount;
+	}
+
 }

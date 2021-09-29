@@ -18,4 +18,6 @@ public interface QuestionService {
 
 	String deleteQuestion(Integer quesNo) throws ServiceException, NotFoundException;
 
+	Long getQuestionCount(Long id) throws NotFoundException, ServiceException;
+
 }

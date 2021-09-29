@@ -49,8 +49,31 @@ public class ResultRepositoryImpl implements ResultRepository {
 		Session session = null;
 		try {
 			session = sessionFactory.getCurrentSession();
-			Query query = session.createQuery("from ResultEntity where quiz.id=:id");
+			
+			Query query = session.createQuery("SELECT new com.questionaire.entity.ResultModel"
+					+ "(r.student.rollNo,r.subject.code,r.quiz.autoId,r.student.name,r.subject.name,r.score) " + "FROM ResultEntity r WHERE r.quiz.id=:id ");
 			query.setParameter("id", id);
+			result = query.getResultList();
+			logger.info("Fetching results for quiz " + id);
+
+		} catch (HibernateException e) {
+			logger.error("Error in fetching results for quiz " + id);
+			throw new DatabaseException(e.getMessage());
+		}
+		return result;
+	}
+
+	@Override
+	public List<ResultEntity> getResultByRollNo(Long rollNo, Long id) throws DatabaseException {
+		List<ResultEntity> result = new ArrayList<>();
+		Session session = null;
+		try {
+			session = sessionFactory.getCurrentSession();
+			
+			Query query = session.createQuery("SELECT new com.questionaire.entity.ResultModel"
+					+ "(r.student.rollNo,r.subject.code,r.quiz.autoId,r.student.name,r.subject.name,r.score) " + "FROM ResultEntity r WHERE r.quiz.id=:id and r.student.rollNo=:rollNo");
+			query.setParameter("id", id);
+			query.setParameter("rollNo", rollNo);
 			result = query.getResultList();
 			logger.info("Fetching results for quiz " + id);
 

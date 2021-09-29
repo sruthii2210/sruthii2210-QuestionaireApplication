@@ -9,6 +9,7 @@ import com.questionaire.dto.Question;
 import com.questionaire.entity.QuestionEntity;
 import com.questionaire.exception.DatabaseException;
 import com.questionaire.exception.NotFoundException;
+import com.questionaire.exception.QuizIdNotFoundException;
 import com.questionaire.exception.ServiceException;
 import com.questionaire.repository.QuestionRepository;
 import com.questionaire.repository.QuizRepository;
@@ -68,6 +69,17 @@ public class QuestionServiceImpl implements QuestionService {
 		}
 
 		catch (DatabaseException e) {
+			throw new ServiceException(e.getMessage());
+		}
+	}
+
+	@Override
+	public Long getQuestionCount(Long id) throws NotFoundException, ServiceException {
+		try {
+			quizRepository.checkQuiz(id);
+			Long count = questionRepository.getQuestionCount(id);
+			return count;
+		} catch (DatabaseException e) {
 			throw new ServiceException(e.getMessage());
 		}
 	}

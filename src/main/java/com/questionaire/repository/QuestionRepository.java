@@ -22,4 +22,6 @@ public interface QuestionRepository {
 
 	String deleteQuestion(Integer quesNo) throws DatabaseException;
 
+	Long getQuestionCount(Long id) throws DatabaseException;
+
 }
