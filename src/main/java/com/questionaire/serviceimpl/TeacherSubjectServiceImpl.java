@@ -11,6 +11,7 @@ import com.questionaire.entity.TeacherSubjectModel;
 import com.questionaire.exception.DatabaseException;
 import com.questionaire.exception.NotFoundException;
 import com.questionaire.exception.ServiceException;
+import com.questionaire.exception.TeacherNotFoundException;
 import com.questionaire.repository.TeacherSubjectRepository;
 import com.questionaire.repositoryimpl.ClassRepositoryImpl;
 import com.questionaire.repositoryimpl.SubjectRepositoryImpl;
@@ -85,6 +86,17 @@ public class TeacherSubjectServiceImpl implements TeacherSubjectService {
 			classRepository.checkClassRoomNo(roomNo);
 			subjectRepository.checkSubject(code);
 			return teacherSubjectRepositoryImpl.getQuiz(roomNo, code);
+		} catch (DatabaseException e) {
+			throw new ServiceException(e.getMessage());
+		}
+	}
+
+	@Override
+	public List<TeacherSubjectModel> getRoomNo(Long id, String code) throws NotFoundException, ServiceException {
+		try {
+			teacherRepository.checkTeacher(id);
+			subjectRepository.checkSubject(code);
+			return teacherSubjectRepositoryImpl.getRoomNo(id, code);
 		} catch (DatabaseException e) {
 			throw new ServiceException(e.getMessage());
 		}

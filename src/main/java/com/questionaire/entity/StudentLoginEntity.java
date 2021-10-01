@@ -1,7 +1,5 @@
 package com.questionaire.entity;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -21,17 +19,17 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name ="login")
-public class TeacherLoginEntity implements Serializable {
+@Table(name="studentLogin")
+public class StudentLoginEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long autoId;
 
-	@OneToOne(targetEntity = TeacherEntity.class)
-	@JoinColumn(name = "id", nullable = false, unique = true)
+	@OneToOne(targetEntity = StudentEntity.class)
+	@JoinColumn(name = "rollNo", nullable = false, unique = true)
 	@JsonIgnore
-	private TeacherEntity teacherId;
+	private StudentEntity student;
 
 	@Column(nullable = false)
 	private String password;

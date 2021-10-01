@@ -11,33 +11,32 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.questionaire.dto.TeacherLogin;
-import com.questionaire.entity.TeacherLoginEntity;
+import com.questionaire.dto.StudentLogin;
+import com.questionaire.entity.StudentLoginEntity;
 import com.questionaire.exception.NotFoundException;
-import com.questionaire.exception.IdNotFoundException;
-import com.questionaire.exception.TeacherNotFoundException;
 import com.questionaire.exception.ServiceException;
-import com.questionaire.service.TeacherLoginService;
+import com.questionaire.exception.StudentIdNotFoundException;
+import com.questionaire.exception.TeacherNotFoundException;
+import com.questionaire.service.StudentLoginService;
 import com.questionaire.util.ResponseUtil;
 
 @RestController
-@RequestMapping("/api/login")
+@RequestMapping("/api/studentlogin")
 @CrossOrigin("http://localhost:4200")
-public class TeacherLoginController {
-
+public class StudentLoginController {
+	
 	@Autowired
-	private TeacherLoginService teacherLoginService;
-
+	private StudentLoginService studentLoginService;
 	@PostMapping("/{id}")
-	public ResponseEntity<Response> createLogin(@PathVariable("id") Long id, @RequestBody TeacherLogin login) {
+	public ResponseEntity<Response> createLogin(@PathVariable("id") Long id, @RequestBody StudentLogin login) {
 		Long autoId = 0l;
 		ResponseEntity<Response> responseBody = null;
 		try {
-			autoId = teacherLoginService.createLogin(id, login);
+			autoId = studentLoginService.createLogin(id, login);
 			responseBody = ResponseUtil.getResponse(200, "Login Details created Sucessfully!", autoId);
 		} catch (NotFoundException e) {
 
-			if (e instanceof TeacherNotFoundException) {
+			if (e instanceof StudentIdNotFoundException) {
 				responseBody = ResponseUtil.getResponse(404, e.getMessage());
 			}
 		} catch (ServiceException e) {
@@ -49,10 +48,10 @@ public class TeacherLoginController {
 	@GetMapping("/{id}")
 	public ResponseEntity<Response> getDetails(@PathVariable("id") Long id) {
 		ResponseEntity<Response> responseBody = null;
-		TeacherLoginEntity teacher;
+		StudentLoginEntity student;
 		try {
-			teacher = teacherLoginService.getDetails(id);
-			responseBody = ResponseUtil.getResponse(200, "Login Details fetched!", teacher);
+			student = studentLoginService.getDetails(id);
+			responseBody = ResponseUtil.getResponse(200, "Login Details fetched!", student);
 		} catch (NotFoundException e) {
 
 			if (e instanceof TeacherNotFoundException) {
@@ -65,13 +64,13 @@ public class TeacherLoginController {
 	}
 
 	@PutMapping("/{autoId}")
-	public ResponseEntity<Response> updateLogin(@PathVariable("autoId") Long id, @RequestBody TeacherLogin login) {
+	public ResponseEntity<Response> updateLogin(@PathVariable("autoId") Long id, @RequestBody StudentLogin login) {
 		ResponseEntity<Response> responseBody = null;
 		try {
-			TeacherLoginEntity teacher = teacherLoginService.updateLogin(id, login);
+			StudentLoginEntity teacher = studentLoginService.updateLogin(id, login);
 			responseBody = ResponseUtil.getResponse(200, "Login Details updated!", teacher);
 		} catch (NotFoundException e) {
-			if (e instanceof TeacherNotFoundException || e instanceof IdNotFoundException) {
+			if (e instanceof NotFoundException || e instanceof StudentIdNotFoundException) {
 				responseBody = ResponseUtil.getResponse(404, e.getMessage());
 			}
 		} catch (ServiceException e) {
@@ -79,5 +78,6 @@ public class TeacherLoginController {
 		}
 		return responseBody;
 	}
+
 
 }

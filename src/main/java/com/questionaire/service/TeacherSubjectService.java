@@ -20,4 +20,6 @@ public interface TeacherSubjectService {
 	List<TeacherSubjectModel> getSubject(Long id) throws ServiceException, NotFoundException;
 
 	TeacherSubjectModel getQuiz(Long roomNo, String code) throws NotFoundException, ServiceException;
+
+	List<TeacherSubjectModel> getRoomNo(Long id, String code) throws NotFoundException, ServiceException;
 }

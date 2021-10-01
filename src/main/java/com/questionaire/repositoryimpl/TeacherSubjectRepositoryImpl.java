@@ -105,7 +105,7 @@ public class TeacherSubjectRepositoryImpl implements TeacherSubjectRepository {
 			session = sessionFactory.getCurrentSession();
 
 			Query query = session.createQuery("SELECT new com.questionaire.entity.TeacherSubjectModel"
-					+ "(t.teacher.id,t.subject.code) " + "FROM TeacherSubjectEntity t WHERE t.teacher.id=:id ");
+					+ "(t.classRoom.roomNo,t.teacher.id,t.subject.code) " + "FROM TeacherSubjectEntity t WHERE t.teacher.id=:id ");
 			query.setParameter("id", id);
 			teacher = query.getResultList();
 
@@ -137,6 +137,28 @@ public class TeacherSubjectRepositoryImpl implements TeacherSubjectRepository {
 		}
 		return teacher;
 
+	}
+
+	@Override
+	public List<TeacherSubjectModel> getRoomNo(Long id, String code) throws DatabaseException {
+		List<TeacherSubjectModel> teacher;
+		Session session = null;
+		try {
+
+			session = sessionFactory.getCurrentSession();
+
+			Query<TeacherSubjectModel> query = session
+					.createQuery("SELECT new com.questionaire.entity.TeacherSubjectModel"
+							+ "(t.classRoom.roomNo,t.teacher.id,t.subject.code) "
+							+ "FROM TeacherSubjectEntity t WHERE t.teacher.id=:id and t.subject.code=:code ");
+			query.setParameter("id", id);
+			query.setParameter("code", code);
+			teacher = query.getResultList();
+
+		} catch (HibernateException e) {
+			throw new DatabaseException(e.getMessage());
+		}
+		return teacher;
 	}
 
 }

@@ -18,12 +18,14 @@ import com.questionaire.exception.TeacherNotFoundException;
 import com.questionaire.service.TeacherService;
 import com.questionaire.util.ResponseUtil;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
 @RequestMapping("/api/teacher")
+@CrossOrigin("http://localhost:4200")
 public class TeacherController {
 	@Autowired
 	private TeacherService teacherServiceImpl;

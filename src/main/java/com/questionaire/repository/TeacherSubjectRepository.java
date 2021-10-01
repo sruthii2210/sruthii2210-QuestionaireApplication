@@ -20,4 +20,6 @@ public interface TeacherSubjectRepository {
 
 	TeacherSubjectModel getQuiz(Long roomNo, String code) throws DatabaseException;
 
+	List<TeacherSubjectModel> getRoomNo(Long id, String code) throws DatabaseException;
+
 }

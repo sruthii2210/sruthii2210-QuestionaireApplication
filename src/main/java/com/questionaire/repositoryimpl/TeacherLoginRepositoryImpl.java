@@ -68,7 +68,7 @@ public class TeacherLoginRepositoryImpl implements TeacherLoginRepository {
 		try {
 			session = sessionFactory.getCurrentSession();
 
-			Query<TeacherLoginEntity> query = session.createSQLQuery("select * from login where id=:staffId");
+			Query<TeacherLoginEntity> query = session.createQuery("from TeacherLoginEntity where teacherId.id=:staffId");
 			query.setParameter("staffId", id);
 			teacher = query.uniqueResultOptional().orElse(null);
 		} catch (HibernateException e) {
@@ -101,4 +101,4 @@ public class TeacherLoginRepositoryImpl implements TeacherLoginRepository {
 
 	}
 
-};
+}

@@ -120,4 +120,20 @@ public class TeacherSubjectController {
 		}
 		return responseBody;
 	}
+	
+	@GetMapping("/staff/{id}/{code}")
+	public ResponseEntity<Response> getRoomNo(@PathVariable("id") Long id, @PathVariable("code") String code) {
+		ResponseEntity<Response> responseBody = null;
+		try {
+			List<TeacherSubjectModel> quiz = teacherSubjectServiceImpl.getRoomNo(id, code);
+			responseBody = ResponseUtil.getResponse(200, "Fetched details of quiz..", quiz);
+		} catch (NotFoundException e) {
+			if (e instanceof RoomNoNotFoundException || e instanceof SubjectNotFoundException) {
+				responseBody = ResponseUtil.getResponse(404, e.getMessage());
+			}
+		} catch (ServiceException e) {
+			responseBody = ResponseUtil.getResponse(500, e.getMessage());
+		}
+		return responseBody;
+	}
 }
