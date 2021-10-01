@@ -11,6 +11,7 @@ import com.questionaire.exception.DatabaseException;
 import com.questionaire.exception.NotFoundException;
 import com.questionaire.exception.QuizIdNotFoundException;
 import com.questionaire.exception.ServiceException;
+import com.questionaire.exception.StudentIdNotFoundException;
 import com.questionaire.repository.QuizRepository;
 import com.questionaire.repository.ResultRepository;
 import com.questionaire.repository.StudentRepository;
@@ -58,6 +59,17 @@ public class ResultServiceImpl implements ResultService {
 		try {
 			quizRepository.checkQuiz(id);
 			return resultRepository.getResultByRollNo(rollNo,id);
+		} catch (DatabaseException e) {
+			throw new ServiceException(e.getMessage());
+		}
+	}
+
+	@Override
+	public List<ResultEntity> getResultByCode(Long rollNo, String code) throws NotFoundException, ServiceException {
+		try {
+			studentRepository.checkStudent(rollNo);
+			subjectRepository.checkSubject(code);
+			return resultRepository.getResultByCode(rollNo,code);
 		} catch (DatabaseException e) {
 			throw new ServiceException(e.getMessage());
 		}

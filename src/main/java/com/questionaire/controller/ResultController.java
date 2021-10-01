@@ -87,4 +87,21 @@ public class ResultController {
 		}
 		return responseEntity;
 	}
+	@GetMapping("/rollNo/{rollNo}/{code}")
+	public ResponseEntity<Response> getResultByCode(@PathVariable("rollNo") Long rollNo,@PathVariable("code") String code) {
+		ResponseEntity<Response> responseEntity = null;
+		List<ResultEntity> result=null;
+		try {
+			result = resultService.getResultByCode(rollNo,code);
+			responseEntity = ResponseUtil.getResponse(200, "Fetched result Details in quiz " + code, result);
+		} catch (NotFoundException e) {
+
+			if (e instanceof QuizIdNotFoundException) {
+				responseEntity = ResponseUtil.getResponse(404, e.getMessage());
+			}
+		} catch (ServiceException e) {
+			responseEntity = ResponseUtil.getResponse(500, e.getMessage());
+		}
+		return responseEntity;
+	}
 }

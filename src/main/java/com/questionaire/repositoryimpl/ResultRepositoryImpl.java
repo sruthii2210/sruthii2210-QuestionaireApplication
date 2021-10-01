@@ -81,5 +81,27 @@ public class ResultRepositoryImpl implements ResultRepository {
 		}
 		return result;
 	}
+	public List<ResultEntity> getResultByCode(Long rollNo, String code) throws DatabaseException {
+		List<ResultEntity> result = null;
+		Session session = null;
+		try {
+			session = sessionFactory.getCurrentSession();
+			
+			Query query = session.createQuery(" FROM ResultEntity r WHERE r.subject.code=:code and r.student.rollNo=:rollNo");
+			query.setParameter("code", code);
+			query.setParameter("rollNo", rollNo);
+			result = query.getResultList();
+			logger.info("Fetching results for quiz " + code);
+
+		} catch (HibernateException e) {
+			logger.error("Error in fetching results for quiz " + code);
+			throw new DatabaseException(e.getMessage());
+		}
+		return result;
+	}
+
+	
+
+	
 
 }

@@ -16,4 +16,6 @@ public interface ResultService {
 
 	ResultEntity getResultByRollNo(Long rollNo, Long id) throws ServiceException, NotFoundException;
 
+	List<ResultEntity> getResultByCode(Long rollNo, String code) throws NotFoundException, ServiceException;
+
 }
