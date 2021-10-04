@@ -63,8 +63,8 @@ public class ResultRepositoryImpl implements ResultRepository {
 	}
 
 	@Override
-	public ResultEntity getResultByRollNo(Long rollNo, Long id) throws DatabaseException {
-		ResultEntity result = null;
+	public List<ResultEntity> getResultByRollNo(Long rollNo, Long id) throws DatabaseException {
+		List<ResultEntity> result = null;
 		Session session = null;
 		try {
 			session = sessionFactory.getCurrentSession();
@@ -72,7 +72,7 @@ public class ResultRepositoryImpl implements ResultRepository {
 			Query query = session.createQuery(" FROM ResultEntity r WHERE r.quiz.id=:id and r.student.rollNo=:rollNo");
 			query.setParameter("id", id);
 			query.setParameter("rollNo", rollNo);
-			result = (ResultEntity) query.uniqueResultOptional().orElse(null);
+			result = query.getResultList();
 			logger.info("Fetching results for quiz " + id);
 
 		} catch (HibernateException e) {

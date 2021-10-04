@@ -3,8 +3,8 @@ package com.questionaire.service;
 import java.util.List;
 
 import com.questionaire.dto.TeacherSubject;
+import com.questionaire.dto.TeacherSubjectModel;
 import com.questionaire.entity.TeacherSubjectEntity;
-import com.questionaire.entity.TeacherSubjectModel;
 import com.questionaire.exception.NotFoundException;
 import com.questionaire.exception.ServiceException;
 

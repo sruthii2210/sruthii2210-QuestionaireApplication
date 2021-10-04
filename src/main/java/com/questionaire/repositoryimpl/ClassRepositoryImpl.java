@@ -71,6 +71,7 @@ public class ClassRepositoryImpl implements ClassRepository {
 		} catch (HibernateException e) {
 			throw new DatabaseException(e.getMessage());
 		}
+		
 		return response;
 
 	}

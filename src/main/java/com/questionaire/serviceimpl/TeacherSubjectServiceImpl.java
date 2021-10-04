@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.questionaire.dto.TeacherSubject;
+import com.questionaire.dto.TeacherSubjectModel;
 import com.questionaire.entity.TeacherSubjectEntity;
-import com.questionaire.entity.TeacherSubjectModel;
 import com.questionaire.exception.DatabaseException;
 import com.questionaire.exception.NotFoundException;
 import com.questionaire.exception.ServiceException;

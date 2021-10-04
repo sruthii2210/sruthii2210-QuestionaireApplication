@@ -48,13 +48,13 @@ public class QuizEntity implements Serializable {
 	@JsonIgnore
 	private Set<ResultEntity> results;
 
-	@ManyToOne(targetEntity = SubjectEntity.class, fetch = FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(name = "code", nullable = false)
-	@JsonIgnore
+	//@JsonIgnore
 	private SubjectEntity subject;
 
-	@ManyToOne(targetEntity = TeacherEntity.class, fetch = FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(name = "id", nullable = false)
-	@JsonIgnore
+	//@JsonIgnore
 	private TeacherEntity teacher;
 }

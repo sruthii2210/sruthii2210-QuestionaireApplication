@@ -14,7 +14,7 @@ public interface ResultService {
 
 	List<ResultEntity> getResult(Long id) throws ServiceException, QuizIdNotFoundException;
 
-	ResultEntity getResultByRollNo(Long rollNo, Long id) throws ServiceException, NotFoundException;
+	List<ResultEntity> getResultByRollNo(Long rollNo, Long id) throws ServiceException, NotFoundException;
 
 	List<ResultEntity> getResultByCode(Long rollNo, String code) throws NotFoundException, ServiceException;
 

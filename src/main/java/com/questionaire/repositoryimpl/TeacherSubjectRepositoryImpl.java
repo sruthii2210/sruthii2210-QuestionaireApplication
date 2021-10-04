@@ -12,8 +12,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.questionaire.dto.TeacherSubject;
+import com.questionaire.dto.TeacherSubjectModel;
 import com.questionaire.entity.TeacherSubjectEntity;
-import com.questionaire.entity.TeacherSubjectModel;
 import com.questionaire.exception.DatabaseException;
 import com.questionaire.mapper.TeacherSubjectMapper;
 import com.questionaire.repository.TeacherSubjectRepository;
@@ -104,7 +104,7 @@ public class TeacherSubjectRepositoryImpl implements TeacherSubjectRepository {
 
 			session = sessionFactory.getCurrentSession();
 
-			Query query = session.createQuery("SELECT new com.questionaire.entity.TeacherSubjectModel"
+			Query query = session.createQuery("SELECT new com.questionaire.dto.TeacherSubjectModel"
 					+ "(t.classRoom.roomNo,t.teacher.id,t.subject.code) " + "FROM TeacherSubjectEntity t WHERE t.teacher.id=:id ");
 			query.setParameter("id", id);
 			teacher = query.getResultList();
@@ -125,7 +125,7 @@ public class TeacherSubjectRepositoryImpl implements TeacherSubjectRepository {
 			session = sessionFactory.getCurrentSession();
 
 			Query<TeacherSubjectModel> query = session
-					.createQuery("SELECT new com.questionaire.entity.TeacherSubjectModel"
+					.createQuery("SELECT new com.questionaire.dto.TeacherSubjectModel"
 							+ "(t.classRoom.roomNo,t.teacher.id,t.subject.code) "
 							+ "FROM TeacherSubjectEntity t WHERE t.classRoom.roomNo=:roomNo and t.subject.code=:code ");
 			query.setParameter("roomNo", roomNo);
@@ -148,7 +148,7 @@ public class TeacherSubjectRepositoryImpl implements TeacherSubjectRepository {
 			session = sessionFactory.getCurrentSession();
 
 			Query<TeacherSubjectModel> query = session
-					.createQuery("SELECT new com.questionaire.entity.TeacherSubjectModel"
+					.createQuery("SELECT new com.questionaire.dto.TeacherSubjectModel"
 							+ "(t.classRoom.roomNo,t.teacher.id,t.subject.code) "
 							+ "FROM TeacherSubjectEntity t WHERE t.teacher.id=:id and t.subject.code=:code ");
 			query.setParameter("id", id);

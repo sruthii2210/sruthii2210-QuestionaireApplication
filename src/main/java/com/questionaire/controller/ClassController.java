@@ -39,6 +39,10 @@ public class ClassController {
 			responseEntity = ResponseUtil.getResponse(200, "ClassDetails added..!", roomNo);
 		} catch (ServiceException e) {
 			responseEntity = ResponseUtil.getResponse(500, e.getMessage());
+		} catch (NotFoundException e) {
+			if (e instanceof RoomNoNotFoundException) {
+				responseEntity = ResponseUtil.getResponse(404, "Already class alloted for this roomNo..");
+			}
 		}
 		return responseEntity;
 	}
@@ -54,6 +58,7 @@ public class ClassController {
 		} catch (ServiceException e) {
 			responseEntity = ResponseUtil.getResponse(500, e.getMessage());
 		}
+		
 		return responseEntity;
 	}
 	@GetMapping("/{roomNo}")

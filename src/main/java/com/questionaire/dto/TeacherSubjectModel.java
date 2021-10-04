@@ -1,4 +1,4 @@
-package com.questionaire.entity;
+package com.questionaire.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

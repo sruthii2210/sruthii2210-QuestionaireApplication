@@ -9,7 +9,7 @@ import com.questionaire.exception.ServiceException;
 
 public interface ClassService {
 
-	Long addClass(ClassDetails classDetails) throws ServiceException;
+	Long addClass(ClassDetails classDetails) throws ServiceException, NotFoundException;
 
 	List<ClassRoom> getClassDetails() throws ServiceException;
 

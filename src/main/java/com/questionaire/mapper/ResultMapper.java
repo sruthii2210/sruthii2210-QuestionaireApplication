@@ -19,7 +19,7 @@ public class ResultMapper {
 		ResultEntity resultEntity = new ResultEntity();
 
 		resultEntity.setStudent(student);
-		resultEntity.setSubject(subject);
+		//resultEntity.setSubject(subject);
 		resultEntity.setQuiz(quiz);
 		resultEntity.setScore(result.getScore());
 

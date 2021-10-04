@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.questionaire.dto.TeacherSubject;
+import com.questionaire.dto.TeacherSubjectModel;
 import com.questionaire.entity.TeacherSubjectEntity;
-import com.questionaire.entity.TeacherSubjectModel;
 import com.questionaire.exception.NotFoundException;
 import com.questionaire.exception.ServiceException;
 import com.questionaire.exception.SubjectNotFoundException;
