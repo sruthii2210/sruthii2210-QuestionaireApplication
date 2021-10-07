@@ -18,4 +18,6 @@ public interface ResultService {
 
 	List<ResultEntity> getResultByCode(Long rollNo, String code) throws NotFoundException, ServiceException;
 
+	List<Integer> getResultByQuizId(Long rollNo, List<Long> quizIds) throws ServiceException;
+
 }

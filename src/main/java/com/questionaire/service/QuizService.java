@@ -17,6 +17,7 @@ public interface QuizService {
 
 	List<QuizEntity> getQuizBySubCode(String subCode) throws ServiceException, NotFoundException;
 
-	boolean getDatediff(LocalDate date);
+	List<List<QuizEntity>> getAllQuiz(List<Long> teacherList, List<String> subjectList) throws ServiceException;
+
 
 }

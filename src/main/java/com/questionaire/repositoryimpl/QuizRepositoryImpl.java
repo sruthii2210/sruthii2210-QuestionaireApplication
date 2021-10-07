@@ -1,6 +1,7 @@
 package com.questionaire.repositoryimpl;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -85,7 +86,7 @@ public class QuizRepositoryImpl implements QuizRepository {
 		try {
 			session = sessionFactory.getCurrentSession();
 			checkQuizBySubCode(subCode);
-			Query query = session.createQuery("from QuizEntity  where teacher.id=:id and subject.code=:subCode");
+			Query query = session.createQuery("from QuizEntity q where q.teacher.id=:id and q.subject.code=:subCode");
 			query.setParameter("subCode", subCode);
 			query.setParameter("id", id);
 			quiz = query.getResultList();
@@ -114,10 +115,29 @@ public class QuizRepositoryImpl implements QuizRepository {
 	}
 
 	@Override
-	public boolean getDatediff(LocalDate date) {
-		DateCompare dateCompare=new DateCompare();
-		boolean status=dateCompare.dateDifference(date);
-		return status;
+	public List<List<QuizEntity>> getAllQuiz(List<Long> teacherList, List<String> subjectList) throws DatabaseException {
+		Session session = null;
+		List<List<QuizEntity>> quiz = new ArrayList<>();
+		List<QuizEntity> quizEntity=new ArrayList<>();
+		try {
+			session = sessionFactory.getCurrentSession();
+			
+			System.out.println(subjectList);
+			System.out.println(teacherList);
+			for(int i=0;i<subjectList.size();i++)
+			{
+			Query query = session.createQuery("from QuizEntity where teacher.id=:id and subject.code=:subCode");
+			query.setParameter("id",teacherList.get(i));
+			query.setParameter("subCode", subjectList.get(i));
+			
+			quizEntity = query.getResultList();
+			quiz.add(quizEntity);
+			}
+		} catch (HibernateException e) {
+			throw new DatabaseException(e.getMessage());
+		}
+
+		return quiz;
 	}
 
 }

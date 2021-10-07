@@ -3,6 +3,7 @@ package com.questionaire.service;
 import java.util.List;
 
 import com.questionaire.dto.Question;
+import com.questionaire.dto.Quiz;
 import com.questionaire.entity.QuestionEntity;
 import com.questionaire.exception.NotFoundException;
 import com.questionaire.exception.ServiceException;
@@ -19,5 +20,7 @@ public interface QuestionService {
 	String deleteQuestion(Integer quesNo) throws ServiceException, NotFoundException;
 
 	Long getQuestionCount(Long id) throws NotFoundException, ServiceException;
+
+	List<Long> getCountOfQuestion(List<Long> quizIds) throws ServiceException;
 
 }

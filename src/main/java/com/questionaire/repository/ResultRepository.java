@@ -17,4 +17,6 @@ public interface ResultRepository {
 
 	List<ResultEntity> getResultByCode(Long rollNo, String code) throws DatabaseException;
 
+	List<Integer> getResultByQuizId(Long rollNo, List<Long> quizIds) throws DatabaseException;
+
 }

@@ -21,6 +21,6 @@ public interface QuizRepository {
 
 	List<QuizEntity> getQuizBySubCode(String subCode) throws DatabaseException;
 
-	boolean getDatediff(LocalDate date);
+	List<List<QuizEntity>> getAllQuiz(List<Long> teacherList, List<String> subjectList) throws DatabaseException;
 
 }

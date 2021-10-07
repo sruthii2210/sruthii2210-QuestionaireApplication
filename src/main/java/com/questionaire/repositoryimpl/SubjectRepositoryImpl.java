@@ -143,4 +143,30 @@ public class SubjectRepositoryImpl implements SubjectRepository {
 		return response;
 	}
 
+	@Override
+	public List<Long> getAllTeachers(Long roomNo, List<String> subjectCodes) throws DatabaseException {
+		List<Long> teacherIdList = new ArrayList<>();
+		
+		Session session = null;
+		try {
+			session = sessionFactory.getCurrentSession();
+			for(int i=0;i<subjectCodes.size();i++)
+			{
+			Query query = session.createQuery("select t.teacher.id from TeacherSubjectEntity t where t.classRoom.roomNo=:roomNo and t.subject.code=:code");
+			System.out.println(subjectCodes.get(i));
+			query.setParameter("roomNo", roomNo);
+			query.setParameter("code", subjectCodes.get(i));
+			teacherIdList.add((Long)query.getSingleResult());
+			}
+			
+			System.out.println(teacherIdList);
+			logger.info("In getSubject Method for particular class...");
+
+		} catch (HibernateException e) {
+			logger.warn("In HibernateException(getSubject)...!");
+			throw new DatabaseException(e.getMessage());
+		}
+		return teacherIdList;
+	}
+
 }

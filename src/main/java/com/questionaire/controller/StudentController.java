@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.questionaire.dto.Student;
 import com.questionaire.entity.StudentEntity;
+import com.questionaire.exception.ConstraintViolationException;
 import com.questionaire.exception.NotFoundException;
 import com.questionaire.exception.RoomNoNotFoundException;
 import com.questionaire.exception.ServiceException;
@@ -41,6 +42,9 @@ public class StudentController {
 		} catch (NotFoundException e) {
 			if (e instanceof RoomNoNotFoundException) {
 				responseEntity = ResponseUtil.getResponse(404, e.getMessage());
+			}
+			if (e instanceof ConstraintViolationException) {
+				responseEntity = ResponseUtil.getResponse(422, e.getMessage());
 			}
 		} catch (ServiceException e) {
 			responseEntity = ResponseUtil.getResponse(500, e.getMessage());

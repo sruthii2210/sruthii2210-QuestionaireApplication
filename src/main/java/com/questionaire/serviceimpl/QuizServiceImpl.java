@@ -69,9 +69,17 @@ public class QuizServiceImpl implements QuizService {
 	}
 
 	@Override
-	public boolean getDatediff(LocalDate date) {
-		boolean status= quizRepository.getDatediff(date);
-		return status;
+	public List<List<QuizEntity>> getAllQuiz(List<Long> teacherList, List<String> subjectList) throws ServiceException {
+		List<List<QuizEntity>> quiz;
+		try {
+			
+			quiz = quizRepository.getAllQuiz(teacherList,subjectList);
+		} catch (DatabaseException e) {
+			throw new ServiceException(e.getMessage());
+		}
+		return quiz;
 	}
+
+	
 
 }

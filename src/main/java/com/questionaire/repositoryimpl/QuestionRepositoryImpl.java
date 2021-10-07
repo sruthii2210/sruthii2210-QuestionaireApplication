@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.questionaire.dto.Question;
+import com.questionaire.dto.Quiz;
 import com.questionaire.entity.QuestionEntity;
 import com.questionaire.exception.DatabaseException;
 import com.questionaire.exception.QuestionNotFoundException;
@@ -154,6 +155,34 @@ public class QuestionRepositoryImpl implements QuestionRepository {
 			query.setParameter("id", id);
 			
 			questionCount=(Long) query.uniqueResult();
+			System.out.println(questionCount);
+			logger.info("Fetching Questions...");
+
+		} catch (HibernateException e) {
+			logger.error("Error in fetching questions..");
+			throw new DatabaseException(e.getMessage());
+
+		}
+
+		return questionCount;
+	}
+	public List<Long> getCountOfQuestion(List<Long> quizIds) throws DatabaseException {
+		Session session = null;
+		Long count = 0l;
+		
+		List<Long>questionCount=new ArrayList<>();
+		try {
+			session = sessionFactory.getCurrentSession();
+			for(int i=0;i<quizIds.size();i++)
+			{
+				Long id=quizIds.get(i);
+				System.out.println(id);
+				Query query = session.createQuery("select count(*) from QuestionEntity where quiz.id=:id");
+				query.setParameter("id", id);
+				count=(Long) query.uniqueResult();
+				
+				questionCount.add(count);
+			}
 			System.out.println(questionCount);
 			logger.info("Fetching Questions...");
 

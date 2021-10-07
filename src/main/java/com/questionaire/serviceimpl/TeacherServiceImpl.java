@@ -3,11 +3,12 @@ package com.questionaire.serviceimpl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.questionaire.dto.Teacher;
 import com.questionaire.entity.TeacherEntity;
+import com.questionaire.exception.ConstraintViolationException;
 import com.questionaire.exception.DatabaseException;
 import com.questionaire.exception.NotFoundException;
 import com.questionaire.exception.ServiceException;
@@ -21,12 +22,15 @@ public class TeacherServiceImpl implements TeacherService {
 	private TeacherRepository teacherRepository;
 
 	@Override
-	public Long addTeacherDetails(Teacher teacherDetails) throws ServiceException {
+	public Long addTeacherDetails(Teacher teacherDetails) throws ServiceException, NotFoundException {
 
 		try {
 			return teacherRepository.addTeacherDetails(teacherDetails);
 		} catch (DatabaseException e) {
 			throw new ServiceException(e.getMessage());
+		}
+		catch (DataIntegrityViolationException e) {
+			throw new ConstraintViolationException("Teacher is already alloted with given id..");
 		}
 	}
 

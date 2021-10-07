@@ -3,10 +3,12 @@ package com.questionaire.serviceimpl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.questionaire.dto.Student;
 import com.questionaire.entity.StudentEntity;
+import com.questionaire.exception.ConstraintViolationException;
 import com.questionaire.exception.DatabaseException;
 import com.questionaire.exception.NotFoundException;
 import com.questionaire.exception.ServiceException;
@@ -29,6 +31,9 @@ public class StudentServiceImpl implements StudentService {
 			return studentRepository.addStudent(roomNo, student);
 		} catch (DatabaseException e) {
 			throw new ServiceException(e.getMessage());
+		}
+		catch (DataIntegrityViolationException e) {
+			throw new ConstraintViolationException("Duplicate Key value..Already student exists eith this rollNo..");
 		}
 	}
 

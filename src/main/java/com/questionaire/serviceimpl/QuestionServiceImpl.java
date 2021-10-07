@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.questionaire.dto.Question;
+import com.questionaire.dto.Quiz;
 import com.questionaire.entity.QuestionEntity;
 import com.questionaire.exception.DatabaseException;
 import com.questionaire.exception.NotFoundException;
@@ -84,4 +85,14 @@ public class QuestionServiceImpl implements QuestionService {
 		}
 	}
 
+	
+	public List<Long> getCountOfQuestion(List<Long> quizIds) throws ServiceException {
+		try {
+			
+			List<Long> count = questionRepository.getCountOfQuestion(quizIds);
+			return count;
+		} catch (DatabaseException e) {
+			throw new ServiceException(e.getMessage());
+		}
+	}
 }

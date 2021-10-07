@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.questionaire.dto.Subject;
 import com.questionaire.entity.SubjectEntity;
+import com.questionaire.exception.ConstraintViolationException;
 import com.questionaire.exception.NotFoundException;
+import com.questionaire.exception.RoomNoNotFoundException;
 import com.questionaire.exception.SubjectNotFoundException;
 import com.questionaire.exception.StandardNotFoundException;
 import com.questionaire.exception.ServiceException;
@@ -42,6 +44,9 @@ public class SubjectController {
 			if (e instanceof StandardNotFoundException) {
 				responseBody = ResponseUtil.getResponse(404, e.getMessage());
 			}
+			if (e instanceof ConstraintViolationException) {
+				responseBody = ResponseUtil.getResponse(422, e.getMessage());
+			}
 		} catch (ServiceException e) {
 			responseBody = ResponseUtil.getResponse(500, e.getMessage());
 		}
@@ -60,6 +65,23 @@ public class SubjectController {
 			}
 		} catch (ServiceException e) {
 			responseEntity = ResponseUtil.getResponse(500, e.getMessage());
+		}
+		return responseEntity;
+
+	}
+	
+	@GetMapping("/{roomNo}/{subjectCodes}")
+	public ResponseEntity<Response> getAllTeachers(@PathVariable("roomNo")Long roomNo, @PathVariable("subjectCodes")List<String> subjectCodes) {
+		ResponseEntity<Response> responseEntity = null;
+		try {
+			List<Long> subjectList = subjectService.getAllTeachers(roomNo,subjectCodes);
+			responseEntity = ResponseUtil.getResponse(200, "TeacherIds fetched", subjectList);
+		} catch (ServiceException e) {
+			responseEntity = ResponseUtil.getResponse(500, e.getMessage());
+		} catch (NotFoundException e) {
+			if (e instanceof RoomNoNotFoundException ) {
+				responseEntity = ResponseUtil.getResponse(404, e.getMessage());
+			}
 		}
 		return responseEntity;
 

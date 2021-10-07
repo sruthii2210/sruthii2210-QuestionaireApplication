@@ -9,7 +9,7 @@ import com.questionaire.exception.ServiceException;
 import com.questionaire.exception.TeacherNotFoundException;
 
 public interface TeacherService {
-	Long addTeacherDetails(Teacher teacherDetails) throws ServiceException;
+	Long addTeacherDetails(Teacher teacherDetails) throws ServiceException, NotFoundException;
 
 	List<TeacherEntity> getAllTeacherDetails() throws ServiceException;
 

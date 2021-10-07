@@ -18,4 +18,6 @@ public interface SubjectService {
 
 	String deleteSubject(String subCode) throws ServiceException, NotFoundException;
 
+	List<Long> getAllTeachers(Long roomNo, List<String> subjectCodes) throws NotFoundException, ServiceException;
+
 }

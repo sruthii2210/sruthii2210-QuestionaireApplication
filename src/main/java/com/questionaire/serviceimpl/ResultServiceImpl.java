@@ -75,4 +75,14 @@ public class ResultServiceImpl implements ResultService {
 		}
 	}
 
+	@Override
+	public List<Integer> getResultByQuizId(Long rollNo, List<Long> quizIds) throws ServiceException {
+		try {
+			
+			return resultRepository.getResultByQuizId(rollNo,quizIds);
+		} catch (DatabaseException e) {
+			throw new ServiceException(e.getMessage());
+		}
+	}
+
 }

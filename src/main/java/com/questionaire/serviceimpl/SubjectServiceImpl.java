@@ -4,11 +4,14 @@ import java.util.List;
 
 import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import com.questionaire.dto.Subject;
 import com.questionaire.entity.SubjectEntity;
+import com.questionaire.exception.ConstraintViolationException;
 import com.questionaire.exception.DatabaseException;
 import com.questionaire.exception.NotFoundException;
+import com.questionaire.exception.RoomNoNotFoundException;
 import com.questionaire.exception.ServiceException;
 import com.questionaire.repository.ClassRepository;
 import com.questionaire.repository.SubjectRepository;
@@ -29,9 +32,13 @@ public class SubjectServiceImpl implements SubjectService {
 
 			classRepository.checkStandard(standard);
 			logger.info("In addSubject in subjectServiceImp...");
+			
 			return subjectRepository.addSubject(standard, subject);
 		} catch (DatabaseException e) {
 			throw new ServiceException(e.getMessage());
+		}
+		catch (DataIntegrityViolationException e) {
+			throw new ConstraintViolationException("Already subject is added..duplicate value..");
 		}
 	}
 
@@ -72,4 +79,20 @@ public class SubjectServiceImpl implements SubjectService {
 			throw new ServiceException(e.getMessage());
 		}
 	}
+
+	@Override
+	public List<Long> getAllTeachers(Long roomNo,List<String> subjectCodes) throws NotFoundException, ServiceException {
+		
+		try {
+			classRepository.checkClassRoomNo(roomNo);
+			logger.info("In getSubject in subjectServiceImp...");
+			return  subjectRepository.getAllTeachers(roomNo,subjectCodes);
+
+		} catch (DatabaseException e) {
+			throw new ServiceException(e.getMessage());
+		}
+		
+	}
+
+	
 }

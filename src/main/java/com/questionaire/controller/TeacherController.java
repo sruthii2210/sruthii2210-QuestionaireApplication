@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.questionaire.dto.Teacher;
 import com.questionaire.entity.TeacherEntity;
+import com.questionaire.exception.ConstraintViolationException;
 import com.questionaire.exception.NotFoundException;
 import com.questionaire.exception.ServiceException;
 import com.questionaire.exception.TeacherNotFoundException;
@@ -39,6 +40,9 @@ public class TeacherController {
 		} catch (ServiceException e) {
 
 			responseBody = ResponseUtil.getResponse(500, e.getMessage());
+		} catch (NotFoundException e) {
+			if(e instanceof ConstraintViolationException)
+				responseBody = ResponseUtil.getResponse(422, e.getMessage());
 		}
 		return responseBody;
 	}

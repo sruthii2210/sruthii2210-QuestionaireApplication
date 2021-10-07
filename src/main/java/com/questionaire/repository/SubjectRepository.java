@@ -22,4 +22,6 @@ public interface SubjectRepository {
 
 	String deleteSubject(String subCode) throws DatabaseException;
 
+	List<Long> getAllTeachers(Long roomNo,List<String> subjectCodes) throws DatabaseException;
+
 }

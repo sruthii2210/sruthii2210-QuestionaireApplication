@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.questionaire.dto.Question;
+import com.questionaire.dto.Quiz;
 import com.questionaire.entity.QuestionEntity;
 import com.questionaire.exception.NotFoundException;
 import com.questionaire.exception.QuestionNotFoundException;
@@ -77,6 +78,20 @@ public class QuestionController {
 				responseBody = ResponseUtil.getResponse(404, e.getMessage());
 			}
 		} catch (ServiceException e) {
+			responseBody = ResponseUtil.getResponse(500, e.getMessage());
+		}
+		return responseBody;
+	}
+	
+	@GetMapping("question/questionCount/{quizIds}")
+	public ResponseEntity<Response> getCountOfQuestion(@PathVariable("quizIds") List<Long>quizIds) {
+		ResponseEntity<Response> responseBody = null;
+		List<Long> questionCount;
+		try {
+			System.out.println(quizIds);
+			questionCount = questionService.getCountOfQuestion(quizIds);
+			responseBody = ResponseUtil.getResponse(200, "Fetched QuestionCount..", questionCount);
+		}  catch (ServiceException e) {
 			responseBody = ResponseUtil.getResponse(500, e.getMessage());
 		}
 		return responseBody;

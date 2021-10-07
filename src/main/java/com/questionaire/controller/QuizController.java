@@ -88,17 +88,18 @@ public class QuizController {
 		}
 		return responseBody;
 	}
-	@GetMapping("/date/{date}")
-	ResponseEntity<Response>getDatediff(@PathVariable("date") String date)
-	{
-		ResponseEntity<Response> responseBody = null;
-		
-//		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd"); 
-//		LocalDateTime localDate = LocalDateTime.parse(date, formatter);
 
-		
-		boolean status  = quizService.getDatediff(LocalDate.parse(date));
-		return responseBody = ResponseUtil.getResponse(200, "gotdatediff", status);
+	@GetMapping("/teacher/{teacherList}/{subjectList}")
+	ResponseEntity<Response> getAllQuiz(@PathVariable("teacherList") List<Long>teacherList, @PathVariable("subjectList") List<String> subjectList) {
+		ResponseEntity<Response> responseBody = null;
+		List<List<QuizEntity>> quiz;
+		try {
+			quiz = quizService.getAllQuiz(teacherList, subjectList);
+			responseBody = ResponseUtil.getResponse(200, "Fetched Quiz Details..!", quiz);
+
+		} catch (ServiceException e) {
+			responseBody = ResponseUtil.getResponse(500, e.getMessage());
+		}
+		return responseBody;
 	}
-	
 }

@@ -17,4 +17,5 @@ public class Quiz {
 
 	private Long id;
 	private Date quizDate;
+	private int passPercent;
 }

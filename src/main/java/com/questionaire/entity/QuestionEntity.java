@@ -35,7 +35,7 @@ public class QuestionEntity implements Serializable {
 	@OneToOne(mappedBy = "question")
 	private AnswerEntity answer;
 
-	@ManyToOne(targetEntity = QuizEntity.class, fetch = FetchType.LAZY)
+	@ManyToOne(targetEntity = QuizEntity.class, fetch = FetchType.EAGER)
 	@JoinColumn(name = "id", nullable = false)
 	@JsonIgnore
 	private QuizEntity quiz;

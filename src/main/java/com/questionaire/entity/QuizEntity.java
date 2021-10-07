@@ -26,7 +26,6 @@ import lombok.ToString;
 
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @Entity
 @Table(name = "quiz")
@@ -40,7 +39,9 @@ public class QuizEntity implements Serializable {
 	@Temporal(TemporalType.DATE)
 	private Date quizDate;
 
-	@OneToMany(mappedBy = "quiz", fetch = FetchType.LAZY)
+	@Column(nullable=false)
+	private int passPercent;
+	@OneToMany(mappedBy = "quiz", fetch = FetchType.EAGER)
 	@JsonIgnore
 	private Set<QuestionEntity> question;
 

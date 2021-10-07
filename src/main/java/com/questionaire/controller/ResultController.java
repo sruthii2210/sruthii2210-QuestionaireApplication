@@ -1,5 +1,6 @@
 package com.questionaire.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,6 +88,20 @@ public class ResultController {
 		}
 		return responseEntity;
 	}
+	
+	@GetMapping("/rollNo/{rollNo}/quiz/{quizIds}")
+	public ResponseEntity<Response> getResultByQuizId(@PathVariable("rollNo") Long rollNo,@PathVariable("quizIds") List<Long> quizIds) {
+		ResponseEntity<Response> responseEntity = null;
+		List<Integer> result=new ArrayList<>();
+		try {
+			result = resultService.getResultByQuizId(rollNo,quizIds);
+			responseEntity = ResponseUtil.getResponse(200, "Fetched result Details in quiz ", result);
+		}  catch (ServiceException e) {
+			responseEntity = ResponseUtil.getResponse(500, e.getMessage());
+		}
+		return responseEntity;
+	}
+	
 	@GetMapping("/rollNo/{rollNo}/{code}")
 	public ResponseEntity<Response> getResultByCode(@PathVariable("rollNo") Long rollNo,@PathVariable("code") String code) {
 		ResponseEntity<Response> responseEntity = null;

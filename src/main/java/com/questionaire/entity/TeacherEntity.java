@@ -37,7 +37,7 @@ public class TeacherEntity {
 	@OneToOne(mappedBy = "teacherId")
 	private TeacherLoginEntity staffId;
 
-	@OneToMany(mappedBy = "teacher", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "teacher", fetch = FetchType.EAGER)
 	@JsonIgnore
 	private Set<QuizEntity> quiz;
 

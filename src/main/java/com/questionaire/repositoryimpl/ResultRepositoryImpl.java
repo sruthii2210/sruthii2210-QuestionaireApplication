@@ -49,7 +49,7 @@ public class ResultRepositoryImpl implements ResultRepository {
 		Session session = null;
 		try {
 			session = sessionFactory.getCurrentSession();
-			
+
 			Query query = session.createQuery("FROM ResultEntity r WHERE r.quiz.id=:id ");
 			query.setParameter("id", id);
 			result = query.getResultList();
@@ -68,7 +68,7 @@ public class ResultRepositoryImpl implements ResultRepository {
 		Session session = null;
 		try {
 			session = sessionFactory.getCurrentSession();
-			
+
 			Query query = session.createQuery(" FROM ResultEntity r WHERE r.quiz.id=:id and r.student.rollNo=:rollNo");
 			query.setParameter("id", id);
 			query.setParameter("rollNo", rollNo);
@@ -81,13 +81,15 @@ public class ResultRepositoryImpl implements ResultRepository {
 		}
 		return result;
 	}
+
 	public List<ResultEntity> getResultByCode(Long rollNo, String code) throws DatabaseException {
 		List<ResultEntity> result = null;
 		Session session = null;
 		try {
 			session = sessionFactory.getCurrentSession();
-			
-			Query query = session.createQuery(" FROM ResultEntity r WHERE r.subject.code=:code and r.student.rollNo=:rollNo");
+
+			Query query = session
+					.createQuery(" FROM ResultEntity r WHERE r.subject.code=:code and r.student.rollNo=:rollNo");
 			query.setParameter("code", code);
 			query.setParameter("rollNo", rollNo);
 			result = query.getResultList();
@@ -100,8 +102,27 @@ public class ResultRepositoryImpl implements ResultRepository {
 		return result;
 	}
 
-	
+	@Override
+	public List<Integer> getResultByQuizId(Long rollNo, List<Long> quizIds) throws DatabaseException {
+		List<Integer> result = new ArrayList<>();
+		Session session = null;
+		try {
+			session = sessionFactory.getCurrentSession();
 
-	
+			for (int i = 0; i < quizIds.size(); i++) {
+				Query query = session.createQuery("select score FROM ResultEntity r WHERE r.quiz.autoId=:autoId and r.student.rollNo=:rollNo");
+				query.setParameter("rollNo", rollNo);
+				query.setParameter("autoId", quizIds.get(i));
+				
+				result.add((Integer) query.getSingleResult());
+			}
+			logger.info("Fetching results for quiz ");
+
+		} catch (HibernateException e) {
+			logger.error("Error in fetching results for quiz ");
+			throw new DatabaseException(e.getMessage());
+		}
+		return result;
+	}
 
 }

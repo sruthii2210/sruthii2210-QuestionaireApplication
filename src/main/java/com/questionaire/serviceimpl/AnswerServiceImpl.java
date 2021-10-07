@@ -1,6 +1,7 @@
 package com.questionaire.serviceimpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.questionaire.dto.Answer;
@@ -26,9 +27,11 @@ public class AnswerServiceImpl implements AnswerService {
 		try {
 			questionRepository.checkQuestion(quesNo);
 			return answerRepository.addAnswer(quesNo, answer);
-		} catch (DatabaseException e) {
+		} 
+		catch (DatabaseException e) {
 			throw new ServiceException(e.getMessage());
 		}
+		
 	}
 
 	@Override

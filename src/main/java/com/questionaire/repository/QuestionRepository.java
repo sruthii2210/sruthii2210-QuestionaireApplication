@@ -3,6 +3,7 @@ package com.questionaire.repository;
 import java.util.List;
 
 import com.questionaire.dto.Question;
+import com.questionaire.dto.Quiz;
 import com.questionaire.entity.QuestionEntity;
 import com.questionaire.exception.DatabaseException;
 import com.questionaire.exception.QuestionNotFoundException;
@@ -23,5 +24,7 @@ public interface QuestionRepository {
 	String deleteQuestion(Integer quesNo) throws DatabaseException;
 
 	Long getQuestionCount(Long id) throws DatabaseException;
+	
+	List<Long> getCountOfQuestion(List<Long> quizIds) throws DatabaseException;
 
 }

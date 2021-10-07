@@ -3,10 +3,12 @@ package com.questionaire.serviceimpl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.questionaire.dto.ClassDetails;
 import com.questionaire.entity.ClassRoom;
+import com.questionaire.exception.ConstraintViolationException;
 import com.questionaire.exception.DatabaseException;
 import com.questionaire.exception.NotFoundException;
 import com.questionaire.exception.ServiceException;
@@ -25,6 +27,9 @@ public class ClassServiceImpl implements ClassService {
 			return classRepositoryImp.addClass(classDetails);
 		} catch (DatabaseException e) {
 			throw new ServiceException(e.getMessage());
+		}
+		catch (DataIntegrityViolationException e) {
+			throw new ConstraintViolationException("Duplicate key value...");
 		}
 	}
 
