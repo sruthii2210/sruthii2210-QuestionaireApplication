@@ -16,6 +16,7 @@ public class ResultMapper {
 		student.setRollNo(rollNo);
 		subject.setCode(subCode);
 		quiz.setAutoId(id);
+		quiz.setSubject(subject);
 		ResultEntity resultEntity = new ResultEntity();
 
 		resultEntity.setStudent(student);

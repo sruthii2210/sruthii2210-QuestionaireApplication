@@ -2,6 +2,8 @@ package com.questionaire.dto;
 
 import java.util.Date;
 
+import javax.validation.constraints.Max;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -17,5 +19,7 @@ public class Quiz {
 
 	private Long id;
 	private Date quizDate;
+	@Max(100)
 	private int passPercent;
+	private String status;
 }

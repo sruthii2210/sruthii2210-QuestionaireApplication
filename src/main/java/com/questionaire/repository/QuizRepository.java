@@ -23,4 +23,10 @@ public interface QuizRepository {
 
 	List<List<QuizEntity>> getAllQuiz(List<Long> teacherList, List<String> subjectList) throws DatabaseException;
 
+	QuizEntity updateClass(Long id,Long quizId, String subCode,Quiz quiz) throws DatabaseException;
+
+	QuizEntity getQuizById(Long id) throws DatabaseException;
+
+	List<QuizEntity> getQuizByStaff(Long id, String subCode) throws DatabaseException;
+
 }

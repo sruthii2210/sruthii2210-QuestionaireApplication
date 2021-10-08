@@ -41,6 +41,9 @@ public class QuizEntity implements Serializable {
 
 	@Column(nullable=false)
 	private int passPercent;
+	
+	@Column(nullable=false)
+	private String status;
 	@OneToMany(mappedBy = "quiz", fetch = FetchType.EAGER)
 	@JsonIgnore
 	private Set<QuestionEntity> question;

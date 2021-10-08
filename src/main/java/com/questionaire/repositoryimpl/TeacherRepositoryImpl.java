@@ -37,7 +37,6 @@ public class TeacherRepositoryImpl implements TeacherRepository {
 
 		if (teacher == null)
 			throw new TeacherNotFoundException("Teacher Not Found with " + id + "!");
-
 	}
 
 	@Override

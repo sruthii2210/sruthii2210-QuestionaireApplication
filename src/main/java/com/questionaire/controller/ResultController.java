@@ -31,15 +31,15 @@ public class ResultController {
 	@Autowired
 	private ResultService resultService;
 
-	@PostMapping("/{rollNo}/{subCode}/{id}")
+	@PostMapping("/{rollNo}/{code}/{id}")
 	public ResponseEntity<Response> addResult(@PathVariable("rollNo") Long rollNo,
-			@PathVariable("subCode") String subCode, @PathVariable("id") Long id, @RequestBody Result result) {
+			@PathVariable("code") String code, @PathVariable("id") Long id, @RequestBody Result result) {
 		Long autoId = 0l;
 		ResponseEntity<Response> responseEntity = null;
 		try {
-			autoId = resultService.addResult(rollNo, subCode, id, result);
+			autoId = resultService.addResult(rollNo, code, id, result);
 			responseEntity = ResponseUtil.getResponse(200,
-					"Result is added to the student " + rollNo + " in quiz " + id + " for subject " + subCode + " ",
+					"Result is added to the student " + rollNo + " in quiz " + id + " for subject " +code + " ",
 					autoId);
 		} catch (NotFoundException e) {
 

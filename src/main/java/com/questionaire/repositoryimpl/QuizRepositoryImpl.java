@@ -14,12 +14,18 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.questionaire.dto.Quiz;
+import com.questionaire.dto.Teacher;
+import com.questionaire.entity.ClassRoom;
 import com.questionaire.entity.QuizEntity;
-
+import com.questionaire.entity.StudentEntity;
+import com.questionaire.entity.SubjectEntity;
+import com.questionaire.entity.TeacherEntity;
 import com.questionaire.exception.DatabaseException;
 import com.questionaire.exception.QuizIdNotFoundException;
 import com.questionaire.exception.SubjectNotFoundException;
+import com.questionaire.mapper.ClassMapper;
 import com.questionaire.mapper.QuizMapper;
+import com.questionaire.mapper.StudentMapper;
 import com.questionaire.repository.QuizRepository;
 import com.questionaire.util.DateCompare;
 
@@ -86,7 +92,7 @@ public class QuizRepositoryImpl implements QuizRepository {
 		try {
 			session = sessionFactory.getCurrentSession();
 			checkQuizBySubCode(subCode);
-			Query query = session.createQuery("from QuizEntity q where q.teacher.id=:id and q.subject.code=:subCode");
+			Query query = session.createQuery("from QuizEntity q where q.teacher.id=:id and q.subject.code=:subCode and status='published'");
 			query.setParameter("subCode", subCode);
 			query.setParameter("id", id);
 			quiz = query.getResultList();
@@ -126,7 +132,7 @@ public class QuizRepositoryImpl implements QuizRepository {
 			System.out.println(teacherList);
 			for(int i=0;i<subjectList.size();i++)
 			{
-			Query query = session.createQuery("from QuizEntity where teacher.id=:id and subject.code=:subCode");
+			Query query = session.createQuery("from QuizEntity where teacher.id=:id and subject.code=:subCode and status='published' ");
 			query.setParameter("id",teacherList.get(i));
 			query.setParameter("subCode", subjectList.get(i));
 			
@@ -134,6 +140,71 @@ public class QuizRepositoryImpl implements QuizRepository {
 			quiz.add(quizEntity);
 			}
 		} catch (HibernateException e) {
+			throw new DatabaseException(e.getMessage());
+		}
+
+		return quiz;
+	}
+
+	@Override
+	public QuizEntity updateClass(Long id,Long quizId, String subCode, Quiz quiz) throws DatabaseException {
+		Session session = null;
+		QuizEntity response = null;
+		try {
+			session = sessionFactory.getCurrentSession();
+			QuizEntity quizEntity = QuizMapper.mapQuiz(quizId, subCode, quiz);
+			session.find(QuizEntity.class, quizId);
+			QuizEntity updatedQuiz = session.load(QuizEntity.class, quizId);
+
+			updatedQuiz.setName(quiz.getName());
+			updatedQuiz.setPassPercent(quiz.getPassPercent());
+			updatedQuiz.setStatus(quiz.getStatus());
+			TeacherEntity teacher=new TeacherEntity();
+			teacher.setId(id);
+			updatedQuiz.setTeacher(teacher);
+			SubjectEntity subject=new SubjectEntity();
+			subject.setCode(subCode);
+			updatedQuiz.setSubject(subject);	
+		
+			updatedQuiz.setQuizDate(quiz.getQuizDate());
+			response = updatedQuiz;
+		} catch (HibernateException e) {
+		
+			throw new DatabaseException(e.getMessage());
+		}
+
+		return response;
+	}
+
+	@Override
+	public QuizEntity getQuizById(Long id) throws DatabaseException {
+		Session session = null;
+		QuizEntity quiz;
+		try {
+			session = sessionFactory.getCurrentSession();
+			Query query = session.createQuery("from QuizEntity  where autoId=:id");
+			query.setParameter("id",id);
+			quiz = (QuizEntity) query.getSingleResult();
+		} catch (HibernateException e) {
+			throw new DatabaseException(e.getMessage());
+		}
+
+		return quiz;
+	}
+
+	@Override
+	public List<QuizEntity> getQuizByStaff(Long id, String subCode) throws DatabaseException {
+		Session session = null;
+
+		List<QuizEntity> quiz;
+		try {
+			session = sessionFactory.getCurrentSession();
+			checkQuizBySubCode(subCode);
+			Query query = session.createQuery("from QuizEntity q where q.teacher.id=:id and q.subject.code=:subCode and status='pending'");
+			query.setParameter("subCode", subCode);
+			query.setParameter("id", id);
+			quiz = query.getResultList();
+		} catch (HibernateException | QuizIdNotFoundException e) {
 			throw new DatabaseException(e.getMessage());
 		}
 

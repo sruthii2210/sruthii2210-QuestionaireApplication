@@ -19,6 +19,7 @@ public class QuizMapper {
 		quizEntity.setName(quiz.getName());
 		quizEntity.setPassPercent(quiz.getPassPercent());
 		quizEntity.setQuizDate(quiz.getQuizDate());
+		quizEntity.setStatus(quiz.getStatus());		
 		return quizEntity;
 
 	}

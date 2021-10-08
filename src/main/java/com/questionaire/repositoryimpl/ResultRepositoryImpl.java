@@ -29,6 +29,7 @@ public class ResultRepositoryImpl implements ResultRepository {
 	@Override
 	public Long addResult(Long rollNo, String subCode, Long id, Result result) throws DatabaseException {
 		Session session = null;
+		System.out.println(subCode);
 		Long autoId = 0l;
 		try {
 			session = sessionFactory.getCurrentSession();
@@ -114,7 +115,10 @@ public class ResultRepositoryImpl implements ResultRepository {
 				query.setParameter("rollNo", rollNo);
 				query.setParameter("autoId", quizIds.get(i));
 				
-				result.add((Integer) query.getSingleResult());
+				if(query.uniqueResult()==null)
+						result.add(0);
+				else
+					result.add((Integer) query.uniqueResult());
 			}
 			logger.info("Fetching results for quiz ");
 

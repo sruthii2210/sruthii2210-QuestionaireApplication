@@ -19,5 +19,11 @@ public interface QuizService {
 
 	List<List<QuizEntity>> getAllQuiz(List<Long> teacherList, List<String> subjectList) throws ServiceException;
 
+	QuizEntity updateQuiz(Long id,Long quizId,String subCode, Quiz quiz) throws NotFoundException, ServiceException;
+
+	QuizEntity getQuizById(Long id) throws NotFoundException, ServiceException;
+
+	List<QuizEntity> getQuizByStaff(Long id, String subCode) throws ServiceException, NotFoundException;
+
 
 }
