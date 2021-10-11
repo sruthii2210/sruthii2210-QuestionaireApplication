@@ -35,7 +35,6 @@ public class StudentEntity implements Serializable {
 
 	@ManyToOne
 	@JoinColumn(name = "roomNo", nullable = false)
-	//@JsonIgnore
 	private ClassRoom classRoom;
 
 	@OneToMany(mappedBy = "student", fetch = FetchType.EAGER)

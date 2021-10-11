@@ -30,17 +30,10 @@ public class ResultEntity implements Serializable {
 
 	@ManyToOne
 	@JoinColumn(name = "rollNo", nullable = false)
-	//@JsonIgnore
 	private StudentEntity student;
-
-//	@ManyToOne
-//	@JoinColumn(name = "code", nullable = false)
-//	//@JsonIgnore
-//	private SubjectEntity subject;
 
 	@ManyToOne
 	@JoinColumn(name = "autoId", nullable = false)
-	//@JsonIgnore
 	private QuizEntity quiz;
 
 	private Integer score;

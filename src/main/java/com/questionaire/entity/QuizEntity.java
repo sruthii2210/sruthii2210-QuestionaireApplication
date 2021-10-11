@@ -54,7 +54,6 @@ public class QuizEntity implements Serializable {
 
 	@ManyToOne
 	@JoinColumn(name = "code", nullable = false)
-	//@JsonIgnore
 	private SubjectEntity subject;
 
 	@ManyToOne

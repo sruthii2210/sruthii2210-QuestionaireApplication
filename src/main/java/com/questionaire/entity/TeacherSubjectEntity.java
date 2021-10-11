@@ -43,6 +43,5 @@ public class TeacherSubjectEntity implements Serializable {
 
 	@ManyToOne(targetEntity = ClassRoom.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "roomNo", nullable = false)
-	// @JsonIgnore
 	private ClassRoom classRoom;
 }
