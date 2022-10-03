@@ -40,6 +40,7 @@ public class SubjectController {
 		try {
 			String subjectCode = subjectService.addSubject(standard, subject);
 			responseBody = ResponseUtil.getResponse(200, "Subject added", subjectCode);
+			System.out.println(responseBody);
 		} catch (NotFoundException e) {
 			if (e instanceof StandardNotFoundException) {
 				responseBody = ResponseUtil.getResponse(404, e.getMessage());
