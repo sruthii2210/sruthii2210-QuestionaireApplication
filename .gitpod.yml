@@ -1,0 +1,7 @@
+tasks:
+  - init: git remote set-url origin git@github.com:sruthii2210/sruthii2210-QuestionaireApplication.git && sed "s/\r$//" commit-command.sh | bash && gp open README.md
+vscode:
+ extensions:
+   - redhat.java
+   - vscjava.vscode-java-debug
+   - Revaturepro-non-prod.revature-labs-non-prod
